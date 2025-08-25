@@ -1,0 +1,88 @@
+/* Map.css */
+.map-container {
+  display: flex;
+}
+
+.sidebar-left {
+  width: 200px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.map-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+/* Thanh trên cùng */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.search-bar {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-right: 8px;
+}
+
+.btn-flash {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #ffeb3b;
+  cursor: pointer;
+}
+
+/* City weather card */
+.city-weather-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.city-weather-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.city-weather-card .icon {
+  font-size: 24px;
+}
+
+.city-weather-card .city-info {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.city-weather-card .time {
+  font-size: 12px;
+  color: #666;
+}
+
+.city-weather-card .temp {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Khung map */
+.map-box {
+  flex: 1;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

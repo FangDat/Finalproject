@@ -1,0 +1,173 @@
+.checkout-container {
+  display: flex;
+  max-width: 1100px;
+  margin: 40px auto;
+  gap: 40px;
+  font-family: "Segoe UI", sans-serif;
+  align-items: flex-start;
+}
+
+/* Cột trái */
+.checkout-left {
+  flex: 1;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #0056b3;
+  font-size: 20px; /* to hơn */
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+.pricing-box {
+  background: #f2f2f2;
+  padding: 25px;
+  border-radius: 15px;
+}
+
+.price {
+  font-size: 28px;
+  font-weight: 800;
+  color: #007bff;
+}
+
+.vat {
+  font-size: 16px;
+  font-weight: normal;
+  color: #333;
+}
+
+.billing-cycle {
+  font-size: 16px;
+  margin-top: 4px;
+}
+
+.note {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.pricing-details .row {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+.pricing-details .value {
+  color: #007bff;
+}
+
+.pricing-details .total {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+/* Cột phải */
+.checkout-right {
+  flex: 2;
+}
+
+.credit-card-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.2);
+}
+
+.billing-title {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #003d80;
+  text-align: left;
+}
+
+/* Card logos */
+.card-logos {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.card-logos img {
+  height: 40px;
+}
+
+/* Form */
+.credit-card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.credit-card-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.credit-card-form label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #003d80;
+}
+
+.credit-card-form input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccd9f5;
+  border-radius: 10px;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+.credit-card-form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-row .form-group.small {
+  flex: 1;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  background: #007bff;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-submit:hover {
+  background: #0056b3;
+}
+
+.error-text {
+  font-size: 13px;
+  color: red;
+  margin-top: 4px;
+}
+
+.warning-text {
+  font-size: 14px; /* nhỏ hơn tiêu đề */
+  color: #d9534f; /* đỏ cảnh báo */
+  margin-top: 4px;
+  font-weight: 500;
+}
+

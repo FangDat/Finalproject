@@ -1,0 +1,169 @@
+/* Body & layout tổng thể */
+body {
+  font-family: Arial, sans-serif;
+  background: #e6f2ff; /* màu nền xanh nhạt giống ảnh 1 */
+  margin: 0;
+  height: 100vh;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.login-box {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  width: 420px;
+  text-align: center;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.logo-img {
+  width: 60px;
+}
+
+/* Title */
+.login-title {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Alert box  */
+.alert-box {
+  padding: 12px 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+.alert-box.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+.alert-box.error {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+.alert-box.warning {
+  background: #fff8e1;
+  color: #f57f17;
+  border: 1px solid #ffe082;
+}
+
+/* Buttons */
+.btn-gmail {
+  width: 100%;
+  padding: 12px;
+  background: #0077b6;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background: #FFA500; /* orange */
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.btn-login:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-signup {
+  display: inline-block;
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  color: #0077b6;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #0077b6;
+  border-radius: 30px; /* bo tròn giống các nút khác */
+  cursor: pointer;
+  margin-top: 10px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.btn-signup:hover {
+  background: #0077b6;
+  color: #fff;
+}
+
+
+/* Texts */
+.or-text {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.forgot-link {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #0077b6;
+  text-decoration: none;
+}
+
+.signup-text {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Form fields */
+.input-box {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.input-error {
+  border-color: #e53935 !important;
+  box-shadow: 0 0 4px rgba(229, 57, 53, 0.2) !important;
+}
+
+.error-msg {
+  color: #e53935;
+  font-size: 0.9rem;
+  margin: -6px 0 8px 2px;
+}
+
+/* Remember me */
+.remember-me {
+  text-align: left;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+/* Divider */
+.divider {
+  margin: 20px 0;
+}
