@@ -55,9 +55,9 @@
       <a href="#" class="forgot-link">Forgot Password?</a>
 
       <hr class="divider" />
-
-      <p class="signup-text">Don't have an account</p>
       <router-link to="/signup" class="btn-signup">Sign up for VietCloud</router-link>
+      <p class="signup-text">Don't have an account</p>
+    
     </div>
   </div>
 </template>

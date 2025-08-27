@@ -90,10 +90,11 @@
     <!-- Sidebar phải -->
     <aside class="sidebar-right">
       <h3 class="section-title">Advanced</h3>
+      <h4><strong>Try now to experience exclusive features</strong></h4>
       <p>* Chat bot<br />* 7 days Forecast<br />* Search History</p>
-      <p><strong>Try now to experience exclusive features</strong></p>
 
       <div class="pricing-box">
+        <p><strong>Register now VietCloud with attractive price</strong></p>
         <p>$6.96 / month</p>
         <router-link to="/signup" class="btn-signup">Sign up</router-link>
       </div>
@@ -116,5 +117,5 @@ export default {
 };
 </script>
 
-<style src="@/assets/common.css"></style>
+<!-- <style src="@/assets/common.css"></style> -->
 <style src="@/assets/Settings.css"></style>

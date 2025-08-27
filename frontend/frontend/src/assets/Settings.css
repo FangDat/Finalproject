@@ -137,6 +137,7 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  text-align: center;
 }
 
 .pricing-box {
@@ -147,17 +148,55 @@
   text-align: center;
 }
 
+
+
 .btn-signup {
   display: inline-block;
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  color: #0077b6;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #0077b6;
+  border-radius: 30px; /* bo tròn giống các nút khác */
+  cursor: pointer;
   margin-top: 10px;
-  padding: 10px 16px;
-  background: #007bff;
-  color: #fff;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.2s ease;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
 .btn-signup:hover {
-  background: #0056b3;
+  background: #0077b6;
+  color: #fff;
+}
+
+
+/* common.css - style tái sử dụng */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.button {
+  background: #4f46e5;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button:hover {
+  background: #3730a3;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
 }

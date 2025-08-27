@@ -109,5 +109,5 @@ export default {
 };
 </script>
 
-<style src="@/assets/common.css"></style>
+<!-- <style src="@/assets/common.css"></style> -->
 <style src="@/assets/Home.css"></style>
