@@ -41,10 +41,10 @@
         />
         <p v-if="errors.password" class="error-msg">{{ errors.password }}</p>
 
-        <div class="remember-me">
+        <!-- <div class="remember-me">
           <input v-model="remember" type="checkbox" id="remember" />
           <label for="remember">Remember me</label>
-        </div>
+        </div> -->
 
         <button class="btn-login" type="submit" :disabled="submitting">
           <span v-if="!submitting">LOG IN</span>
@@ -118,12 +118,12 @@ export default {
         // Thành công (backend trả { message, user })
         const user = res.data?.user || this.username;
 
-        // Remember me → lưu user
-        if (this.remember) {
-          localStorage.setItem("user", user);
-        } else {
-          sessionStorage.setItem("user", user);
-        }
+        //Remember me → lưu user
+        // if (this.remember) {
+        //   localStorage.setItem("user", user);
+        // } else {
+        //   sessionStorage.setItem("user", user);
+        // }
 
         this.alertMessage = "Login successful! Redirecting...";
         this.alertType = "success";
