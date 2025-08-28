@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api import views
+from backend.api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('api/signup/', views.signup, name="signup"),
+    path('api/signup/', views.signup, name="signup"),
     path('api/login/', views.login, name="login"),
+    path('api/logout/', views.logout, name="logout"),
+    path('api/check-premium/', views.check_premium, name="check_premium"),
+    path('api/weather/', views.get_weather, name="get_weather"),  # 👈 endpoint thời tiết mới
 ]

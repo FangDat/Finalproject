@@ -1,15 +1,14 @@
 <template>
   <div class="home-container">
-  <!-- Sidebar trái -->
-  <aside class="sidebar-left">
-    <h2 class="logo">🌤 Viet Cloud</h2>
-    <nav class="nav-menu">
-      <button class="nav-btn active">☁️ Weather</button>
-      <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
-      <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-    </nav>
-  </aside>
-
+    <!-- Sidebar trái -->
+    <aside class="sidebar-left">
+      <h2 class="logo">🌤 Viet Cloud</h2>
+      <nav class="nav-menu">
+        <button class="nav-btn active">☁️ Weather</button>
+        <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
+        <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
+      </nav>
+    </aside>
 
     <!-- Nội dung chính -->
     <main class="main-content">
@@ -26,7 +25,9 @@
           <p class="rain">Chance of rain: {{ chanceOfRain }}</p>
           <h2 class="temperature">{{ temperature }}°C</h2>
         </div>
-        <div class="weather-icon">☀️</div>
+        <div class="weather-icon">
+          <img :src="weatherIcon" alt="Weather Icon" />
+        </div>
       </section>
 
       <!-- Dự báo trong ngày -->
@@ -39,7 +40,7 @@
             class="forecast-item"
           >
             <p>{{ item.time }}</p>
-            <div class="forecast-icon">{{ item.icon }}</div>
+            <img :src="getIconSrc(item.icon)" class="forecast-icon" />
             <p>{{ item.temp }}°C</p>
           </div>
         </div>
@@ -67,7 +68,7 @@
         class="forecast-3day"
       >
         <div>{{ day.day }}</div>
-        <div class="forecast-icon">{{ day.icon }}</div>
+        <img :src="getIconSrc(day.icon)" class="forecast-icon" />
         <div>{{ day.temp }}</div>
       </div>
       <p class="premium-text">
@@ -79,35 +80,66 @@
 </template>
 
 <script>
-
-
 export default {
   name: "Home",
   data() {
     return {
       city: "Da Nang",
-      temperature: 36,
+      temperature: null,
       chanceOfRain: "0%",
-      realFeel: 36,
-      wind: 0.2,
+      realFeel: null,
+      wind: null,
       visibility: 11,
       uvIndex: 2,
+      condition: "",
+      weatherIcon: require("@/assets/sun.png"),
       forecastToday: [
-        { time: "6:00", icon: "☁️", temp: 18 },
-        { time: "9:00", icon: "🌧️", temp: 17 },
-        { time: "12:00", icon: "⛅", temp: 20 },
-        { time: "15:00", icon: "☀️", temp: 36 },
-        { time: "18:00", icon: "☁️", temp: 26 },
+        { time: "6:00", icon: "cloudy", temp: null },
+        { time: "9:00", icon: "rain", temp: null },
+        { time: "12:00", icon: "cloudy", temp: null },
+        { time: "15:00", icon: "sun", temp: null },
+        { time: "18:00", icon: "cloudy", temp: null },
       ],
       forecast3days: [
-        { day: "Today", icon: "☀️", temp: "36/22" },
-        { day: "Tue", icon: "☀️", temp: "37/22" },
-        { day: "Wed", icon: "🌧️", temp: "22/17" },
+        { day: "Today", icon: "sun", temp: "36/22" },
+        { day: "Tue", icon: "sun", temp: "37/22" },
+        { day: "Wed", icon: "rain", temp: "22/17" },
       ],
     };
+  },
+  methods: {
+    getIconSrc(iconName) {
+      if (iconName.includes("cloud")) return require("@/assets/cloudy.png");
+      if (iconName.includes("rain")) return require("@/assets/heavy-rain.png");
+      if (iconName.includes("sun")) return require("@/assets/sun.png");
+      return require("@/assets/cloudy.png");
+    },
+    async fetchWeather() {
+      try {
+        const response = await fetch("http://localhost:8000/api/weather/");
+        const data = await response.json();
+
+        if (response.ok) {
+          this.city = data.location;
+          this.temperature = data.temperature;
+          this.realFeel = data.temperature;
+          this.wind = data.wind_speed;
+          this.condition = data.condition;
+
+          this.weatherIcon = this.getIconSrc(data.condition.toLowerCase());
+          this.forecastToday[3].icon = data.condition.toLowerCase();
+        } else {
+          console.error("Lỗi fetch weather:", data);
+        }
+      } catch (err) {
+        console.error("Không thể lấy dữ liệu thời tiết:", err);
+      }
+    },
+  },
+  mounted() {
+    this.fetchWeather();
   },
 };
 </script>
 
-<!-- <style src="@/assets/common.css"></style> -->
 <style src="@/assets/Home.css"></style>

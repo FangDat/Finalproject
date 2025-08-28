@@ -42,8 +42,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  font-size: 1.1rem;
+  gap: 12px;
+  font-size: 1rem;
+}
+.forecast-3day img {
+  width: 32px;
+  height: 32px;
 }
 .premium-text {
   font-size: 0.9rem;
@@ -80,7 +84,6 @@
 }
 .btn-login {
   padding: 12px 20px;
-  margin-top: 0 !important;
   text-align: center;
   border: none;
   width: 180px !important;
@@ -102,13 +105,18 @@
   font-size: 2rem;
   font-weight: bold;
 }
+
+/* Chỉ nhiệt độ căn giữa */
 .temperature {
-  font-size: 3.5rem;
+  font-size: 3rem;
   margin: 15px 0;
   color: #ff5722;
+  text-align: center;
 }
-.weather-icon {
-  font-size: 100px;
+
+.weather-icon img {
+  width: 80px;
+  height: 80px;
 }
 .rain {
   font-size: 1.2rem;
@@ -137,10 +145,11 @@
 }
 .forecast-item {
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 .forecast-icon {
-  font-size: 32px;
+  width: 40px;
+  height: 40px;
   margin: 5px 0;
 }
 
@@ -153,13 +162,7 @@
   font-size: 1.1rem;
 }
 
-.nav-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
-}
-
+/* Navigation buttons */
 .nav-btn {
   background: #f4f4f4;
   border: none;
@@ -171,47 +174,17 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
-
 .nav-btn:hover {
   background: #2196f3;
   color: #fff;
   transform: translateX(4px);
 }
 
-/* Bỏ gạch chân mặc định của router-link */
+/* Remove underline for links */
 a,
 .router-link,
 .router-link-active,
 .router-link-exact-active {
   text-decoration: none !important;
-  color: inherit; /* Giữ nguyên màu chữ */
-}
-
-/* common.css - style tái sử dụng */
-.card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 16px;
-  margin: 12px 0;
-}
-
-.button {
-  background: #4f46e5;
-  color: #fff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.button:hover {
-  background: #3730a3;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 12px;
+  color: inherit;
 }
