@@ -3,7 +3,7 @@
     <div class="signup-card">
       <!-- Logo -->
       <div class="logo-section">
-        <img src="@/assets/cloudy.png" alt="VietCloud" class="logo" />
+        <img src="@/assets/clouds.png" alt="VietCloud" class="logo" />
         <h2>VietCloud</h2>
       </div>
 

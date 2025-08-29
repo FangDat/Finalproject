@@ -105,15 +105,12 @@
   font-size: 2rem;
   font-weight: bold;
 }
-
-/* Chỉ nhiệt độ căn giữa */
 .temperature {
   font-size: 3rem;
   margin: 15px 0;
   color: #ff5722;
   text-align: center;
 }
-
 .weather-icon img {
   width: 80px;
   height: 80px;
@@ -151,6 +148,10 @@
   width: 40px;
   height: 40px;
   margin: 5px 0;
+}
+.pop-text {
+  font-size: 0.85rem;
+  color: #2196f3;
 }
 
 /* Air condition */

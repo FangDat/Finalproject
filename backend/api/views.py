@@ -1,29 +1,23 @@
+import requests
+import datetime
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.hashers import check_password
 from .models import User
 from .serializers import UserSerializer
-from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth import login as dj_login
-import requests
-import datetime
+import pytz  # để xử lý timezone
 
 # ---------------------------
 # SIGNUP
 # ---------------------------
 @api_view(['POST'])
 def signup(request):
-    print("DEBUG request.data:", request.data)   # 👈 in ra dữ liệu nhận được
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        user = serializer.save()
+        serializer.save()
         return Response({"message": "User created successfully"}, status=201)
-    else:
-        print("DEBUG serializer.errors:", serializer.errors)  # 👈 in lỗi chi tiết
-        return Response(serializer.errors, status=400)
-
+    return Response(serializer.errors, status=400)
 
 # ---------------------------
 # LOGIN
@@ -39,13 +33,9 @@ def login(request):
     try:
         user = User.objects.get(username=username)
         if check_password(password, user.password):
-            # ---------------------------
-            # SESSION-BASED LOGIN
-            # ---------------------------
             request.session['user_id'] = str(user._id)
             request.session['username'] = user.username
             request.session['is_premium'] = getattr(user, 'is_premium', False)
-
             return Response({
                 "message": "Login successful",
                 "user": user.username,
@@ -56,55 +46,99 @@ def login(request):
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=404)
 
-
 # ---------------------------
 # LOGOUT
 # ---------------------------
 @api_view(['POST'])
 def logout(request):
-    """
-    Logout user và xóa toàn bộ session.
-    """
     request.session.flush()
     return Response({"message": "Logged out successfully"})
-
 
 # ---------------------------
 # CHECK PREMIUM
 # ---------------------------
 @api_view(['GET'])
 def check_premium(request):
-    """
-    Kiểm tra user hiện tại có quyền premium hay không.
-    Trả về: {"is_premium": True/False}
-    """
     is_premium = request.session.get('is_premium', False)
     return Response({"is_premium": is_premium})
 
-
+# ---------------------------
+# GET WEATHER
+# ---------------------------
 @api_view(['GET'])
 def get_weather(request):
-    """
-    Gọi API OpenWeather để lấy thời tiết hiện tại của Đà Nẵng
-    """
-    api_key = "49d2545d1cdff8820a039e6e2f451ffc"  # 👈 thay bằng key thật của bạn
-    city = "Da Nang"
-    url = f"http://pro.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={api_key}"
+    api_key = "49d2545d1cdff8820a039e6e2f451ffc"
+    city = "Ohio"
+    vn_tz = pytz.timezone("Asia/Ho_Chi_Minh")
 
     try:
-        response = requests.get(url)
-        data = response.json()
+        # 1️⃣ Thời tiết hiện tại
+        current_url = f"http://pro.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={api_key}"
+        current_resp = requests.get(current_url)
+        current_data = current_resp.json()
+        if current_resp.status_code != 200:
+            return Response({"error": "Không lấy được dữ liệu thời tiết hiện tại", "details": current_data}, status=400)
 
-        if response.status_code != 200:
-            return Response({"error": "Không lấy được dữ liệu từ OpenWeather", "details": data}, status=400)
+        # 2️⃣ Forecast 5 ngày / 3h
+        forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&units=metric&appid={api_key}"
+        forecast_resp = requests.get(forecast_url)
+        forecast_data = forecast_resp.json()
+        if forecast_resp.status_code != 200:
+            return Response({"error": "Không lấy được dữ liệu forecast", "details": forecast_data}, status=400)
 
-        # Parse dữ liệu cần thiết
+        # Giờ hiện tại ở VN
+        now = datetime.datetime.now(vn_tz)
+
+        # Lấy 5 mốc giờ forecast tiếp theo sau giờ hiện tại
+        upcoming_hours = []
+        for item in forecast_data['list']:
+            dt = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt = vn_tz.localize(dt)
+            if dt > now:
+                upcoming_hours.append({
+                    "time": dt.strftime("%Y-%m-%d %H:%M"),
+                    "temp": item['main']['temp'],
+                    "condition": item['weather'][0]['main'].lower()
+                })
+            if len(upcoming_hours) >= 5:
+                break
+
+        # Lấy chance_of_rain hiện tại (từ mốc forecast gần nhất)
+        chance_of_rain = 0
+        for item in forecast_data['list']:
+            dt = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt = vn_tz.localize(dt)
+            if dt > now:
+                chance_of_rain = item.get("pop", 0) * 100  # pop từ 0~1, đổi ra %
+                break
+
+        # Forecast 3 ngày tiếp theo
+        daily_forecast = {}
+        for item in forecast_data['list']:
+            dt = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt = vn_tz.localize(dt)
+            day_str = dt.date().isoformat()
+            if day_str not in daily_forecast:
+                daily_forecast[day_str] = {"temps": [], "condition": item['weather'][0]['main'].lower()}
+            daily_forecast[day_str]["temps"].append(item['main']['temp'])
+
+        daily_forecast_list = []
+        for day, info in list(daily_forecast.items())[:3]:
+            daily_forecast_list.append({
+                "day": day,
+                "condition": info["condition"],
+                "temp": f"{int(max(info['temps']))}/{int(min(info['temps']))}"
+            })
+
         result = {
-            "location": f"{data['name']}, {data['sys']['country']}",
-            "temperature": data['main']['temp'],
-            "humidity": data['main']['humidity'],
-            "condition": data['weather'][0]['description'],
-            "wind_speed": data['wind']['speed'],
+            "location": f"{current_data['name']}, {current_data['sys']['country']}",
+            "temperature": current_data['main']['temp'],
+            "humidity": current_data['main']['humidity'],
+            "condition": current_data['weather'][0]['description'],
+            "wind_speed": current_data['wind']['speed'],
+            "chance_of_rain": round(chance_of_rain),  # thêm tỉ lệ mưa hiện tại
+            "upcoming_hours": upcoming_hours,
+            "daily_forecast": daily_forecast_list,
             "source": "OpenWeather"
         }
 
@@ -112,6 +146,10 @@ def get_weather(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+
+
+
 
 
 
