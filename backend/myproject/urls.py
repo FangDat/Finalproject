@@ -26,3 +26,5 @@ urlpatterns = [
     path('api/check-premium/', views.check_premium, name="check_premium"),
     path('api/weather/', views.get_weather, name="get_weather"),  # 👈 endpoint thời tiết mới
 ]
+
+# check check check
