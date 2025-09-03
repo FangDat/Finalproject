@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.hashers import check_password
 from .models import User
 from .serializers import UserSerializer
-import pytz  # để xử lý timezone
+import pytz
 
 # ---------------------------
 # SIGNUP
@@ -63,21 +63,28 @@ def check_premium(request):
     return Response({"is_premium": is_premium})
 
 # ---------------------------
-# GET WEATHER
+# GET WEATHER (dùng local timezone theo city)
 # ---------------------------
 @api_view(['GET'])
 def get_weather(request):
     api_key = "49d2545d1cdff8820a039e6e2f451ffc"
-    city = "Ohio"
-    vn_tz = pytz.timezone("Asia/Ho_Chi_Minh")
+    city = "Hanoi"  # có thể đổi bằng query param trong request sau này
 
     try:
         # 1️⃣ Thời tiết hiện tại
-        current_url = f"http://pro.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={api_key}"
+        current_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={api_key}"
         current_resp = requests.get(current_url)
         current_data = current_resp.json()
         if current_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu thời tiết hiện tại", "details": current_data}, status=400)
+
+        # Lấy timezone offset (giây) từ OpenWeather
+        timezone_offset = current_data.get("timezone", 0)  # vd: +7200 cho UTC+2
+        offset = datetime.timedelta(seconds=timezone_offset)
+        tz = datetime.timezone(offset)
+
+        # Giờ hiện tại ở city
+        now = datetime.datetime.now(tz)
 
         # 2️⃣ Forecast 5 ngày / 3h
         forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&units=metric&appid={api_key}"
@@ -86,38 +93,35 @@ def get_weather(request):
         if forecast_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu forecast", "details": forecast_data}, status=400)
 
-        # Giờ hiện tại ở VN
-        now = datetime.datetime.now(vn_tz)
-
-        # Lấy 5 mốc giờ forecast tiếp theo sau giờ hiện tại
+        # Lấy 5 mốc giờ forecast tiếp theo sau giờ hiện tại (local city)
         upcoming_hours = []
         for item in forecast_data['list']:
-            dt = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt = vn_tz.localize(dt)
-            if dt > now:
+            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
+            if dt_local > now:
                 upcoming_hours.append({
-                    "time": dt.strftime("%Y-%m-%d %H:%M"),
+                    "time": dt_local.strftime("%Y-%m-%d %H:%M"),
                     "temp": item['main']['temp'],
                     "condition": item['weather'][0]['main'].lower()
                 })
             if len(upcoming_hours) >= 5:
                 break
 
-        # Lấy chance_of_rain hiện tại (từ mốc forecast gần nhất)
+        # Lấy chance_of_rain hiện tại (từ forecast gần nhất)
         chance_of_rain = 0
         for item in forecast_data['list']:
-            dt = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt = vn_tz.localize(dt)
-            if dt > now:
-                chance_of_rain = item.get("pop", 0) * 100  # pop từ 0~1, đổi ra %
+            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
+            if dt_local > now:
+                chance_of_rain = item.get("pop", 0) * 100  # pop: 0~1
                 break
 
         # Forecast 3 ngày tiếp theo
         daily_forecast = {}
         for item in forecast_data['list']:
-            dt = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt = vn_tz.localize(dt)
-            day_str = dt.date().isoformat()
+            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
+            day_str = dt_local.date().isoformat()
             if day_str not in daily_forecast:
                 daily_forecast[day_str] = {"temps": [], "condition": item['weather'][0]['main'].lower()}
             daily_forecast[day_str]["temps"].append(item['main']['temp'])
@@ -136,7 +140,7 @@ def get_weather(request):
             "humidity": current_data['main']['humidity'],
             "condition": current_data['weather'][0]['description'],
             "wind_speed": current_data['wind']['speed'],
-            "chance_of_rain": round(chance_of_rain),  # thêm tỉ lệ mưa hiện tại
+            "chance_of_rain": round(chance_of_rain),
             "upcoming_hours": upcoming_hours,
             "daily_forecast": daily_forecast_list,
             "source": "OpenWeather"

@@ -40,7 +40,7 @@
             class="forecast-item"
           >
             <p>{{ item.time }}</p>
-            <img :src="getIconSrc(item.icon)" class="forecast-icon" />
+            <img :src="getIconSrc(item.icon, item.time)" class="forecast-icon" />
             <p>{{ Math.round(item.temp) }}°C</p>
           </div>
         </div>
@@ -68,7 +68,7 @@
         class="forecast-3day"
       >
         <div>{{ day.day }}</div>
-        <img :src="getIconSrc(day.icon)" class="forecast-icon" />
+        <img :src="getDayIcon(day.icon)" class="forecast-icon" />
         <div>{{ day.temp.split('/').map(t => Math.round(t)).join('/') }}</div>
       </div>
       <p class="premium-text">
@@ -98,20 +98,67 @@ export default {
     };
   },
   methods: {
-    getIconSrc(iconName) {
+    // Icon phân biệt ngày/đêm (dùng cho hiện tại + today forecast)
+    getIconSrc(iconName, timeStr = null) {
+      let hour = null;
+      if (timeStr) {
+        try {
+          hour = parseInt(timeStr.split(":")[0], 10);
+        } catch {
+          hour = null;
+        }
+      } else {
+        hour = new Date().getHours();
+      }
+
+      const isNight = hour !== null && (hour >= 18 || hour < 7);
+
+      if (iconName.includes("cloud")) {
+        return isNight
+          ? require("@/assets/moonandclouds.png")
+          : require("@/assets/clouds.png");
+      }
+      if (iconName.includes("clear")) {
+        return isNight
+          ? require("@/assets/moon.png")
+          : require("@/assets/clear.png");
+      }
+      if (iconName.includes("rain")) {
+        return require("@/assets/rain.png");
+      }
+
       try {
-        return require(`@/assets/${iconName.toLowerCase()}.png`);
+        return require(`@/assets/${iconName}.png`);
       } catch {
-        return require("@/assets/clouds.png"); // default icon
+        return require("@/assets/clouds.png");
       }
     },
+
+    // Icon mặc định ban ngày (cho 3-day forecast)
+    getDayIcon(iconName) {
+      if (iconName.includes("cloud")) {
+        return require("@/assets/clouds.png");
+      }
+      if (iconName.includes("clear")) {
+        return require("@/assets/clear.png");
+      }
+      if (iconName.includes("rain")) {
+        return require("@/assets/rain.png");
+      }
+
+      try {
+        return require(`@/assets/${iconName}.png`);
+      } catch {
+        return require("@/assets/clouds.png");
+      }
+    },
+
     async fetchWeather() {
       try {
         const response = await fetch("http://localhost:8000/api/weather/");
         const data = await response.json();
 
         if (response.ok) {
-          // Thông tin hiện tại
           this.city = data.location;
           this.temperature = data.temperature;
           this.realFeel = data.temperature;
@@ -121,18 +168,30 @@ export default {
               ? data.chance_of_rain + "%"
               : "0%";
           this.condition = data.condition;
+
+          // Giờ local từ upcoming_hours
+          let localHour = null;
+          if (data.upcoming_hours && data.upcoming_hours.length > 0) {
+            localHour = parseInt(
+              data.upcoming_hours[0].time.split(" ")[1].split(":")[0],
+              10
+            );
+          }
+
+          // Icon hiện tại (có phân biệt ngày/đêm)
           this.weatherIcon = this.getIconSrc(
-            data.condition.split(" ")[0].toLowerCase()
+            data.condition.toLowerCase(),
+            localHour !== null ? localHour + ":00" : null
           );
 
-          // Today's forecast: 5 mốc giờ tiếp theo từ API
+          // Forecast hôm nay
           this.forecastToday = data.upcoming_hours.map((item) => ({
-            time: item.time.split(" ")[1].slice(0, 5), // HH:MM
+            time: item.time.split(" ")[1].slice(0, 5),
             temp: item.temp,
             icon: item.condition.toLowerCase(),
           }));
 
-          // 3-day forecast
+          // Forecast 3 ngày (icon ban ngày mặc định)
           this.forecast3days = data.daily_forecast.map((item) => ({
             day: item.day,
             temp: item.temp,
