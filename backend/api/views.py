@@ -68,7 +68,7 @@ def check_premium(request):
 @api_view(['GET'])
 def get_weather(request):
     api_key = "49d2545d1cdff8820a039e6e2f451ffc"
-    city = "Hanoi"  # có thể đổi bằng query param trong request sau này
+    city = "Seoul"  # có thể đổi bằng query param trong request sau này
 
     try:
         # 1️⃣ Thời tiết hiện tại
