@@ -26,99 +26,85 @@ export default {
       termsHtml: `
         <h2>1. Introduction</h2>
         <p>
-          Welcome to <b>VietCloud</b> – a real-time weather forecasting web application offering weather information,
-          travel suggestions, and premium features like chatbot and 10-day forecast.
+          Welcome to <b>VietCloud</b> – a real-time weather forecasting application offering global forecasts, 
+          travel tips, and premium features like chatbot and 10-day outlooks.
         </p>
         <p>
-          These Terms and Conditions ("Agreement") are a legal contract between you ("User") and VietCloud ("we",
-          "our", or "us") regarding the use of our website and services.
-        </p>
-        <p>
-          By using VietCloud, you agree to these terms. If you do not agree, please do not use the service.
+          By using VietCloud, you agree to follow these Terms. If you do not agree, you must stop using our services.
         </p>
 
         <h2>2. Services</h2>
-        <p><b>Free Users</b> can:</p>
+        <p><b>Free Users</b> may:</p>
         <ul>
-          <li>Search and view weather forecast (up to 3 days)</li>
-          <li>See weather charts, icons, and maps</li>
-          <li>Receive public travel suggestions</li>
+          <li>Check weather forecasts up to 3 days</li>
+          <li>Access maps, charts, and public travel suggestions</li>
         </ul>
-        <p><b>Premium Users</b> additionally:</p>
+        <p><b>Premium Users</b> gain extra features:</p>
         <ul>
-          <li>Access 10-day forecast</li>
-          <li>Use chatbot for travel advice</li>
-          <li>View personal search history</li>
-          <li>Make and manage subscription payments</li>
+          <li>10-day forecast</li>
+          <li>AI chatbot for travel advice</li>
+          <li>Personal search history</li>
+          <li>Payment & subscription management</li>
         </ul>
 
         <h2>3. Payments & Subscriptions</h2>
         <p>
-          Premium features require a subscription, billed monthly or annually. All payments are processed securely via
-          third-party payment providers.
+          Premium features require a subscription (monthly or annual). Payments are processed securely through 
+          third-party providers.
         </p>
         <p>
-          Your subscription will automatically renew unless cancelled at least 48 hours before the billing cycle ends.
-          No refunds for unused time. You may cancel anytime and retain access until the end of the paid period.
+          Subscriptions renew automatically unless cancelled at least 48 hours before renewal. Refunds are not provided 
+          for unused time.
         </p>
 
-        <h2>4. Use of Digital Content</h2>
-        <p>
-          By using our forecast data, weather charts, or downloading app content, you agree:
-        </p>
+        <h2>4. Acceptable Use</h2>
+        <p>You agree not to:</p>
         <ul>
-          <li>Not to reproduce, sell, or redistribute without permission</li>
-          <li>To use information for personal and non-commercial purposes</li>
+          <li>Copy, sell, or redistribute our data without consent</li>
+          <li>Exploit, hack, or misuse our services</li>
+          <li>Share accounts or attempt reverse engineering</li>
         </ul>
 
-        <h2>5. Cancellation and Refund Policy</h2>
+        <h2>5. Cancellation & Refund Policy</h2>
         <p>
-          If you're not satisfied, you may cancel your premium subscription through your account settings or by
-          contacting support.
-        </p>
-        <p>
-          Refunds are only granted if there's a verified technical issue or wrongful billing and will be evaluated
-          case-by-case.
+          You may cancel your premium subscription anytime via account settings. Refunds are only issued for 
+          verified technical faults or wrongful charges.
         </p>
 
-        <h2>6. Privacy and Data</h2>
+        <h2>6. Privacy & Data</h2>
         <p>
-          Your data (location, queries, etc.) is handled according to our <b>[Privacy Policy]</b>.
-        </p>
-        <p>
-          We do not sell your personal information. Some anonymized weather queries may be used to improve service or
-          analytics.
+          Your data (location, search history, etc.) is handled under our <b>Privacy Policy</b>. We do not sell personal data. 
+          Some anonymized information may be used for analytics.
         </p>
 
         <h2>7. Termination</h2>
-        <p>We reserve the right to suspend or terminate your access if:</p>
-        <ul>
-          <li>You violate these Terms</li>
-          <li>Fraud or abuse is detected</li>
-          <li>We discontinue or significantly alter the service</li>
-        </ul>
+        <p>
+          We may suspend or terminate accounts if users violate these Terms, commit fraud, or misuse services.
+        </p>
 
         <h2>8. Limitation of Liability</h2>
         <p>
-          VietCloud does not guarantee 100% accurate forecasts or uninterrupted service. You use VietCloud at your own
-          risk.
+          VietCloud aims for accurate forecasts but does not guarantee 100% reliability. Users assume all risk 
+          when using weather data for travel or decision-making.
         </p>
         <p>We are not liable for:</p>
         <ul>
-          <li>Loss from decisions based on our forecasts</li>
-          <li>External travel issues</li>
+          <li>Losses due to reliance on forecasts</li>
+          <li>Travel disruptions</li>
           <li>Indirect or consequential damages</li>
         </ul>
 
         <h2>9. Governing Law</h2>
         <p>
-          For users in Vietnam: governed by Vietnamese law. <br />
-          For international users: governed by the laws of England and Wales. <br />
-          Any disputes will be resolved by competent courts in your jurisdiction or ours.
+          For Vietnam-based users: governed by Vietnamese law. <br/>
+          For international users: governed by English law. <br/>
+          Any disputes will be settled in competent courts.
         </p>
 
         <h2>10. Contact Us</h2>
-        <p>Have questions? Reach out at <a href="mailto:support@vietcloud.app">support@vietcloud.app</a></p>
+        <p>
+          Questions? Contact us at <a href="mailto:support@vietcloud.app">support@vietcloud.app</a>
+        </p>
       `,
     };
   },
@@ -132,7 +118,7 @@ export default {
   padding: 20px;
 }
 
-/* Nút Return: xanh, bo tròn, to */
+/* Back button */
 .back-btn {
   background-color: #1976d2;
   color: white;
