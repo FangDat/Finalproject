@@ -1,4 +1,4 @@
-/* Bố cục tổng thể Settings giống Home */
+/* Bố cục tổng thể */
 .settings-container {
   display: flex;
   min-height: 100vh;
@@ -6,31 +6,27 @@
 }
 
 /* Sidebar trái */
-.sidebar-left {
+.settings-sidebar-left {
   width: 220px;
   background: #fff;
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 0 20px 20px 0;
 }
-
-.logo {
+.settings-logo {
   font-size: 1.5rem;
   margin-bottom: 20px;
 }
-
-.logo a {
+.settings-logo a {
   text-decoration: none;
   color: inherit;
 }
-
-.nav-menu {
+.settings-nav-menu {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
-.nav-btn {
+.settings-nav-btn {
   padding: 10px;
   border-radius: 8px;
   background: #f8f9fa;
@@ -39,12 +35,10 @@
   border: none;
   transition: all 0.2s ease;
 }
-
-.nav-btn:hover {
+.settings-nav-btn:hover {
   background: #e2e6ea;
 }
-
-.nav-btn.active {
+.settings-nav-btn.active {
   background: #007bff;
   color: white;
 }
@@ -57,26 +51,22 @@
   flex-direction: column;
   gap: 20px;
 }
-
-.card {
+.settings-card {
   background: #fff;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
-
-.section-title {
+.settings-section-title {
   margin-bottom: 10px;
   font-weight: bold;
 }
-
-.unit-group {
+.settings-unit-group {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
-.unit-btn {
+.settings-unit-btn {
   padding: 8px 16px;
   margin: 4px;
   border: 1.5px solid #d1d5db;
@@ -88,15 +78,13 @@
   transition: all 0.25s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
-
-.unit-btn:hover {
+.settings-unit-btn:hover {
   background: #f0f4ff;
   border-color: #3b82f6;
   transform: translateY(-2px);
   box-shadow: 0 3px 6px rgba(0,0,0,0.12);
 }
-
-.unit-btn.active {
+.settings-unit-btn.active {
   background: #3b82f6;
   color: white;
   border-color: #2563eb;
@@ -104,7 +92,7 @@
 }
 
 /* Toggle đẹp hơn cho Notifications & General */
-.toggle-item {
+.settings-toggle-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -115,19 +103,17 @@
   cursor: pointer;
   transition: background 0.25s ease;
 }
-
-.toggle-item:hover {
+.settings-toggle-item:hover {
   background: #eef2ff;
 }
-
-.check {
+.settings-check {
   font-size: 18px;
   color: #22c55e;
   font-weight: bold;
 }
 
 /* Sidebar phải */
-.sidebar-right {
+.settings-sidebar-right {
   width: 250px;
   background: #fff;
   padding: 20px;
@@ -139,18 +125,14 @@
   gap: 16px;
   text-align: center;
 }
-
-.pricing-box {
+.settings-pricing-box {
   margin-top: 15px;
   padding: 15px;
   border-radius: 8px;
   background: #f1f3ff;
   text-align: center;
 }
-
-
-
-.btn-signup {
+.settings-btn-signup {
   display: inline-block;
   width: 100%;
   padding: 12px;
@@ -159,44 +141,13 @@
   font-size: 16px;
   font-weight: bold;
   border: 2px solid #0077b6;
-  border-radius: 30px; /* bo tròn giống các nút khác */
+  border-radius: 30px;
   cursor: pointer;
   margin-top: 10px;
   text-align: center;
   transition: all 0.3s ease;
 }
-
-.btn-signup:hover {
+.settings-btn-signup:hover {
   background: #0077b6;
   color: #fff;
-}
-
-
-/* common.css - style tái sử dụng */
-.card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 16px;
-  margin: 12px 0;
-}
-
-.button {
-  background: #4f46e5;
-  color: #fff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.button:hover {
-  background: #3730a3;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 12px;
 }

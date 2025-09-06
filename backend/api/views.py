@@ -1,16 +1,13 @@
 import requests
 import datetime
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.hashers import check_password
 from .models import User
 from .serializers import UserSerializer
-import pytz
 
-# ---------------------------
-# SIGNUP
-# ---------------------------
+
+# --------------------------- SIGNUP ---------------------------
 @api_view(['POST'])
 def signup(request):
     serializer = UserSerializer(data=request.data)
@@ -19,9 +16,8 @@ def signup(request):
         return Response({"message": "User created successfully"}, status=201)
     return Response(serializer.errors, status=400)
 
-# ---------------------------
-# LOGIN
-# ---------------------------
+
+# --------------------------- LOGIN ---------------------------
 @api_view(['POST'])
 def login(request):
     username = request.data.get("username")
@@ -46,54 +42,102 @@ def login(request):
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=404)
 
-# ---------------------------
-# LOGOUT
-# ---------------------------
+
+# --------------------------- LOGOUT ---------------------------
 @api_view(['POST'])
 def logout(request):
     request.session.flush()
     return Response({"message": "Logged out successfully"})
 
-# ---------------------------
-# CHECK PREMIUM
-# ---------------------------
+
+# --------------------------- CHECK PREMIUM ---------------------------
 @api_view(['GET'])
 def check_premium(request):
     is_premium = request.session.get('is_premium', False)
     return Response({"is_premium": is_premium})
 
-# ---------------------------
-# GET WEATHER (dùng local timezone theo city)
-# ---------------------------
+
+# --------------------------- Helper: Get City ---------------------------
+def get_city_from_coordinates(lat, lon, geocode_key):
+    geocode_url = f"https://api.opencagedata.com/geocode/v1/json?q={lat}+{lon}&key={geocode_key}&language=vi"
+    geo_resp = requests.get(geocode_url).json()
+
+    if geo_resp.get("results"):
+        components = geo_resp["results"][0]["components"]
+        # Ưu tiên city-level
+        city_name = (
+            components.get("city")
+            or components.get("town")
+            or components.get("municipality")
+            or components.get("county")           # thêm county cho case Hải Châu
+            or components.get("state_district")   # fallback cho vài tỉnh VN
+            or components.get("state")
+            or components.get("region")
+            or components.get("country")
+        )
+        return city_name
+    return None
+
+
+# --------------------------- GET WEATHER ---------------------------
 @api_view(['GET'])
 def get_weather(request):
-    api_key = "49d2545d1cdff8820a039e6e2f451ffc"
-    city = "Seoul"  # có thể đổi bằng query param trong request sau này
+    api_key = "49d2545d1cdff8820a039e6e2f451ffc"  # OpenWeather key
+    geocode_key = "4d1a2b6f3a1c4fb6a37b9a2efb1f6a3e"  # OpenCage key
+
+    city = request.GET.get("city")
+    lat = request.GET.get("lat")
+    lon = request.GET.get("lon")
 
     try:
-        # 1️⃣ Thời tiết hiện tại
-        current_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={api_key}"
+        city_name = None
+
+        # ---------------- HTML5 GEOLOCATION ----------------
+        if lat and lon:
+            # OpenWeather
+            current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"
+            forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&appid={api_key}"
+
+            # Lấy city-level
+            city_name = get_city_from_coordinates(lat, lon, geocode_key)
+
+        # ---------------- SEARCH BOX ----------------
+        else:
+            if not city:
+                return Response({"error": "Cần city hoặc lat/lon"}, status=400)
+
+            city_name = city
+            current_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={api_key}"
+            forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&units=metric&appid={api_key}"
+
+        # ---------------- CURRENT WEATHER ----------------
         current_resp = requests.get(current_url)
         current_data = current_resp.json()
-        if current_resp.status_code != 200:
-            return Response({"error": "Không lấy được dữ liệu thời tiết hiện tại", "details": current_data}, status=400)
 
-        # Lấy timezone offset (giây) từ OpenWeather
-        timezone_offset = current_data.get("timezone", 0)  # vd: +7200 cho UTC+2
+        if current_resp.status_code != 200:
+            return Response({"error": "Không lấy được dữ liệu thời tiết", "details": current_data}, status=400)
+
+        timezone_offset = current_data.get("timezone", 0)
         offset = datetime.timedelta(seconds=timezone_offset)
         tz = datetime.timezone(offset)
-
-        # Giờ hiện tại ở city
         now = datetime.datetime.now(tz)
 
-        # 2️⃣ Forecast 5 ngày / 3h
-        forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&units=metric&appid={api_key}"
+        # Nếu search box thì dùng OpenWeather "name"
+        if not (lat and lon):
+            city_name = current_data.get("name", city_name)
+
+        # Fix riêng cho Đà Nẵng
+        if city_name and city_name.lower() in ["turan", "tourane", "da nang"]:
+            city_name = "Đà Nẵng"
+
+        # ---------------- FORECAST ----------------
         forecast_resp = requests.get(forecast_url)
         forecast_data = forecast_resp.json()
+
         if forecast_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu forecast", "details": forecast_data}, status=400)
 
-        # Lấy 5 mốc giờ forecast tiếp theo sau giờ hiện tại (local city)
+        # 5 mốc giờ tới
         upcoming_hours = []
         for item in forecast_data['list']:
             dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
@@ -107,23 +151,25 @@ def get_weather(request):
             if len(upcoming_hours) >= 5:
                 break
 
-        # Lấy chance_of_rain hiện tại (từ forecast gần nhất)
+        # Chance of rain
         chance_of_rain = 0
         for item in forecast_data['list']:
             dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
             dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
             if dt_local > now:
-                chance_of_rain = item.get("pop", 0) * 100  # pop: 0~1
+                chance_of_rain = item.get("pop", 0) * 100
                 break
 
-        # Forecast 3 ngày tiếp theo
+        # Forecast 3 ngày
         daily_forecast = {}
         for item in forecast_data['list']:
             dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
             dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
             day_str = dt_local.date().isoformat()
+
             if day_str not in daily_forecast:
                 daily_forecast[day_str] = {"temps": [], "condition": item['weather'][0]['main'].lower()}
+
             daily_forecast[day_str]["temps"].append(item['main']['temp'])
 
         daily_forecast_list = []
@@ -134,11 +180,12 @@ def get_weather(request):
                 "temp": f"{int(max(info['temps']))}/{int(min(info['temps']))}"
             })
 
+        # ---------------- RESULT ----------------
         result = {
-            "location": f"{current_data['name']}, {current_data['sys']['country']}",
+            "location": f"{city_name}, {current_data['sys']['country']}",
             "temperature": current_data['main']['temp'],
             "humidity": current_data['main']['humidity'],
-            "condition": current_data['weather'][0]['description'],
+            "condition": current_data['weather'][0]['main'].lower(),
             "wind_speed": current_data['wind']['speed'],
             "chance_of_rain": round(chance_of_rain),
             "upcoming_hours": upcoming_hours,
@@ -150,9 +197,6 @@ def get_weather(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-
-
-
 
 
 

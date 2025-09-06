@@ -14,7 +14,16 @@
     <main class="main-content">
       <!-- Thanh trên cùng -->
       <header class="top-bar">
-        <input type="text" placeholder="Search city..." class="search-bar" />
+        <div class="search-container">
+          <input
+            type="text"
+            v-model="searchQuery"
+            @keyup.enter="fetchWeather(searchQuery)"
+            placeholder="Search city..."
+            class="search-bar"
+          />
+          <span class="search-icon" @click="fetchWeather(searchQuery)">🔍</span>
+        </div>
         <router-link to="/login" class="btn-login">Login</router-link>
       </header>
 
@@ -30,7 +39,7 @@
         </div>
       </section>
 
-      <!-- Dự báo trong ngày -->
+      <!-- Forecast trong ngày -->
       <section class="card">
         <h3 class="section-title">Today's Forecast</h3>
         <div class="forecast-today">
@@ -69,7 +78,9 @@
       >
         <div>{{ day.day }}</div>
         <img :src="getDayIcon(day.icon)" class="forecast-icon" />
-        <div>{{ day.temp.split('/').map(t => Math.round(t)).join('/') }}</div>
+        <div>
+          {{ day.temp.split('/').map(t => Math.round(t)).join('/') }}
+        </div>
       </div>
       <p class="premium-text">
         Want forecast for 7 days? → Sign up for VietCloud premium now!
@@ -84,7 +95,8 @@ export default {
   name: "Home",
   data() {
     return {
-      city: "Da Nang",
+      searchQuery: "",
+      city: "Loading...",
       temperature: null,
       chanceOfRain: "0%",
       realFeel: null,
@@ -98,7 +110,7 @@ export default {
     };
   },
   methods: {
-    // Icon phân biệt ngày/đêm (dùng cho hiện tại + today forecast)
+    // --- Icon logic ban ngày / ban đêm ---
     getIconSrc(iconName, timeStr = null) {
       let hour = null;
       if (timeStr) {
@@ -110,7 +122,6 @@ export default {
       } else {
         hour = new Date().getHours();
       }
-
       const isNight = hour !== null && (hour >= 18 || hour < 7);
 
       if (iconName.includes("cloud")) {
@@ -126,26 +137,16 @@ export default {
       if (iconName.includes("rain")) {
         return require("@/assets/rain.png");
       }
-
       try {
         return require(`@/assets/${iconName}.png`);
       } catch {
         return require("@/assets/clouds.png");
       }
     },
-
-    // Icon mặc định ban ngày (cho 3-day forecast)
     getDayIcon(iconName) {
-      if (iconName.includes("cloud")) {
-        return require("@/assets/clouds.png");
-      }
-      if (iconName.includes("clear")) {
-        return require("@/assets/clear.png");
-      }
-      if (iconName.includes("rain")) {
-        return require("@/assets/rain.png");
-      }
-
+      if (iconName.includes("cloud")) return require("@/assets/clouds.png");
+      if (iconName.includes("clear")) return require("@/assets/clear.png");
+      if (iconName.includes("rain")) return require("@/assets/rain.png");
       try {
         return require(`@/assets/${iconName}.png`);
       } catch {
@@ -153,9 +154,13 @@ export default {
       }
     },
 
-    async fetchWeather() {
+    // --- Fetch thời tiết từ backend ---
+    async fetchWeather(city = "") {
       try {
-        const response = await fetch("http://localhost:8000/api/weather/");
+        let url = city
+          ? `http://localhost:8000/api/weather/?city=${city}`
+          : "http://localhost:8000/api/weather/";
+        const response = await fetch(url);
         const data = await response.json();
 
         if (response.ok) {
@@ -163,50 +168,92 @@ export default {
           this.temperature = data.temperature;
           this.realFeel = data.temperature;
           this.wind = data.wind_speed;
-          this.chanceOfRain =
-            data.chance_of_rain !== undefined
-              ? data.chance_of_rain + "%"
-              : "0%";
+          this.chanceOfRain = data.chance_of_rain
+            ? data.chance_of_rain + "%"
+            : "0%";
           this.condition = data.condition;
 
-          // Giờ local từ upcoming_hours
+          // icon chính
           let localHour = null;
-          if (data.upcoming_hours && data.upcoming_hours.length > 0) {
+          if (data.upcoming_hours?.length > 0) {
             localHour = parseInt(
               data.upcoming_hours[0].time.split(" ")[1].split(":")[0],
               10
             );
           }
-
-          // Icon hiện tại (có phân biệt ngày/đêm)
           this.weatherIcon = this.getIconSrc(
             data.condition.toLowerCase(),
             localHour !== null ? localHour + ":00" : null
           );
 
-          // Forecast hôm nay
+          // forecast hôm nay
           this.forecastToday = data.upcoming_hours.map((item) => ({
             time: item.time.split(" ")[1].slice(0, 5),
             temp: item.temp,
             icon: item.condition.toLowerCase(),
           }));
 
-          // Forecast 3 ngày (icon ban ngày mặc định)
+          // forecast 3 ngày
           this.forecast3days = data.daily_forecast.map((item) => ({
             day: item.day,
             temp: item.temp,
             icon: item.condition.toLowerCase(),
           }));
         } else {
-          console.error("Lỗi fetch weather:", data);
+          alert(data.error || "Không lấy được dữ liệu thời tiết");
         }
       } catch (err) {
-        console.error("Không thể lấy dữ liệu thời tiết:", err);
+        alert("Không thể kết nối đến server");
+        console.error(err);
       }
     },
+
+    // --- Lấy thời tiết theo tọa độ ---
+    getWeatherByLocation(lat, lon) {
+      fetch(`http://localhost:8000/api/weather/?lat=${lat}&lon=${lon}`)
+        .then((res) => res.json())
+        .then((data) => {
+          this.city = data.location;
+          this.temperature = data.temperature;
+          this.realFeel = data.temperature;
+          this.wind = data.wind_speed;
+          this.chanceOfRain = data.chance_of_rain
+            ? data.chance_of_rain + "%"
+            : "0%";
+          this.condition = data.condition;
+
+          this.weatherIcon = this.getIconSrc(data.condition.toLowerCase());
+
+          this.forecastToday = data.upcoming_hours.map((item) => ({
+            time: item.time.split(" ")[1].slice(0, 5),
+            temp: item.temp,
+            icon: item.condition.toLowerCase(),
+          }));
+
+          this.forecast3days = data.daily_forecast.map((item) => ({
+            day: item.day,
+            temp: item.temp,
+            icon: item.condition.toLowerCase(),
+          }));
+        })
+        .catch((err) => console.error("Error location weather:", err));
+    },
   },
+
+  // --- Khi load trang ---
   mounted() {
-    this.fetchWeather();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          this.getWeatherByLocation(pos.coords.latitude, pos.coords.longitude);
+        },
+        () => {
+          this.fetchWeather(); // fallback city
+        }
+      );
+    } else {
+      this.fetchWeather();
+    }
   },
 };
 </script>

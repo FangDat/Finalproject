@@ -189,3 +189,26 @@ a,
   text-decoration: none !important;
   color: inherit;
 }
+
+.search-container {
+  position: relative;
+  width: 500px; /* dài hơn */
+}
+
+.search-bar {
+  width: 100%;
+  padding: 12px 45px 12px 20px; /* chừa chỗ cho icon */
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.search-icon {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #2196f3;
+  cursor: pointer;
+}
