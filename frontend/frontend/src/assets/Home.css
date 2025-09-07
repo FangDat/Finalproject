@@ -212,3 +212,9 @@ a,
   color: #2196f3;
   cursor: pointer;
 }
+
+
+.suggestions { position:absolute; top:40px; left:0; right:0; background:#fff; border:1px solid #ddd; z-index:50; max-height:240px; overflow:auto; list-style:none; padding:0; margin:4px 0 0 0; }
+.suggestion-item { padding:8px 12px; cursor:pointer; }
+.suggestion-item:hover { background:#f2f2f2; }
+

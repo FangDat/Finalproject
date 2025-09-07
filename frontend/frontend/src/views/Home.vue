@@ -14,15 +14,29 @@
     <main class="main-content">
       <!-- Thanh trên cùng -->
       <header class="top-bar">
-        <div class="search-container">
+        <div class="search-container" style="position:relative;">
           <input
             type="text"
             v-model="searchQuery"
-            @keyup.enter="fetchWeather(searchQuery)"
+            @input="onSearchInput"
+            @keyup.enter="onEnterSearch"
             placeholder="Search city..."
             class="search-bar"
+            autocomplete="off"
           />
-          <span class="search-icon" @click="fetchWeather(searchQuery)">🔍</span>
+          <span class="search-icon" @click="onClickSearch">🔍</span>
+
+          <!-- Suggestions dropdown -->
+          <ul v-if="showSuggestions && suggestions.length" class="suggestions">
+            <li
+              v-for="(s, idx) in suggestions"
+              :key="idx"
+              @click="selectSuggestion(s)"
+              class="suggestion-item"
+            >
+              {{ s.name }} <small v-if="!s.is_vn">· {{ s.raw }}</small>
+            </li>
+          </ul>
         </div>
         <router-link to="/login" class="btn-login">Login</router-link>
       </header>
@@ -96,6 +110,9 @@ export default {
   data() {
     return {
       searchQuery: "",
+      suggestions: [],
+      showSuggestions: false,
+      suggestTimer: null,
       city: "Loading...",
       temperature: null,
       chanceOfRain: "0%",
@@ -154,51 +171,81 @@ export default {
       }
     },
 
-    // --- Fetch thời tiết từ backend ---
+    // --- Autocomplete handling ---
+    onSearchInput() {
+      // debounce requests
+      this.showSuggestions = false;
+      if (this.suggestTimer) clearTimeout(this.suggestTimer);
+      const q = this.searchQuery.trim();
+      if (!q) {
+        this.suggestions = [];
+        return;
+      }
+      this.suggestTimer = setTimeout(() => {
+        this.fetchSuggestions(q);
+      }, 300);
+    },
+
+    async fetchSuggestions(q) {
+      try {
+        const res = await fetch(
+          `http://localhost:8000/api/autocomplete/?q=${encodeURIComponent(q)}`
+        );
+        const arr = await res.json();
+        if (Array.isArray(arr)) {
+          this.suggestions = arr;
+          this.showSuggestions = arr.length > 0;
+        } else {
+          this.suggestions = [];
+          this.showSuggestions = false;
+        }
+      } catch (err) {
+        console.error("Autocomplete error", err);
+        this.suggestions = [];
+        this.showSuggestions = false;
+      }
+    },
+
+    selectSuggestion(s) {
+      this.searchQuery = s.name;
+      this.showSuggestions = false;
+      if (s.lat && s.lon) {
+        this.getWeatherByLocation(s.lat, s.lon);
+      } else {
+        // fallback: search by text
+        this.fetchWeather(s.name);
+      }
+    },
+
+    onEnterSearch() {
+      // if there is a visible suggestion and first suggestion matches exactly, use it
+      if (
+        this.suggestions.length > 0 &&
+        this.suggestions[0].name.toLowerCase() === this.searchQuery.trim().toLowerCase()
+      ) {
+        this.selectSuggestion(this.suggestions[0]);
+        return;
+      }
+      // otherwise search by text
+      this.fetchWeather(this.searchQuery.trim());
+      this.showSuggestions = false;
+    },
+
+    onClickSearch() {
+      this.onEnterSearch();
+    },
+
+    // --- Fetch thời tiết từ backend (by city text) ---
     async fetchWeather(city = "") {
       try {
         let url = city
-          ? `http://localhost:8000/api/weather/?city=${city}`
+          ? `http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`
           : "http://localhost:8000/api/weather/";
         const response = await fetch(url);
         const data = await response.json();
 
         if (response.ok) {
-          this.city = data.location;
-          this.temperature = data.temperature;
-          this.realFeel = data.temperature;
-          this.wind = data.wind_speed;
-          this.chanceOfRain = data.chance_of_rain
-            ? data.chance_of_rain + "%"
-            : "0%";
-          this.condition = data.condition;
-
-          // icon chính
-          let localHour = null;
-          if (data.upcoming_hours?.length > 0) {
-            localHour = parseInt(
-              data.upcoming_hours[0].time.split(" ")[1].split(":")[0],
-              10
-            );
-          }
-          this.weatherIcon = this.getIconSrc(
-            data.condition.toLowerCase(),
-            localHour !== null ? localHour + ":00" : null
-          );
-
-          // forecast hôm nay
-          this.forecastToday = data.upcoming_hours.map((item) => ({
-            time: item.time.split(" ")[1].slice(0, 5),
-            temp: item.temp,
-            icon: item.condition.toLowerCase(),
-          }));
-
-          // forecast 3 ngày
-          this.forecast3days = data.daily_forecast.map((item) => ({
-            day: item.day,
-            temp: item.temp,
-            icon: item.condition.toLowerCase(),
-          }));
+          this.applyWeatherData(data);
         } else {
           alert(data.error || "Không lấy được dữ liệu thời tiết");
         }
@@ -213,30 +260,49 @@ export default {
       fetch(`http://localhost:8000/api/weather/?lat=${lat}&lon=${lon}`)
         .then((res) => res.json())
         .then((data) => {
-          this.city = data.location;
-          this.temperature = data.temperature;
-          this.realFeel = data.temperature;
-          this.wind = data.wind_speed;
-          this.chanceOfRain = data.chance_of_rain
-            ? data.chance_of_rain + "%"
-            : "0%";
-          this.condition = data.condition;
-
-          this.weatherIcon = this.getIconSrc(data.condition.toLowerCase());
-
-          this.forecastToday = data.upcoming_hours.map((item) => ({
-            time: item.time.split(" ")[1].slice(0, 5),
-            temp: item.temp,
-            icon: item.condition.toLowerCase(),
-          }));
-
-          this.forecast3days = data.daily_forecast.map((item) => ({
-            day: item.day,
-            temp: item.temp,
-            icon: item.condition.toLowerCase(),
-          }));
+          if (data.error) {
+            alert(data.error);
+            return;
+          }
+          this.applyWeatherData(data);
         })
         .catch((err) => console.error("Error location weather:", err));
+    },
+
+    applyWeatherData(data) {
+      this.city = data.location;
+      this.temperature = data.temperature;
+      this.realFeel = data.temperature;
+      this.wind = data.wind_speed;
+      this.chanceOfRain = data.chance_of_rain ? data.chance_of_rain + "%" : "0%";
+      this.condition = data.condition;
+
+      // icon chính
+      let localHour = null;
+      if (data.upcoming_hours?.length > 0) {
+        localHour = parseInt(
+          data.upcoming_hours[0].time.split(" ")[1].split(":")[0],
+          10
+        );
+      }
+      this.weatherIcon = this.getIconSrc(
+        data.condition.toLowerCase(),
+        localHour !== null ? localHour + ":00" : null
+      );
+
+      // forecast hôm nay
+      this.forecastToday = (data.upcoming_hours || []).map((item) => ({
+        time: item.time.split(" ")[1].slice(0, 5),
+        temp: item.temp,
+        icon: item.condition.toLowerCase(),
+      }));
+
+      // forecast 3 ngày
+      this.forecast3days = (data.daily_forecast || []).map((item) => ({
+        day: item.day,
+        temp: item.temp,
+        icon: item.condition.toLowerCase(),
+      }));
     },
   },
 
@@ -259,3 +325,5 @@ export default {
 </script>
 
 <style src="@/assets/Home.css"></style>
+
+

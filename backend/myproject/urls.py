@@ -24,7 +24,9 @@ urlpatterns = [
     path('api/login/', views.login, name="login"),
     path('api/logout/', views.logout, name="logout"),
     path('api/check-premium/', views.check_premium, name="check_premium"),
-    path('api/weather/', views.get_weather, name="get_weather"),  # 👈 endpoint thời tiết mới
+    path('api/weather/', views.get_weather, name="get_weather"),  # weather endpoint
+    path('api/autocomplete/', views.autocomplete, name="autocomplete"),  # NEW autocomplete
 ]
+
 
 # check check check
