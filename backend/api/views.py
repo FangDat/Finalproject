@@ -64,13 +64,12 @@ def get_city_from_coordinates(lat, lon, geocode_key):
 
     if geo_resp.get("results"):
         components = geo_resp["results"][0]["components"]
-        # Ưu tiên city-level
         city_name = (
             components.get("city")
             or components.get("town")
             or components.get("municipality")
-            or components.get("county")           # thêm county cho case Hải Châu
-            or components.get("state_district")   # fallback cho vài tỉnh VN
+            or components.get("county")
+            or components.get("state_district")
             or components.get("state")
             or components.get("region")
             or components.get("country")
@@ -79,11 +78,28 @@ def get_city_from_coordinates(lat, lon, geocode_key):
     return None
 
 
+# --------------------------- Helper: Clean City ---------------------------
+def clean_city_name(raw_name):
+    if not raw_name:
+        return None
+    for prefix in ["Thành phố ", "Tỉnh ", "Thủ đô "]:
+        if raw_name.startswith(prefix):
+            raw_name = raw_name.replace(prefix, "")
+    # Fix riêng một số case thường gặp
+    mapping = {
+        "Hanoi": "Hà Nội",
+        "Ho Chi Minh City": "TP. Hồ Chí Minh",
+        "Da Nang": "Đà Nẵng",
+        "Haiphong": "Hải Phòng"
+    }
+    return mapping.get(raw_name, raw_name.strip())
+
+
 # --------------------------- GET WEATHER ---------------------------
 @api_view(['GET'])
 def get_weather(request):
-    api_key = "49d2545d1cdff8820a039e6e2f451ffc"  # OpenWeather key
-    geocode_key = "4d1a2b6f3a1c4fb6a37b9a2efb1f6a3e"  # OpenCage key
+    api_key = "49d2545d1cdff8820a039e6e2f451ffc"   # OpenWeather key
+    geocode_key = "c173e9b1e4c14ee3845dfa894f82a9c7"  # OpenCage key
 
     city = request.GET.get("city")
     lat = request.GET.get("lat")
@@ -94,11 +110,8 @@ def get_weather(request):
 
         # ---------------- HTML5 GEOLOCATION ----------------
         if lat and lon:
-            # OpenWeather
             current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"
             forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&appid={api_key}"
-
-            # Lấy city-level
             city_name = get_city_from_coordinates(lat, lon, geocode_key)
 
         # ---------------- SEARCH BOX ----------------
@@ -106,7 +119,10 @@ def get_weather(request):
             if not city:
                 return Response({"error": "Cần city hoặc lat/lon"}, status=400)
 
-            city_name = city
+            # Ưu tiên OpenCage để lấy tên tiếng Việt
+            geo_city = get_city_from_coordinates(city, "", geocode_key) if city else None
+            city_name = geo_city or city
+
             current_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={api_key}"
             forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&units=metric&appid={api_key}"
 
@@ -122,13 +138,12 @@ def get_weather(request):
         tz = datetime.timezone(offset)
         now = datetime.datetime.now(tz)
 
-        # Nếu search box thì dùng OpenWeather "name"
-        if not (lat and lon):
-            city_name = current_data.get("name", city_name)
+        # Nếu search box mà chưa có city_name → lấy từ OpenWeather
+        if not (lat and lon) and not city_name:
+            city_name = current_data.get("name")
 
-        # Fix riêng cho Đà Nẵng
-        if city_name and city_name.lower() in ["turan", "tourane", "da nang"]:
-            city_name = "Đà Nẵng"
+        # Clean city name
+        city_name = clean_city_name(city_name)
 
         # ---------------- FORECAST ----------------
         forecast_resp = requests.get(forecast_url)
@@ -182,7 +197,7 @@ def get_weather(request):
 
         # ---------------- RESULT ----------------
         result = {
-            "location": f"{city_name}, {current_data['sys']['country']}",
+            "location": city_name,
             "temperature": current_data['main']['temp'],
             "humidity": current_data['main']['humidity'],
             "condition": current_data['weather'][0]['main'].lower(),
@@ -197,8 +212,6 @@ def get_weather(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-
-
 
 
 # from django.shortcuts import render
