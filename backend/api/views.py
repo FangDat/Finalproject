@@ -8,9 +8,9 @@ from .models import User
 from .serializers import UserSerializer
 import logging
 
-# Setup logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+
 
 # --------------------------- SIGNUP ---------------------------
 @api_view(['POST'])
@@ -62,7 +62,7 @@ def check_premium(request):
     return Response({"is_premium": is_premium})
 
 
-# --------------------------- Helpers for geocoding + cleaning ---------------------------
+# --------------------------- Helpers ---------------------------
 def strip_country_suffix(formatted):
     if not formatted:
         return formatted
@@ -76,15 +76,25 @@ def clean_city_name(raw_name):
     if not raw_name:
         return None
     raw = str(raw_name).strip()
-    prefixes = [
-        "Thành phố ", "Thành phố", "Tp. ", "Tp ", "TP. ", "TP ",
-        "Tỉnh ", "Tỉnh", "Thủ đô ", "Phường ", "Xã ", "Quận ",
-        "Huyện ", "Thị xã "
-    ]
+    prefixes = ["Thành phố ", "Tp. ", "Tp ", "TP. ", "TP ", "Tỉnh ", "Thủ đô "]
     for p in prefixes:
         if raw.startswith(p):
             raw = raw[len(p):].strip()
     return raw
+
+
+def build_display_name(comps, fallback):
+    district = comps.get("suburb") or comps.get("city_district") or comps.get("county")
+    city = comps.get("city") or comps.get("town")
+    state = comps.get("state") or comps.get("province")
+
+    if district and city:
+        return f"{clean_city_name(district)}, {clean_city_name(city)}"
+    if district and state:
+        return f"{clean_city_name(district)}, {clean_city_name(state)}"
+    if city and state:
+        return f"{clean_city_name(city)}, {clean_city_name(state)}"
+    return clean_city_name(fallback)
 
 
 # --------------------------- Autocomplete ---------------------------
@@ -111,49 +121,73 @@ def autocomplete(request):
         score = 0
         if comps.get("country_code", "").lower() == "vn":
             score += 10
-        main_keys = ["state", "province", "region", "county", "city", "town", "village", "municipality"]
+        main_keys = ["city", "town", "village", "municipality", "county", "state", "province", "region"]
         lower_q = q.lower()
         for k in main_keys:
             v = comps.get(k)
             if v and lower_q in str(v).lower():
                 score += 5
-        formatted = r.get("formatted", "")
-        if formatted and lower_q == formatted.lower():
-            score += 20
         return score
 
+    def get_place_rank(comps):
+        if comps.get("city") or comps.get("town"):
+            return 2
+        if comps.get("county") or comps.get("city_district") or comps.get("district"):
+            return 3
+        if comps.get("suburb") or comps.get("village") or comps.get("ward"):
+            return 4
+        return 5
+
+    exact_matches = []
     scored = []
     for r in results:
         geometry = r.get("geometry", {})
-        formatted = r.get("formatted", "")
         comps = r.get("components", {})
-        display = (comps.get("state") or comps.get("province") or comps.get("region")
-                   or comps.get("city") or comps.get("town") or formatted)
+        display = build_display_name(comps, r.get("formatted"))
         display = strip_country_suffix(display)
-        display = clean_city_name(display) or strip_country_suffix(formatted) or formatted
-        lat = geometry.get("lat")
-        lon = geometry.get("lng")
-        is_vn = (comps.get("country_code", "").lower() == "vn")
-        scored.append((score_result(r), {
-            "name": display,
-            "lat": lat,
-            "lon": lon,
-            "is_vn": is_vn,
-            "raw": formatted
-        }))
 
-    scored.sort(key=lambda x: x[0], reverse=True)
+        if display.lower() == q.lower():
+            exact_matches.append({
+                "name": display,
+                "lat": geometry.get("lat"),
+                "lon": geometry.get("lng"),
+                "is_vn": (comps.get("country_code", "").lower() == "vn"),
+                "raw": r.get("formatted", "")
+            })
+        else:
+            rank = get_place_rank(comps)
+            scored.append((
+                rank,
+                score_result(r),
+                {
+                    "name": display,
+                    "lat": geometry.get("lat"),
+                    "lon": geometry.get("lng"),
+                    "is_vn": (comps.get("country_code", "").lower() == "vn"),
+                    "raw": r.get("formatted", "")
+                }
+            ))
+
+    scored.sort(key=lambda x: (x[0], -x[1]))
+    suggestions = []
     seen = set()
-    for _score, item in scored:
-        if not item["name"]:
-            continue
+
+    for item in exact_matches:
+        key = item["name"].lower()
+        if key not in seen:
+            seen.add(key)
+            suggestions.append(item)
+        if len(suggestions) >= 8:
+            break
+
+    for _, _, item in scored:
+        if len(suggestions) >= 8:
+            break
         key = item["name"].lower()
         if key in seen:
             continue
         seen.add(key)
         suggestions.append(item)
-        if len(suggestions) >= 8:
-            break
 
     return Response(suggestions)
 
@@ -162,14 +196,13 @@ def autocomplete(request):
 def get_city_from_coordinates(lat, lon, geocode_key):
     geocode_url = f"https://api.opencagedata.com/geocode/v1/json?q={lat}+{lon}&key={geocode_key}&language=vi"
     geo_resp = requests.get(geocode_url).json()
+
     if geo_resp.get("results"):
         for r in geo_resp["results"]:
             comps = r.get("components", {})
-            name = (comps.get("state") or comps.get("province")
-                    or comps.get("region") or comps.get("city")
-                    or comps.get("town"))
-            if name:
-                return clean_city_name(name)
+            display = build_display_name(comps, r.get("formatted"))
+            if display:
+                return strip_country_suffix(display)
         return strip_country_suffix(geo_resp["results"][0].get("formatted"))
     return None
 
@@ -183,94 +216,77 @@ def get_weather(request):
     city_input = request.GET.get("city")
     lat = request.GET.get("lat")
     lon = request.GET.get("lon")
+    name = request.GET.get("name")  # Tên hiển thị frontend gửi lên
 
     try:
         city_name = None
-
-        # HTML5 GEOLOCATION
         if lat and lon:
-            city_name = get_city_from_coordinates(lat, lon, geocode_key)
+            if name:
+                city_name = name
+            else:
+                city_name = get_city_from_coordinates(lat, lon, geocode_key)
+            city_name = strip_country_suffix(city_name)
 
-        # SEARCH BOX
         else:
             if not city_input:
                 return Response({"error": "Cần city hoặc lat/lon"}, status=400)
 
-            city_encoded = quote(city_input.strip())
-            geocode_url = f"https://api.opencagedata.com/geocode/v1/json?q={city_encoded}&key={geocode_key}&language=vi&limit=10"
+            geocode_url = f"https://api.opencagedata.com/geocode/v1/json?q={quote(city_input.strip())}&key={geocode_key}&language=vi&limit=10"
             geo_resp = requests.get(geocode_url).json()
+
             if not geo_resp.get("results"):
                 return Response({"error": f"Không tìm thấy địa điểm '{city_input}'"}, status=404)
 
-            # --- Chọn kết quả đúng tỉnh/thành ---
-            chosen = None
-            ui = city_input.strip().lower()
-            for r in geo_resp["results"]:
-                comps = r.get("components", {})
-                for k in ("state", "province", "region", "county", "city", "town"):
-                    v = comps.get(k)
-                    if v and ui in str(v).lower():
-                        chosen = r
-                        break
-                if chosen:
-                    break
-
-            if not chosen:
-                # fallback nếu không match
-                chosen = geo_resp["results"][0]
-
+            chosen = geo_resp["results"][0]
             geometry = chosen.get("geometry", {})
-            lat = geometry.get("lat")
-            lon = geometry.get("lng")
+            lat, lon = geometry.get("lat"), geometry.get("lng")
             comps = chosen.get("components", {})
-            city_name = (comps.get("state") or comps.get("province") or comps.get("region")
-                         or comps.get("city") or comps.get("town") or chosen.get("formatted"))
-            city_name = clean_city_name(city_name)
+            city_name = build_display_name(comps, chosen.get("formatted"))
+            city_name = strip_country_suffix(city_name)
 
-        # DEBUG LOG
-        logger.debug(f"City chosen: {city_name}, lat={lat}, lon={lon}")
-        print(f"[DEBUG] City chosen: {city_name}, lat={lat}, lon={lon}")
+            logger.debug(f"City chosen: {city_name}, lat={lat}, lon={lon}")
+            print(f"[DEBUG] City chosen: {city_name}, lat={lat}, lon={lon}")
 
         if not lat or not lon:
             return Response({"error": "Không lấy được tọa độ cho địa điểm"}, status=400)
 
+        # Call OpenWeather
         current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"
         forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&appid={api_key}"
-        print(f"[DEBUG] OpenWeather current URL: {current_url}")
 
-        # Current weather
         current_resp = requests.get(current_url)
         current_data = current_resp.json()
         if current_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu thời tiết", "details": current_data}, status=400)
 
-        # Timezone
         timezone_offset = current_data.get("timezone", 0)
         offset = datetime.timedelta(seconds=timezone_offset)
         tz = datetime.timezone(offset)
         now = datetime.datetime.now(tz)
 
-        # Forecast
         forecast_resp = requests.get(forecast_url)
         forecast_data = forecast_resp.json()
         if forecast_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu forecast", "details": forecast_data}, status=400)
 
-        # 5 upcoming hours
-        upcoming_hours = []
+        # Forecast processing
+        upcoming_hours, daily_forecast = [], {}
         for item in forecast_data.get('list', []):
             dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
             dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
-            if dt_local > now:
+
+            if dt_local > now and len(upcoming_hours) < 5:
                 upcoming_hours.append({
                     "time": dt_local.strftime("%Y-%m-%d %H:%M"),
                     "temp": item['main']['temp'],
                     "condition": item['weather'][0]['main'].lower()
                 })
-            if len(upcoming_hours) >= 5:
-                break
 
-        # Chance of rain
+            day_str = dt_local.date().isoformat()
+            if day_str not in daily_forecast:
+                daily_forecast[day_str] = {"temps": [], "condition": item['weather'][0]['main'].lower()}
+            daily_forecast[day_str]["temps"].append(item['main']['temp'])
+
         chance_of_rain = 0
         for item in forecast_data.get('list', []):
             dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
@@ -278,16 +294,6 @@ def get_weather(request):
             if dt_local > now:
                 chance_of_rain = item.get("pop", 0) * 100
                 break
-
-        # 3-day forecast
-        daily_forecast = {}
-        for item in forecast_data.get('list', []):
-            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
-            day_str = dt_local.date().isoformat()
-            if day_str not in daily_forecast:
-                daily_forecast[day_str] = {"temps": [], "condition": item['weather'][0]['main'].lower()}
-            daily_forecast[day_str]["temps"].append(item['main']['temp'])
 
         daily_forecast_list = []
         for day, info in list(daily_forecast.items())[:3]:
@@ -313,6 +319,8 @@ def get_weather(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+
 
 
 # from django.shortcuts import render

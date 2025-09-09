@@ -46,7 +46,7 @@
         <div>
           <h1 class="city">{{ city }}</h1>
           <p class="rain">Chance of rain: {{ chanceOfRain }}</p>
-          <h2 class="temperature">{{ Math.round(temperature) }}°C</h2>
+          <h2 class="temperature">{{ temperature !== null ? Math.round(temperature) + '°C' : '—' }}</h2>
         </div>
         <div class="weather-icon">
           <img :src="weatherIcon" alt="Weather Icon" />
@@ -57,11 +57,7 @@
       <section class="card">
         <h3 class="section-title">Today's Forecast</h3>
         <div class="forecast-today">
-          <div
-            v-for="(item, index) in forecastToday"
-            :key="index"
-            class="forecast-item"
-          >
+          <div v-for="(item, index) in forecastToday" :key="index" class="forecast-item">
             <p>{{ item.time }}</p>
             <img :src="getIconSrc(item.icon, item.time)" class="forecast-icon" />
             <p>{{ Math.round(item.temp) }}°C</p>
@@ -73,8 +69,8 @@
       <section class="card">
         <h3 class="section-title">Air Condition</h3>
         <div class="air-grid">
-          <div>🌡️ Real feel: {{ Math.round(realFeel) }}°C</div>
-          <div>💨 Wind: {{ Math.round(wind) }} km/h</div>
+          <div>🌡️ Real feel: {{ realFeel ? Math.round(realFeel) + '°C' : '—' }}</div>
+          <div>💨 Wind: {{ wind ? Math.round(wind) + ' km/h' : '—' }}</div>
           <div>👁️ Visibility: {{ visibility }} km</div>
           <div>🌞 UV index: {{ uvIndex }}</div>
           <div>💧 Chance of rain: {{ chanceOfRain }}</div>
@@ -85,16 +81,10 @@
     <!-- Sidebar phải -->
     <aside class="sidebar-right">
       <h3 class="section-title">3-Day Forecast</h3>
-      <div
-        v-for="(day, index) in forecast3days"
-        :key="index"
-        class="forecast-3day"
-      >
+      <div v-for="(day, index) in forecast3days" :key="index" class="forecast-3day">
         <div>{{ day.day }}</div>
         <img :src="getDayIcon(day.icon)" class="forecast-icon" />
-        <div>
-          {{ day.temp.split('/').map(t => Math.round(t)).join('/') }}
-        </div>
+        <div>{{ day.temp.split('/').map(t => Math.round(t)).join('/') }}</div>
       </div>
       <p class="premium-text">
         Want forecast for 7 days? → Sign up for VietCloud premium now!
@@ -173,17 +163,17 @@ export default {
 
     // --- Autocomplete handling ---
     onSearchInput() {
-      // debounce requests
-      this.showSuggestions = false;
       if (this.suggestTimer) clearTimeout(this.suggestTimer);
       const q = this.searchQuery.trim();
       if (!q) {
         this.suggestions = [];
+        this.showSuggestions = false;
         return;
       }
+      // debounce nhanh hơn (100ms)
       this.suggestTimer = setTimeout(() => {
         this.fetchSuggestions(q);
-      }, 300);
+      }, 100);
     },
 
     async fetchSuggestions(q) {
@@ -208,17 +198,15 @@ export default {
 
     selectSuggestion(s) {
       this.searchQuery = s.name;
-      this.showSuggestions = false;
+      this.showSuggestions = false; // ẩn dropdown
       if (s.lat && s.lon) {
-        this.getWeatherByLocation(s.lat, s.lon);
+        this.getWeatherByLocation(s.lat, s.lon, s.name);
       } else {
-        // fallback: search by text
         this.fetchWeather(s.name);
       }
     },
 
     onEnterSearch() {
-      // if there is a visible suggestion and first suggestion matches exactly, use it
       if (
         this.suggestions.length > 0 &&
         this.suggestions[0].name.toLowerCase() === this.searchQuery.trim().toLowerCase()
@@ -226,9 +214,8 @@ export default {
         this.selectSuggestion(this.suggestions[0]);
         return;
       }
-      // otherwise search by text
       this.fetchWeather(this.searchQuery.trim());
-      this.showSuggestions = false;
+      this.showSuggestions = false; // ẩn dropdown khi Enter
     },
 
     onClickSearch() {
@@ -246,6 +233,7 @@ export default {
 
         if (response.ok) {
           this.applyWeatherData(data);
+          this.showSuggestions = false; // ẩn dropdown khi thành công
         } else {
           alert(data.error || "Không lấy được dữ liệu thời tiết");
         }
@@ -255,9 +243,10 @@ export default {
       }
     },
 
-    // --- Lấy thời tiết theo tọa độ ---
-    getWeatherByLocation(lat, lon) {
-      fetch(`http://localhost:8000/api/weather/?lat=${lat}&lon=${lon}`)
+    getWeatherByLocation(lat, lon, name = null) {
+      let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
+      if (name) url += `&name=${encodeURIComponent(name)}`;
+      fetch(url)
         .then((res) => res.json())
         .then((data) => {
           if (data.error) {
@@ -265,12 +254,13 @@ export default {
             return;
           }
           this.applyWeatherData(data);
+          this.showSuggestions = false; // ẩn dropdown khi thành công
         })
         .catch((err) => console.error("Error location weather:", err));
     },
 
     applyWeatherData(data) {
-      this.city = data.location;
+      this.city = data.location || this.searchQuery;
       this.temperature = data.temperature;
       this.realFeel = data.temperature;
       this.wind = data.wind_speed;
@@ -306,7 +296,6 @@ export default {
     },
   },
 
-  // --- Khi load trang ---
   mounted() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -314,7 +303,7 @@ export default {
           this.getWeatherByLocation(pos.coords.latitude, pos.coords.longitude);
         },
         () => {
-          this.fetchWeather(); // fallback city
+          this.fetchWeather(); // fallback
         }
       );
     } else {
@@ -325,5 +314,3 @@ export default {
 </script>
 
 <style src="@/assets/Home.css"></style>
-
-
