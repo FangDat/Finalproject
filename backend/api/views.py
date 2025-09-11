@@ -34,32 +34,15 @@ def login(request):
     try:
         user = User.objects.get(username=username)
         if check_password(password, user.password):
-            request.session['user_id'] = str(user._id)
-            request.session['username'] = user.username
-            request.session['is_premium'] = getattr(user, 'is_premium', False)
             return Response({
                 "message": "Login successful",
                 "user": user.username,
-                "is_premium": request.session['is_premium']
+                "is_premium": getattr(user, 'is_premium', False)
             })
         else:
             return Response({"error": "Invalid password"}, status=400)
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=404)
-
-
-# --------------------------- LOGOUT ---------------------------
-@api_view(['POST'])
-def logout(request):
-    request.session.flush()
-    return Response({"message": "Logged out successfully"})
-
-
-# --------------------------- CHECK PREMIUM ---------------------------
-@api_view(['GET'])
-def check_premium(request):
-    is_premium = request.session.get('is_premium', False)
-    return Response({"is_premium": is_premium})
 
 
 # --------------------------- Helpers ---------------------------

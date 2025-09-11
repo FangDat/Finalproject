@@ -22,8 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/signup/', views.signup, name="signup"),
     path('api/login/', views.login, name="login"),
-    path('api/logout/', views.logout, name="logout"),
-    path('api/check-premium/', views.check_premium, name="check_premium"),
+    # path('api/logout/', views.logout, name="logout"),
+    # path('api/check-premium/', views.check_premium, name="check_premium"),
     path('api/weather/', views.get_weather, name="get_weather"),  # weather endpoint
     path('api/autocomplete/', views.autocomplete, name="autocomplete"),  # NEW autocomplete
 ]
