@@ -1,19 +1,71 @@
+# backend/api/views.py
 import requests
 import datetime
 from urllib.parse import quote
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from django.contrib.auth.hashers import check_password
-from .models import User
-from .serializers import UserSerializer
 import logging
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.exceptions import AuthenticationFailed
+
+from django.contrib.auth.hashers import check_password
+from django.utils import timezone
+
+from .models import User, RevokedToken
+from .serializers import UserSerializer
+from .authentication import CustomJWTAuthentication
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
-# --------------------------- SIGNUP ---------------------------
+# ---------------------------
+# Custom TokenObtainPairSerializer
+# ---------------------------
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Override validate để dùng custom User model (MongoDB) thay vì authenticate()
+    """
+    def validate(self, attrs):
+        username = attrs.get(self.username_field) or attrs.get("username")
+        password = attrs.get("password")
+
+        if not username or not password:
+            raise AuthenticationFailed("Username and password required")
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise AuthenticationFailed("No active account found with the given credentials")
+
+        if not check_password(password, user.password):
+            raise AuthenticationFailed("No active account found with the given credentials")
+
+        refresh = self.get_token(user)
+        data = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "username": user.username,
+            "is_premium": bool(getattr(user, "is_premium", False)),
+            "user_id": str(user._id),  # MongoDB _id
+        }
+        return data
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+
+# ---------------------------
+# SIGNUP
+# ---------------------------
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def signup(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
@@ -22,8 +74,11 @@ def signup(request):
     return Response(serializer.errors, status=400)
 
 
-# --------------------------- LOGIN ---------------------------
+# ---------------------------
+# LOGIN
+# ---------------------------
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login(request):
     username = request.data.get("username")
     password = request.data.get("password")
@@ -34,10 +89,14 @@ def login(request):
     try:
         user = User.objects.get(username=username)
         if check_password(password, user.password):
+            refresh = RefreshToken.for_user(user)
             return Response({
                 "message": "Login successful",
                 "user": user.username,
-                "is_premium": getattr(user, 'is_premium', False)
+                "is_premium": bool(getattr(user, 'is_premium', False)),
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "user_id": str(user._id)
             })
         else:
             return Response({"error": "Invalid password"}, status=400)
@@ -45,7 +104,61 @@ def login(request):
         return Response({"error": "User not found"}, status=404)
 
 
-# --------------------------- Helpers ---------------------------
+# ---------------------------
+# LOGOUT (revoke refresh token)
+# ---------------------------
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def logout(request):
+    token_str = request.data.get("refresh")
+    if not token_str:
+        return Response({"error": "refresh token required"}, status=400)
+
+    try:
+        rt = RefreshToken(token_str)
+        jti = rt.get("jti")
+        exp = rt.get("exp")
+        user_id = rt.get("user_id") or None
+
+        expires_at = None
+        if exp:
+            try:
+                expires_at = datetime.datetime.fromtimestamp(int(exp), tz=timezone.utc)
+            except Exception:
+                expires_at = None
+
+        if jti:
+            if not RevokedToken.objects.filter(jti=jti).exists():
+                RevokedToken.objects.create(
+                    jti=jti,
+                    token=token_str,
+                    user_id=str(user_id) if user_id else None,
+                    expires_at=expires_at
+                )
+            return Response({"message": "Token revoked"}, status=200)
+        else:
+            return Response({"error": "Token has no jti"}, status=400)
+    except Exception as e:
+        logger.exception("logout failed")
+        return Response({"error": "Invalid token", "details": str(e)}, status=400)
+
+
+# ---------------------------
+# CHECK PREMIUM
+# ---------------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_premium(request):
+    user = request.user
+    return Response({
+        "username": user.username,
+        "is_premium": bool(getattr(user, 'is_premium', False))
+    })
+
+
+# ---------------------------
+# Helpers / Weather / Autocomplete
+# ---------------------------
 def strip_country_suffix(formatted):
     if not formatted:
         return formatted
@@ -80,7 +193,6 @@ def build_display_name(comps, fallback):
     return clean_city_name(fallback)
 
 
-# --------------------------- Autocomplete ---------------------------
 @api_view(['GET'])
 def autocomplete(request):
     geocode_key = "c173e9b1e4c14ee3845dfa894f82a9c7"
@@ -123,13 +235,13 @@ def autocomplete(request):
 
     exact_matches = []
     scored = []
+
     for r in results:
         geometry = r.get("geometry", {})
         comps = r.get("components", {})
         display = build_display_name(comps, r.get("formatted"))
         display = strip_country_suffix(display)
-
-        if display.lower() == q.lower():
+        if display and display.lower() == q.lower():
             exact_matches.append({
                 "name": display,
                 "lat": geometry.get("lat"),
@@ -139,17 +251,13 @@ def autocomplete(request):
             })
         else:
             rank = get_place_rank(comps)
-            scored.append((
-                rank,
-                score_result(r),
-                {
-                    "name": display,
-                    "lat": geometry.get("lat"),
-                    "lon": geometry.get("lng"),
-                    "is_vn": (comps.get("country_code", "").lower() == "vn"),
-                    "raw": r.get("formatted", "")
-                }
-            ))
+            scored.append((rank, score_result(r), {
+                "name": display,
+                "lat": geometry.get("lat"),
+                "lon": geometry.get("lng"),
+                "is_vn": (comps.get("country_code", "").lower() == "vn"),
+                "raw": r.get("formatted", "")
+            }))
 
     scored.sort(key=lambda x: (x[0], -x[1]))
     suggestions = []
@@ -166,7 +274,7 @@ def autocomplete(request):
     for _, _, item in scored:
         if len(suggestions) >= 8:
             break
-        key = item["name"].lower()
+        key = (item.get("name") or "").lower()
         if key in seen:
             continue
         seen.add(key)
@@ -175,11 +283,9 @@ def autocomplete(request):
     return Response(suggestions)
 
 
-# --------------------------- Helper: Get City from Coordinates ---------------------------
 def get_city_from_coordinates(lat, lon, geocode_key):
     geocode_url = f"https://api.opencagedata.com/geocode/v1/json?q={lat}+{lon}&key={geocode_key}&language=vi"
     geo_resp = requests.get(geocode_url).json()
-
     if geo_resp.get("results"):
         for r in geo_resp["results"]:
             comps = r.get("components", {})
@@ -190,7 +296,9 @@ def get_city_from_coordinates(lat, lon, geocode_key):
     return None
 
 
-# --------------------------- GET WEATHER ---------------------------
+# ---------------------------
+# GET WEATHER
+# ---------------------------
 @api_view(['GET'])
 def get_weather(request):
     api_key = "49d2545d1cdff8820a039e6e2f451ffc"
@@ -199,7 +307,7 @@ def get_weather(request):
     city_input = request.GET.get("city")
     lat = request.GET.get("lat")
     lon = request.GET.get("lon")
-    name = request.GET.get("name")  # Tên hiển thị frontend gửi lên
+    name = request.GET.get("name")
 
     try:
         city_name = None
@@ -209,17 +317,13 @@ def get_weather(request):
             else:
                 city_name = get_city_from_coordinates(lat, lon, geocode_key)
             city_name = strip_country_suffix(city_name)
-
         else:
             if not city_input:
                 return Response({"error": "Cần city hoặc lat/lon"}, status=400)
-
             geocode_url = f"https://api.opencagedata.com/geocode/v1/json?q={quote(city_input.strip())}&key={geocode_key}&language=vi&limit=10"
             geo_resp = requests.get(geocode_url).json()
-
             if not geo_resp.get("results"):
                 return Response({"error": f"Không tìm thấy địa điểm '{city_input}'"}, status=404)
-
             chosen = geo_resp["results"][0]
             geometry = chosen.get("geometry", {})
             lat, lon = geometry.get("lat"), geometry.get("lng")
@@ -227,16 +331,11 @@ def get_weather(request):
             city_name = build_display_name(comps, chosen.get("formatted"))
             city_name = strip_country_suffix(city_name)
 
-            logger.debug(f"City chosen: {city_name}, lat={lat}, lon={lon}")
-            print(f"[DEBUG] City chosen: {city_name}, lat={lat}, lon={lon}")
-
         if not lat or not lon:
             return Response({"error": "Không lấy được tọa độ cho địa điểm"}, status=400)
 
-        # Call OpenWeather
+        # Current weather
         current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"
-        forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&appid={api_key}"
-
         current_resp = requests.get(current_url)
         current_data = current_resp.json()
         if current_resp.status_code != 200:
@@ -247,12 +346,13 @@ def get_weather(request):
         tz = datetime.timezone(offset)
         now = datetime.datetime.now(tz)
 
+        # Forecast
+        forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&appid={api_key}"
         forecast_resp = requests.get(forecast_url)
         forecast_data = forecast_resp.json()
         if forecast_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu forecast", "details": forecast_data}, status=400)
 
-        # Forecast processing
         upcoming_hours, daily_forecast = [], {}
         for item in forecast_data.get('list', []):
             dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
@@ -297,13 +397,10 @@ def get_weather(request):
             "daily_forecast": daily_forecast_list,
             "source": "OpenWeather"
         }
-
         return Response(result)
-
     except Exception as e:
+        logger.exception("get_weather failed")
         return Response({"error": str(e)}, status=500)
-
-
 
 
 # from django.shortcuts import render
