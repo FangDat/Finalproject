@@ -15,11 +15,13 @@ from rest_framework_simplejwt.exceptions import AuthenticationFailed
 
 from django.contrib.auth.hashers import check_password
 from django.utils import timezone
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsPremiumUser
 
 from .models import User, RevokedToken
 from .serializers import UserSerializer
 from .authentication import CustomJWTAuthentication
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -29,8 +31,16 @@ logger.setLevel(logging.DEBUG)
 # ---------------------------
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
-    Override validate để dùng custom User model (MongoDB) thay vì authenticate()
+    Override validate để dùng custom User model (MongoDB) thay vì authenticate().
+    Chèn 'user_id' (_id) vào payload để CustomJWTAuthentication hoạt động.
     """
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Thêm user_id vào token payload
+        token['user_id'] = str(user._id)  # MongoDB _id -> str
+        return token
+
     def validate(self, attrs):
         username = attrs.get(self.username_field) or attrs.get("username")
         password = attrs.get("password")
@@ -46,6 +56,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if not check_password(password, user.password):
             raise AuthenticationFailed("No active account found with the given credentials")
 
+        # Dùng get_token để tạo JWT, payload đã có user_id
         refresh = self.get_token(user)
         data = {
             "refresh": str(refresh),
@@ -59,7 +70,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
-
 
 # ---------------------------
 # SIGNUP
@@ -90,18 +100,24 @@ def login(request):
         user = User.objects.get(username=username)
         if check_password(password, user.password):
             refresh = RefreshToken.for_user(user)
+            # Thêm user_id vào payload của refresh token và access token
+            refresh['user_id'] = str(user._id)
+            access = refresh.access_token
+            access['user_id'] = str(user._id)
+
             return Response({
                 "message": "Login successful",
                 "user": user.username,
                 "is_premium": bool(getattr(user, 'is_premium', False)),
                 "refresh": str(refresh),
-                "access": str(refresh.access_token),
+                "access": str(access),
                 "user_id": str(user._id)
             })
         else:
             return Response({"error": "Invalid password"}, status=400)
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=404)
+
 
 
 # ---------------------------
@@ -146,8 +162,44 @@ def logout(request):
 # ---------------------------
 # CHECK PREMIUM
 # ---------------------------
+# @api_view(['GET'])
+# @permission_classes([AllowAny])  # Cho phép test token mà không cần login DRF chuẩn
+# def check_premium(request):
+#     """
+#     Test API check premium: lấy token từ header Authorization và xác thực
+#     """
+#     auth_header = request.headers.get("Authorization") or request.META.get("HTTP_AUTHORIZATION")
+#     if not auth_header:
+#         return Response({"error": "Authorization header missing"}, status=401)
+
+#     try:
+#         # Token dạng "Bearer <token>"
+#         prefix, token_str = auth_header.split()
+#         if prefix.lower() != "bearer":
+#             return Response({"error": "Authorization header must start with Bearer"}, status=401)
+#     except ValueError:
+#         return Response({"error": "Invalid Authorization header"}, status=401)
+
+#     try:
+#         validated_token = CustomJWTAuthentication().get_validated_token(token_str)
+#         user = CustomJWTAuthentication().get_user(validated_token)
+#     except AuthenticationFailed as e:
+#         return Response({"error": "Token invalid or expired", "details": str(e)}, status=401)
+#     except Exception as e:
+#         return Response({"error": "Token verification failed", "details": str(e)}, status=400)
+
+#     return Response({
+#         "user_id": str(user._id),
+#         "username": user.username,
+#         "is_premium": bool(getattr(user, "is_premium", False)),
+#         "token_received": token_str
+#     })
+
+# ---------------------------
+# CHECK PREMIUM
+# ---------------------------
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsPremiumUser])
 def check_premium(request):
     user = request.user
     return Response({
@@ -401,206 +453,4 @@ def get_weather(request):
     except Exception as e:
         logger.exception("get_weather failed")
         return Response({"error": str(e)}, status=500)
-
-
-# from django.shortcuts import render
-# from rest_framework.response import Response
-# from rest_framework.decorators import api_view
-# from django.contrib.auth.hashers import check_password
-# from .models import User
-# from .serializers import UserSerializer
-
-
-# @api_view(['POST'])
-# def signup(request):
-#     serializer = UserSerializer(data=request.data)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response({"message": "User created successfully!"}, status=201)
-#     return Response(serializer.errors, status=400)
-
-
-# @api_view(['POST'])
-# def login(request):
-#     username = request.data.get("username")
-#     password = request.data.get("password")
-#     try:
-#         user = User.objects.get(username=username)
-#         if check_password(password, user.password):
-#             return Response({"message": "Login successful", "user": user.username})
-#         else:
-#             return Response({"error": "Invalid password"}, status=400)
-#     except User.DoesNotExist:
-#         return Response({"error": "User not found"}, status=404)
-
-
-# # Create your views here.
-# @api_view(['POST'])
-# def signup(request):
-#     print("DEBUG request.data:", request.data)  # 👈 in ra dữ liệu nhận được
-#     serializer = UserSerializer(data=request.data)
-#     if serializer.is_valid():
-#         user = serializer.save()
-#         return Response({"message": "User created successfully"}, status=201)
-#     else:
-#         print("DEBUG serializer.errors:", serializer.errors)  # 👈 in lỗi chi tiết
-#         return Response(serializer.errors, status=400)
-# code cu~ nhat
-
-# from django.shortcuts import render
-# from rest_framework.response import Response
-# from rest_framework.decorators import api_view
-# from django.contrib.auth.hashers import check_password, make_password
-# from .models import User
-# from .serializers import UserSerializer
-# from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
-# from django.contrib.auth.hashers import check_password
-# from django.contrib.auth import login as dj_login
-# import requests
-# import datetime
-
-# # ---------------------------
-# # SIGNUP
-# # ---------------------------
-# @api_view(['POST'])
-# def signup(request):
-#     print("DEBUG request.data:", request.data)   # 👈 in ra dữ liệu nhận được
-#     serializer = UserSerializer(data=request.data)
-#     if serializer.is_valid():
-#         user = serializer.save()
-#         return Response({"message": "User created successfully"}, status=201)
-#     else:
-#         print("DEBUG serializer.errors:", serializer.errors)  # 👈 in lỗi chi tiết
-#         return Response(serializer.errors, status=400)
-
-
-# # ---------------------------
-# # LOGIN
-# # ---------------------------
-# @api_view(['POST'])
-# def login(request):
-#     username = request.data.get("username")
-#     password = request.data.get("password")
-
-#     if not username or not password:
-#         return Response({"error": "Username and password are required"}, status=400)
-
-#     try:
-#         user = User.objects.get(username=username)
-#         if check_password(password, user.password):
-#             # ---------------------------
-#             # SESSION-BASED LOGIN
-#             # ---------------------------
-#             request.session['user_id'] = str(user._id)
-#             request.session['username'] = user.username
-#             request.session['is_premium'] = getattr(user, 'is_premium', False)
-
-#             return Response({
-#                 "message": "Login successful",
-#                 "user": user.username,
-#                 "is_premium": request.session['is_premium']
-#             })
-#         else:
-#             return Response({"error": "Invalid password"}, status=400)
-#     except User.DoesNotExist:
-#         return Response({"error": "User not found"}, status=404)
-
-
-# # ---------------------------
-# # LOGOUT
-# # ---------------------------
-# @api_view(['POST'])
-# def logout(request):
-#     """
-#     Logout user và xóa toàn bộ session.
-#     """
-#     request.session.flush()
-#     return Response({"message": "Logged out successfully"})
-
-
-# # ---------------------------
-# # CHECK PREMIUM
-# # ---------------------------
-# @api_view(['GET'])
-# def check_premium(request):
-#     """
-#     Kiểm tra user hiện tại có quyền premium hay không.
-#     Trả về: {"is_premium": True/False}
-#     """
-#     is_premium = request.session.get('is_premium', False)
-#     return Response({"is_premium": is_premium})
-
-
-# @api_view(['GET'])
-# def get_weather(request):
-#     city = "Ha Noi"
-#     api_key = "49d2545d1cdff8820a039e6e2f451ffc"  # thay bằng key của bạn
-
-#     try:
-#         # --- Current weather ---
-#         url_current = f"http://pro.openweathermap.org/data/2.5/weather?q={city},VN&units=metric&appid={api_key}"
-#         resp_current = requests.get(url_current)
-#         if resp_current.status_code != 200:
-#             return Response({"error": "Không lấy được dữ liệu thời tiết hiện tại", "details": resp_current.json()}, status=400)
-#         data_current = resp_current.json()
-
-#         result = {
-#             "location": f"{data_current['name']}, {data_current['sys']['country']}",
-#             "temperature": data_current['main']['temp'],
-#             "humidity": data_current['main']['humidity'],
-#             "condition": data_current['weather'][0]['description'],
-#             "wind_speed": data_current['wind']['speed'],
-#             "hourly_forecast": [],
-#             "daily_forecast": [],
-#             "source": "OpenWeather"
-#         }
-
-#         # --- 5 khung giờ cố định: 6,9,12,15,18 ---
-#         url_forecast = f"http://pro.openweathermap.org/data/2.5/forecast?q={city},VN&units=metric&appid={api_key}"
-#         resp_forecast = requests.get(url_forecast)
-#         if resp_forecast.status_code != 200:
-#             return Response({"error": "Không lấy được dữ liệu forecast", "details": resp_forecast.json()}, status=400)
-#         data_forecast = resp_forecast.json()
-
-#         hours_needed = [6, 9, 12, 15, 18]
-#         today = datetime.datetime.now().date()
-
-#         # Lọc forecast theo giờ cố định
-#         for item in data_forecast['list']:
-#             dt = datetime.datetime.fromtimestamp(item['dt'])
-#             if dt.date() == today and dt.hour in hours_needed:
-#                 result['hourly_forecast'].append({
-#                     "time": dt.strftime("%H:%M"),
-#                     "temp": item['main']['temp'],
-#                     "condition": item['weather'][0]['description']
-#                 })
-
-#         # Lấy dự báo 3 ngày tới (dựa vào forecast ngày hôm nay trở đi)
-#         daily_temp = {}
-#         for item in data_forecast['list']:
-#             dt = datetime.datetime.fromtimestamp(item['dt'])
-#             day_str = dt.strftime("%Y-%m-%d")
-#             if day_str not in daily_temp:
-#                 daily_temp[day_str] = {"max": item['main']['temp_max'], "min": item['main']['temp_min'], "icon": item['weather'][0]['description']}
-#             else:
-#                 daily_temp[day_str]['max'] = max(daily_temp[day_str]['max'], item['main']['temp_max'])
-#                 daily_temp[day_str]['min'] = min(daily_temp[day_str]['min'], item['main']['temp_min'])
-
-#         # Chỉ lấy 3 ngày đầu
-#         for i, (day, val) in enumerate(daily_temp.items()):
-#             if i >= 3:
-#                 break
-#             dt_obj = datetime.datetime.strptime(day, "%Y-%m-%d")
-#             result['daily_forecast'].append({
-#                 "day": dt_obj.strftime("%a"),
-#                 "icon": val['icon'],
-#                 "temp": f"{int(val['max'])}/{int(val['min'])}"
-#             })
-
-#         return Response(result)
-
-#     except Exception as e:
-#         return Response({"error": str(e)}, status=500)
-
-# code chua fix
 

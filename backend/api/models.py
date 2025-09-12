@@ -22,6 +22,11 @@ class User(models.Model):
     def id(self):
         # SimpleJWT cần user.id -> trả str
         return str(self._id)
+    
+    @property
+    def is_authenticated(self):
+        # Mặc định tất cả user đã login đều True
+        return True
 
 
 class RevokedToken(models.Model):
