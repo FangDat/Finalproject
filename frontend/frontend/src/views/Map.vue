@@ -47,7 +47,7 @@ export default {
     return {
       cities: [
         { name: "Ha Noi", time: "10:23", temp: 18, icon: "🌧️" },
-        { name: "Da Nang", time: "10:23", temp: 28, icon: "⛅" },
+        { name: "Ho Chi Minh", time: "10:23", temp: 28, icon: "⛅" },
         { name: "Da Nang", time: "10:23", temp: 36, icon: "☀️" },
       ],
     };

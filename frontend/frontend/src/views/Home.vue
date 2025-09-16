@@ -129,7 +129,7 @@ export default {
       } else {
         hour = new Date().getHours();
       }
-      const isNight = hour !== null && (hour >= 18 || hour < 7);
+      const isNight = hour !== null && (hour >= 19 || hour < 7);
 
       if (iconName.includes("cloud")) {
         return isNight

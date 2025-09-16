@@ -64,7 +64,7 @@
           password !!!
         </p>
         <div class="card-actions">
-          <button class="btn-danger" @click="handleAction('change-password')">Change password</button>
+          <button class="btn-danger" @click="openChangePassword">Change password</button>
         </div>
       </section>
 
@@ -127,6 +127,34 @@
         <router-link to="/terms">Terms & Conditions</router-link>
       </footer>
     </main>
+
+    <!-- Overlay + Change Password Modal -->
+    <div v-if="showChangePassword" class="overlay">
+      <div class="modal">
+        <h2>Set Password</h2>
+        <p class="note">
+          Password needs to be at least <b>8 characters long</b> and contain at
+          least one <b>lowercase letter</b>, one <b>uppercase letter</b>, and a
+          <b>number</b>.
+        </p>
+        <div class="form-group">
+          <label>Current Password:</label>
+          <input type="password" placeholder="Enter current password" />
+        </div>
+        <div class="form-group">
+          <label>New Password:</label>
+          <input type="password" placeholder="Enter new password" />
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password:</label>
+          <input type="password" placeholder="Re-enter new password" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" @click="closeChangePassword">Close</button>
+          <button class="btn-danger">Set password</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -136,6 +164,7 @@ export default {
   data() {
     return {
       activeTab: "basic",
+      showChangePassword: false,
     };
   },
   methods: {
@@ -148,6 +177,12 @@ export default {
     },
     handleAction(action) {
       alert(`Action triggered: ${action}`);
+    },
+    openChangePassword() {
+      this.showChangePassword = true;
+    },
+    closeChangePassword() {
+      this.showChangePassword = false;
     },
   },
 };

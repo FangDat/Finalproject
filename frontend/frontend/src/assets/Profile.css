@@ -196,3 +196,90 @@ textarea {
 .footer-links a:hover {
   text-decoration: underline;
 }
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.722);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal */
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  width: 690px;
+  max-width: 90%;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  animation: popup 0.3s ease;
+}
+
+@keyframes popup {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal h2 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.modal .note {
+  font-size: 0.9rem;
+  color: gray;
+  margin-bottom: 20px;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.form-group input {
+  width: 95%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* Modal actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+.btn-secondary {
+  padding: 10px 18px;
+  background: #e0e0e0;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn-secondary:hover {
+  background: #d5d5d5;
+}
+
+.modal-actions .btn-danger {
+  margin-right: 15px; /* 👈 dịch riêng nút Set password sang trái */
+}
