@@ -78,7 +78,7 @@ body {
 }
 
 .btn-login {
-  width: 100%;
+  width: 50%;
   padding: 12px;
   background: #FFA500; /* orange */
   color: white;
@@ -91,6 +91,9 @@ body {
 .btn-login:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+.btn-login:hover {
+  background: #d48a00;
 }
 
 

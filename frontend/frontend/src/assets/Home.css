@@ -55,8 +55,8 @@
 }
 .btn-signup {
   padding: 8px 16px;
-  width: 180px !important;
-  background: #ff9800;
+  width: 150px !important;
+  background: #2196f3;
   color: white;
   border: none;
   border-radius: 20px;
@@ -69,29 +69,108 @@
   flex: 1;
   padding: 30px;
 }
+
+/* Thanh trên cùng */
 .top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* Hello text */
+.hello-text {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #2196f3;
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Search box */
+.search-container {
+  position: relative;
+  width: 460px;
+  flex-grow: 1;
 }
 .search-bar {
-  padding: 12px 20px;
+  width: 100%;
+  padding: 12px 45px 12px 20px;
   border-radius: 30px;
   border: 1px solid #ccc;
-  width: 80%;
   font-size: 1rem;
 }
-.btn-login {
+.search-icon {
+  position: absolute;
+  right: -35px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #2196f3;
+  cursor: pointer;
+}
+
+/* Auth buttons */
+.auth-btn {
+  flex-shrink: 0;
+  min-width: 200px; /* Giữ chỗ trống kể cả khi Hello mất đi */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 6px; /* Hạ nút xuống để bằng với search bar */
+}
+.auth-btn button {
+  width: 200px;
   padding: 12px 20px;
-  text-align: center;
   border: none;
-  width: 180px !important;
   border-radius: 30px;
-  background: #2196f3;
-  color: white;
   cursor: pointer;
   font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* Login (cam) */
+.btn-login {
+  background: #ff9800;
+  color: #fff;
+}
+.btn-login:hover {
+  background: #e68900;
+}
+
+/* Logout (đỏ) */
+.btn-logout {
+  background: #f44336;
+  color: #fff;
+}
+.btn-logout:hover {
+  background: #d32f2f;
+}
+
+/* Suggestions dropdown */
+.suggestions {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  z-index: 50;
+  max-height: 240px;
+  overflow: auto;
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 0;
+}
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.suggestion-item:hover {
+  background: #f2f2f2;
 }
 
 /* Weather chính */
@@ -120,7 +199,7 @@
   color: #666;
 }
 
-/* Card chung */
+/* Card */
 .card {
   margin-top: 25px;
   background: white;
@@ -134,7 +213,7 @@
   font-weight: bold;
 }
 
-/* Forecast trong ngày */
+/* Forecast hôm nay */
 .forecast-today {
   display: flex;
   justify-content: space-around;
@@ -163,7 +242,7 @@
   font-size: 1.1rem;
 }
 
-/* Navigation buttons */
+/* Nav buttons */
 .nav-btn {
   background: #f4f4f4;
   border: none;
@@ -181,7 +260,7 @@
   transform: translateX(4px);
 }
 
-/* Remove underline for links */
+/* Remove underline */
 a,
 .router-link,
 .router-link-active,
@@ -189,32 +268,3 @@ a,
   text-decoration: none !important;
   color: inherit;
 }
-
-.search-container {
-  position: relative;
-  width: 500px; /* dài hơn */
-}
-
-.search-bar {
-  width: 100%;
-  padding: 12px 45px 12px 20px; /* chừa chỗ cho icon */
-  border-radius: 30px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.search-icon {
-  position: absolute;
-  right: 0px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.5rem;
-  color: #2196f3;
-  cursor: pointer;
-}
-
-
-.suggestions { position:absolute; top:40px; left:0; right:0; background:#fff; border:1px solid #ddd; z-index:50; max-height:240px; overflow:auto; list-style:none; padding:0; margin:4px 0 0 0; }
-.suggestion-item { padding:8px 12px; cursor:pointer; }
-.suggestion-item:hover { background:#f2f2f2; }
-

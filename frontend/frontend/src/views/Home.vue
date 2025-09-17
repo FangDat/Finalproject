@@ -14,31 +14,32 @@
     <main class="main-content">
       <!-- Thanh trên cùng -->
       <header class="top-bar">
-        <div class="search-container" style="position:relative;">
-          <input
-            type="text"
-            v-model="searchQuery"
-            @input="onSearchInput"
-            @keyup.enter="onEnterSearch"
-            placeholder="Search city..."
-            class="search-bar"
-            autocomplete="off"
-          />
-          <span class="search-icon" @click="onClickSearch">🔍</span>
+        <div class="left-header">
+          <div class="search-container" style="position:relative;">
+            <input
+              type="text"
+              v-model="searchQuery"
+              @input="onSearchInput"
+              @keyup.enter="onEnterSearch"
+              placeholder="Search city..."
+              class="search-bar"
+              autocomplete="off"
+            />
+            <span class="search-icon" @click="onClickSearch">🔍</span>
 
-          <!-- Suggestions dropdown -->
-          <ul v-if="showSuggestions && suggestions.length" class="suggestions">
-            <li
-              v-for="(s, idx) in suggestions"
-              :key="idx"
-              @click="selectSuggestion(s)"
-              class="suggestion-item"
-            >
-              {{ s.name }} <small v-if="!s.is_vn">· {{ s.raw }}</small>
-            </li>
-          </ul>
+            <!-- Suggestions dropdown -->
+            <ul v-if="showSuggestions && suggestions.length" class="suggestions">
+              <li
+                v-for="(s, idx) in suggestions"
+                :key="idx"
+                @click="selectSuggestion(s)"
+                class="suggestion-item"
+              >
+                {{ s.name }} <small v-if="!s.is_vn">· {{ s.raw }}</small>
+              </li>
+            </ul>
+          </div>
         </div>
-        <router-link to="/login" class="btn-login">Login</router-link>
       </header>
 
       <!-- Thông tin thời tiết -->
@@ -46,7 +47,9 @@
         <div>
           <h1 class="city">{{ city }}</h1>
           <p class="rain">Chance of rain: {{ chanceOfRain }}</p>
-          <h2 class="temperature">{{ temperature !== null ? Math.round(temperature) + '°C' : '—' }}</h2>
+          <h2 class="temperature">
+            {{ temperature !== null ? Math.round(temperature) + '°C' : '—' }}
+          </h2>
         </div>
         <div class="weather-icon">
           <img :src="weatherIcon" alt="Weather Icon" />
@@ -57,7 +60,11 @@
       <section class="card">
         <h3 class="section-title">Today's Forecast</h3>
         <div class="forecast-today">
-          <div v-for="(item, index) in forecastToday" :key="index" class="forecast-item">
+          <div
+            v-for="(item, index) in forecastToday"
+            :key="index"
+            class="forecast-item"
+          >
             <p>{{ item.time }}</p>
             <img :src="getIconSrc(item.icon, item.time)" class="forecast-icon" />
             <p>{{ Math.round(item.temp) }}°C</p>
@@ -81,10 +88,16 @@
     <!-- Sidebar phải -->
     <aside class="sidebar-right">
       <h3 class="section-title">3-Day Forecast</h3>
-      <div v-for="(day, index) in forecast3days" :key="index" class="forecast-3day">
+      <div
+        v-for="(day, index) in forecast3days"
+        :key="index"
+        class="forecast-3day"
+      >
         <div>{{ day.day }}</div>
         <img :src="getDayIcon(day.icon)" class="forecast-icon" />
-        <div>{{ day.temp.split('/').map(t => Math.round(t)).join('/') }}</div>
+        <div>
+          {{ day.temp.split('/').map(t => Math.round(t)).join('/') }}
+        </div>
       </div>
       <p class="premium-text">
         Want forecast for 7 days? → Sign up for VietCloud premium now!
@@ -137,9 +150,7 @@ export default {
           : require("@/assets/clouds.png");
       }
       if (iconName.includes("clear")) {
-        return isNight
-          ? require("@/assets/moon.png")
-          : require("@/assets/clear.png");
+        return isNight ? require("@/assets/moon.png") : require("@/assets/clear.png");
       }
       if (iconName.includes("rain")) {
         return require("@/assets/rain.png");
@@ -170,7 +181,6 @@ export default {
         this.showSuggestions = false;
         return;
       }
-      // debounce nhanh hơn (100ms)
       this.suggestTimer = setTimeout(() => {
         this.fetchSuggestions(q);
       }, 100);
@@ -198,7 +208,7 @@ export default {
 
     selectSuggestion(s) {
       this.searchQuery = s.name;
-      this.showSuggestions = false; // ẩn dropdown
+      this.showSuggestions = false;
       if (s.lat && s.lon) {
         this.getWeatherByLocation(s.lat, s.lon, s.name);
       } else {
@@ -209,20 +219,21 @@ export default {
     onEnterSearch() {
       if (
         this.suggestions.length > 0 &&
-        this.suggestions[0].name.toLowerCase() === this.searchQuery.trim().toLowerCase()
+        this.suggestions[0].name.toLowerCase() ===
+          this.searchQuery.trim().toLowerCase()
       ) {
         this.selectSuggestion(this.suggestions[0]);
         return;
       }
       this.fetchWeather(this.searchQuery.trim());
-      this.showSuggestions = false; // ẩn dropdown khi Enter
+      this.showSuggestions = false;
     },
 
     onClickSearch() {
       this.onEnterSearch();
     },
 
-    // --- Fetch thời tiết từ backend (by city text) ---
+    // --- Fetch thời tiết ---
     async fetchWeather(city = "") {
       try {
         let url = city
@@ -233,7 +244,7 @@ export default {
 
         if (response.ok) {
           this.applyWeatherData(data);
-          this.showSuggestions = false; // ẩn dropdown khi thành công
+          this.showSuggestions = false;
         } else {
           alert(data.error || "Không lấy được dữ liệu thời tiết");
         }
@@ -244,7 +255,9 @@ export default {
     },
 
     getWeatherByLocation(lat, lon, name = null) {
-      let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
+      let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(
+        lat
+      )}&lon=${encodeURIComponent(lon)}`;
       if (name) url += `&name=${encodeURIComponent(name)}`;
       fetch(url)
         .then((res) => res.json())
@@ -254,7 +267,7 @@ export default {
             return;
           }
           this.applyWeatherData(data);
-          this.showSuggestions = false; // ẩn dropdown khi thành công
+          this.showSuggestions = false;
         })
         .catch((err) => console.error("Error location weather:", err));
     },
@@ -267,7 +280,6 @@ export default {
       this.chanceOfRain = data.chance_of_rain ? data.chance_of_rain + "%" : "0%";
       this.condition = data.condition;
 
-      // icon chính
       let localHour = null;
       if (data.upcoming_hours?.length > 0) {
         localHour = parseInt(
@@ -280,14 +292,12 @@ export default {
         localHour !== null ? localHour + ":00" : null
       );
 
-      // forecast hôm nay
       this.forecastToday = (data.upcoming_hours || []).map((item) => ({
         time: item.time.split(" ")[1].slice(0, 5),
         temp: item.temp,
         icon: item.condition.toLowerCase(),
       }));
 
-      // forecast 3 ngày
       this.forecast3days = (data.daily_forecast || []).map((item) => ({
         day: item.day,
         temp: item.temp,
@@ -303,7 +313,7 @@ export default {
           this.getWeatherByLocation(pos.coords.latitude, pos.coords.longitude);
         },
         () => {
-          this.fetchWeather(); // fallback
+          this.fetchWeather();
         }
       );
     } else {
@@ -313,4 +323,4 @@ export default {
 };
 </script>
 
-<style src="@/assets/Home.css"></style>
+<style scoped src="@/assets/Home.css"></style>

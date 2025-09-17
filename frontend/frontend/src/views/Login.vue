@@ -1,6 +1,4 @@
-
 <template>
-  
   <div class="login-container">
     <div class="login-box">
       <!-- Logo -->
@@ -41,11 +39,6 @@
         />
         <p v-if="errors.password" class="error-msg">{{ errors.password }}</p>
 
-        <!-- <div class="remember-me">
-          <input v-model="remember" type="checkbox" id="remember" />
-          <label for="remember">Remember me</label>
-        </div> -->
-
         <button class="btn-login" type="submit" :disabled="submitting">
           <span v-if="!submitting">LOG IN</span>
           <span v-else>Processing...</span>
@@ -57,13 +50,12 @@
       <hr class="divider" />
       <router-link to="/signup" class="btn-signup">Sign up for VietCloud</router-link>
       <p class="signup-text">Don't have an account</p>
-    
     </div>
   </div>
 </template>
 
 <script>
-import "../assets/Login.css";;
+import "../assets/Login.css";
 import axios from "axios";
 
 export default {
@@ -72,7 +64,6 @@ export default {
     return {
       username: "",
       password: "",
-      remember: false,
       submitting: false,
 
       // UI state
@@ -95,7 +86,7 @@ export default {
     async handleLogin() {
       this.resetErrors();
 
-      // Validate client-side đơn giản trước
+      // Validate cơ bản
       if (!this.username || !this.password) {
         if (!this.username) this.errors.username = "Please enter your username.";
         if (!this.password) this.errors.password = "Please enter your password.";
@@ -115,15 +106,13 @@ export default {
           headers: { "Content-Type": "application/json" },
         });
 
-        // Thành công (backend trả { message, user })
+        // ✅ Lấy username từ backend (res.data.user) hoặc fallback từ input
         const user = res.data?.user || this.username;
 
-        //Remember me → lưu user
-        // if (this.remember) {
-        //   localStorage.setItem("user", user);
-        // } else {
-        //   sessionStorage.setItem("user", user);
-        // }
+        // ✅ Lưu vào localStorage để App.vue nhận ra
+        localStorage.setItem("username", user);
+        localStorage.setItem("access", res.data?.access || "");
+        localStorage.setItem("refresh", res.data?.refresh || "");
 
         this.alertMessage = "Login successful! Redirecting...";
         this.alertType = "success";
@@ -131,15 +120,10 @@ export default {
         // Điều hướng về Home
         setTimeout(() => {
           this.$router.push("/");
-        }, 1200);
+        }, 800);
       } catch (err) {
-        // Map các lỗi backend hiện tại:
-        // - 404: { error: "User not found" }
-        // - 400: { error: "Invalid password" } hoặc { username: ["..."], password: ["..."] }
         if (err.response) {
           const { status, data } = err.response;
-
-          // Kiểu { username: ["..."], password: ["..."] }
           if (data && typeof data === "object" && (data.username || data.password)) {
             if (data.username?.length) this.errors.username = data.username[0];
             if (data.password?.length) this.errors.password = data.password[0];
@@ -156,12 +140,10 @@ export default {
             this.alertMessage = "Incorrect password.";
             this.alertType = "warning";
           } else {
-            // Lỗi khác
             this.alertMessage = data?.error || "Login failed. Please try again.";
             this.alertType = "error";
           }
         } else {
-          // Lỗi mạng/CORS
           this.alertMessage = "Cannot connect to server. Please try again.";
           this.alertType = "error";
         }
@@ -172,6 +154,3 @@ export default {
   },
 };
 </script>
-
-
-
