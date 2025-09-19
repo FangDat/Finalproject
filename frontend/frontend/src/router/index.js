@@ -22,18 +22,20 @@ const routes = [
     component: () => import("@/views/Settings.vue"),
   },
   { path: "/terms", name: "Terms", component: TermsAndConditions },
-  {
-    path: "/credit-card",
-    name: "CreditCard",
-    component: CreditCard,
+  { path: "/credit-card", name: "CreditCard", component: CreditCard },
+  { path: "/map", name: "Map", component: MapPage },
+  { 
+    path: "/chatbot", 
+    name: "Chatbot", 
+    component: Chatbot,
+    meta: { requiresAuth: true }   // 👈 cần login
   },
-  {
-    path: "/map",
-    name: "Map",
-    component: MapPage,
+  { 
+    path: "/profile", 
+    name: "Profile", 
+    component: Profile,
+    meta: { requiresAuth: true }   // 👈 cần login
   },
-  { path: "/chatbot", name: "Chatbot", component: Chatbot },
-  { path: "/profile", name: "Profile", component: Profile },
   { path: "/privacy", name: "Privacy", component: PrivacyPolicy },
 ];
 
@@ -41,14 +43,22 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    // Nếu dùng back/forward thì giữ nguyên vị trí
     if (savedPosition) {
       return savedPosition;
     } else {
-      // Còn khi vào route mới thì scroll lên đầu
       return { top: 0 };
     }
   },
+});
+
+// 🔐 Navigation Guard toàn cục
+router.beforeEach((to, from, next) => {
+  const username = localStorage.getItem("username");
+  if (to.matched.some(record => record.meta.requiresAuth) && !username) {
+    next("/");  // chưa login → về Home
+  } else {
+    next();
+  }
 });
 
 export default router;

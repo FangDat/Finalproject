@@ -1,18 +1,57 @@
 /* Map.css */
 .map-container {
   display: flex;
-}
-
-.sidebar-left {
-  width: 200px;
+  min-height: 100vh; /* giữ chiều cao full như Home */
+  background: linear-gradient(to bottom right, #cce7ff, #ffd9a8);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Sidebar trái (giống Home.css) */
+.sidebar-left {
+  width: 200px;
+  background: #ffffffcc;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 20px 20px 0;
+}
+
+.logo {
+  margin-bottom: 40px;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  font-size: 1.1rem;
+}
+
+.nav-btn {
+  background: #f4f4f4;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-btn:hover {
+  background: #2196f3;
+  color: #fff;
+  transform: translateX(4px);
+}
+
+/* Nội dung chính Map */
 .map-main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 30px; /* đồng bộ với Home.css */
 }
 
 /* Thanh trên cùng */
@@ -20,17 +59,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px; /* giống Home */
+  gap: 20px;
 }
 
 .search-bar {
   flex: 1;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 12px 20px;
+  border-radius: 30px; /* đồng bộ search Home */
   border: 1px solid #ccc;
-  margin-right: 8px;
+  font-size: 1rem;
 }
 
+/* Flash button */
 .btn-flash {
   padding: 8px 12px;
   border: none;
@@ -52,9 +93,9 @@
   align-items: center;
   justify-content: space-between;
   background: #fff;
-  border-radius: 8px;
-  padding: 12px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 20px; /* đồng bộ card Home */
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .city-weather-card .icon {
@@ -80,19 +121,19 @@
 .map-box {
   flex: 1;
   background: #f5f5f5;
-  border-radius: 8px;
+  border-radius: 20px; /* đồng bộ card Home */
   margin-top: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* common.css - style tái sử dụng */
+/* Common card */
 .card {
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 20px;
   margin: 12px 0;
 }
 
@@ -114,4 +155,21 @@
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 12px;
+}
+
+/* Remove underline giống Home */
+a,
+.router-link,
+.router-link-active,
+.router-link-exact-active {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* Active nav-btn (highlight xanh khi đang ở route tương ứng) */
+.sidebar-left .nav-btn.router-link-active,
+.sidebar-left .nav-btn.router-link-exact-active {
+  background: #2196f3;
+  color: #fff;
+  font-weight: bold;
 }

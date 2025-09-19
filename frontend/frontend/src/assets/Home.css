@@ -104,7 +104,7 @@
 }
 .search-icon {
   position: absolute;
-  right: -35px;
+  right: -39px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.5rem;
@@ -115,11 +115,11 @@
 /* Auth buttons */
 .auth-btn {
   flex-shrink: 0;
-  min-width: 200px; /* Giữ chỗ trống kể cả khi Hello mất đi */
+  min-width: 200px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 6px; /* Hạ nút xuống để bằng với search bar */
+  margin-top: 6px;
 }
 .auth-btn button {
   width: 200px;
@@ -259,6 +259,16 @@
   color: #fff;
   transform: translateX(4px);
 }
+
+/* Giữ màu xanh khi đang active (giống Settings) */
+/* Giữ màu xanh khi đang active */
+.sidebar-left .nav-btn.router-link-active,
+.sidebar-left .nav-btn.router-link-exact-active {
+  background: #2196f3;
+  color: #fff;
+  font-weight: bold;
+}
+
 
 /* Remove underline */
 a,

@@ -260,4 +260,4 @@ export default {
 };
 </script>
 
-<style src="@/assets/CreditCard.css"></style>
+<style scoped src="@/assets/CreditCard.css"></style>

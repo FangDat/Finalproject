@@ -6,19 +6,14 @@
       <nav class="nav-menu">
         <router-link to="/" class="nav-btn">☁️ Weather</router-link>
         <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
+        <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
         <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-        <button class="nav-btn active">👤 Profile</button>
+        <router-link to="/profile" class="nav-btn">👤 Profile</router-link>
       </nav>
     </aside>
 
     <!-- Nội dung chính -->
     <main class="main-content">
-      <!-- Thanh trên cùng -->
-      <header class="top-bar">
-        <h1 class="section-title">Personal info</h1>
-        <router-link to="/" class="btn-logout">Logout</router-link>
-      </header>
-
       <!-- Tabs -->
       <div class="tab-bar">
         <button class="tab" @click="scrollTo('basic')" :class="{ active: activeTab === 'basic' }">
@@ -48,8 +43,8 @@
         <div class="info-row">
           <label>Username</label>
           <div class="inline-input">
-            <input type="text" value="abcde" readonly class="readonly-input" />
-            <span class="note">cannot be changed</span>
+            <input type="text" :value="username || 'Not logged in'" readonly class="readonly-input" />
+            <span class="note" v-if="username">cannot be changed</span>
           </div>
         </div>
       </section>
@@ -60,8 +55,7 @@
         <p>Password</p>
         <p class="note">Last change on DD/MM/YYYY</p>
         <p>
-          Protect your VietCloud account from unauthorized access. Use a strong
-          password !!!
+          Protect your VietCloud account from unauthorized access. Use a strong password !!!
         </p>
         <div class="card-actions">
           <button class="btn-danger" @click="openChangePassword">Change password</button>
@@ -77,7 +71,7 @@
           <b>This action is irreversible</b>.
         </p>
         <div class="card-actions">
-          <button class="btn-danger" @click="handleAction('delete-account')">Delete your account</button>
+          <button class="btn-danger" @click="logout">Delete your account</button>
         </div>
       </section>
 
@@ -100,8 +94,7 @@
       <section class="card">
         <h2 class="sub-title">Premium</h2>
         <p>
-          Your premium package has expired, please click the "Renew" button to
-          continue using VietCloud's exclusive features.
+          Your premium package has expired, please click the "Renew" button to continue using VietCloud's exclusive features.
         </p>
         <div class="card-actions">
           <button class="btn-primary" @click="handleAction('renew')">Renew</button>
@@ -133,9 +126,7 @@
       <div class="modal">
         <h2>Set Password</h2>
         <p class="note">
-          Password needs to be at least <b>8 characters long</b> and contain at
-          least one <b>lowercase letter</b>, one <b>uppercase letter</b>, and a
-          <b>number</b>.
+          Password needs to be at least <b>8 characters long</b> and contain at least one <b>lowercase letter</b>, one <b>uppercase letter</b>, and a <b>number</b>.
         </p>
         <div class="form-group">
           <label>Current Password:</label>
@@ -165,7 +156,15 @@ export default {
     return {
       activeTab: "basic",
       showChangePassword: false,
+      username: null,
     };
+  },
+  created() {
+    this.username = localStorage.getItem("username");
+    if (!this.username) {
+      // Nếu reload ở Profile nhưng chưa login thì đẩy về Home
+      this.$router.push("/");
+    }
   },
   methods: {
     scrollTo(section) {
@@ -184,8 +183,20 @@ export default {
     closeChangePassword() {
       this.showChangePassword = false;
     },
+    logout() {
+      // Xóa dữ liệu login
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      localStorage.removeItem("username");
+      this.username = null;
+      // Quay về Home.vue
+      this.$router.push("/");
+      // Reload lại app để reset giao diện
+      window.location.reload();
+    },
   },
 };
 </script>
 
-<style src="@/assets/Profile.css"></style>
+
+<style scoped src="@/assets/Profile.css"></style>

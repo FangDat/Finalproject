@@ -6,9 +6,12 @@
         <router-link to="/">🌤 Viet Cloud</router-link>
       </h2>
       <nav class="nav-menu">
-        <router-link to="/" class="nav-btn">☁️ Weather</router-link>
-        <router-link to="/map" class="nav-btn active">🗺️ Maps</router-link>
-        <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
+      <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
+      <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
+      <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
+      <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
+      <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
+
       </nav>
     </aside>
 
@@ -45,6 +48,7 @@ export default {
   name: "Map",
   data() {
     return {
+      username: localStorage.getItem("username") || "",
       cities: [
         { name: "Ha Noi", time: "10:23", temp: 18, icon: "🌧️" },
         { name: "Ho Chi Minh", time: "10:23", temp: 28, icon: "⛅" },
@@ -52,8 +56,13 @@ export default {
       ],
     };
   },
+  mounted() {
+    // Đồng bộ username khi login/logout
+    window.addEventListener("storage", () => {
+      this.username = localStorage.getItem("username") || "";
+    });
+  },
 };
 </script>
 
-<!-- <style src="@/assets/common.css"></style> -->
-<style src="@/assets/Map.css"></style>
+<style scoped src="@/assets/Map.css"></style>

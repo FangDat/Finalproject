@@ -6,7 +6,7 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Sidebar */
+/* Sidebar trái (đồng bộ với Home.vue) */
 .sidebar-left {
   width: 200px;
   background: #ffffffcc;
@@ -36,11 +36,19 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
-.nav-btn:hover,
-.nav-btn.active {
+/* Hover: đổi màu + lệch phải */
+.nav-btn:hover {
   background: #2196f3;
   color: #fff;
   transform: translateX(4px);
+}
+/* Active: giữ màu xanh, không trượt */
+.sidebar-left .nav-btn.router-link-active,
+.sidebar-left .nav-btn.router-link-exact-active {
+  background: #2196f3;
+  color: #fff;
+  font-weight: bold;
+  /* transform: none; */
 }
 
 /* Nội dung chính */
@@ -185,7 +193,7 @@ textarea {
 /* Footer links */
 .footer-links {
   margin-top: 30px;
-  font-size: 1.1rem; /* tăng size */
+  font-size: 1.1rem;
   text-align: center;
   font-weight: 500;
 }
@@ -194,7 +202,8 @@ textarea {
   text-decoration: none;
 }
 .footer-links a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  color: #1976d2;
 }
 
 /* Overlay */
@@ -281,5 +290,58 @@ textarea {
 }
 
 .modal-actions .btn-danger {
-  margin-right: 15px; /* 👈 dịch riêng nút Set password sang trái */
+  margin-right: 15px;
 }
+
+/* Link reset */
+a,
+.router-link,
+.router-link-active,
+.router-link-exact-active {
+  text-decoration: none !important;
+  color: inherit;
+}
+/* Sidebar trái (đồng bộ với Home.vue) */
+.sidebar-left {
+  width: 200px;
+  background: #ffffffcc;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 20px 20px 0;
+}
+.logo {
+  margin-bottom: 40px;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  font-size: 1.1rem;
+}
+.nav-btn {
+  background: #f4f4f4;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+/* Hover: đổi màu + lệch phải (kể cả active) */
+.nav-btn:hover {
+  background: #2196f3;
+  color: #fff;
+  transform: translateX(4px);
+}
+/* Active: giữ màu xanh, vẫn cho hover lệch phải */
+.sidebar-left .nav-btn.router-link-active,
+.sidebar-left .nav-btn.router-link-exact-active {
+  background: #2196f3;
+  color: #fff;
+  font-weight: bold;
+}
+

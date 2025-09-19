@@ -2,44 +2,47 @@
 .settings-container {
   display: flex;
   min-height: 100vh;
+  background: linear-gradient(to bottom right, #cce7ff, #ffd9a8);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Sidebar trái */
+/* Sidebar trái (giống Home & Map) */
 .settings-sidebar-left {
-  width: 220px;
-  background: #fff;
+  width: 200px;
+  background: #ffffffcc;
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 0 20px 20px 0;
 }
 .settings-logo {
+  margin-bottom: 40px;
+  font-weight: bold;
   font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-.settings-logo a {
-  text-decoration: none;
-  color: inherit;
 }
 .settings-nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 25px;
+  font-size: 1.1rem;
 }
 .settings-nav-btn {
-  padding: 10px;
-  border-radius: 8px;
-  background: #f8f9fa;
-  text-align: left;
-  cursor: pointer;
+  background: #f4f4f4;
   border: none;
-  transition: all 0.2s ease;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 .settings-nav-btn:hover {
-  background: #e2e6ea;
+  background: #2196f3;
+  color: #fff;
+  transform: translateX(4px);
 }
 .settings-nav-btn.active {
-  background: #007bff;
+  background: #2196f3;
   color: white;
 }
 
@@ -54,8 +57,8 @@
 .settings-card {
   background: #fff;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 20px; /* đồng bộ card Home */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 .settings-section-title {
   margin-bottom: 10px;
@@ -114,8 +117,8 @@
 
 /* Sidebar phải */
 .settings-sidebar-right {
-  width: 250px;
-  background: #fff;
+  width: 220px;
+  background: #ffffffcc;
   padding: 20px;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 20px 0 0 20px;
@@ -134,14 +137,14 @@
 }
 .settings-btn-signup {
   display: inline-block;
-  width: 100%;
-  padding: 12px;
-  background: #fff;
-  color: #0077b6;
+  width: 150px;
+  padding: 8px 16px;
+  background: #2196f3;
+  color: white;
   font-size: 16px;
   font-weight: bold;
-  border: 2px solid #0077b6;
-  border-radius: 30px;
+  border: none;
+  border-radius: 20px;
   cursor: pointer;
   margin-top: 10px;
   text-align: center;
@@ -150,4 +153,73 @@
 .settings-btn-signup:hover {
   background: #0077b6;
   color: #fff;
+}
+
+/* Bỏ gạch chân link */
+a,
+.router-link,
+.router-link-active,
+.router-link-exact-active {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* Xử lý link trong sidebar */
+.sidebar-left a {
+  text-decoration: none;   /* bỏ gạch chân */
+  color: inherit;          /* giữ nguyên màu chữ */
+}
+
+.sidebar-left a.router-link-active .nav-btn {
+  background: #2196f3;
+  color: #fff;
+  font-weight: bold;
+}
+
+.nav-menu a {
+  text-decoration: none; /* bỏ underline */
+}
+
+/* Sidebar trái (đồng bộ với Home & Map) */
+.sidebar-left {
+  width: 200px;
+  background: #ffffffcc;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 20px 20px 0;
+}
+.logo {
+  margin-bottom: 40px;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  font-size: 1.1rem;
+}
+.nav-btn {
+  background: #f4f4f4;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.nav-btn:hover {
+  background: #2196f3;
+  color: #fff;
+  transform: translateX(4px);
+}
+
+/* Giữ màu xanh khi active */
+.sidebar-left .nav-btn.router-link-active,
+.sidebar-left .nav-btn.router-link-exact-active {
+  background: #2196f3;
+  color: #fff;
+  font-weight: bold;
 }

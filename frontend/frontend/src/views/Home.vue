@@ -4,10 +4,13 @@
     <aside class="sidebar-left">
       <h2 class="logo">🌤 Viet Cloud</h2>
       <nav class="nav-menu">
-        <button class="nav-btn active">☁️ Weather</button>
+        <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
         <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
+        <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
         <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
+        <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
       </nav>
+
     </aside>
 
     <!-- Nội dung chính -->
@@ -99,10 +102,11 @@
           {{ day.temp.split('/').map(t => Math.round(t)).join('/') }}
         </div>
       </div>
-      <p class="premium-text">
-        Want forecast for 7 days? → Sign up for VietCloud premium now!
-      </p>
-      <router-link to="/signup" class="btn-signup">Sign up</router-link>
+        <p v-if="!username" class="premium-text">
+          Want forecast for 7 days? → Sign up for VietCloud premium now!
+        </p>
+      <!-- Nút signup chỉ hiện nếu chưa login -->
+      <router-link v-if="!username" to="/signup" class="btn-signup">Sign up</router-link>
     </aside>
   </div>
 </template>
@@ -112,6 +116,7 @@ export default {
   name: "Home",
   data() {
     return {
+      username: localStorage.getItem("username") || "",
       searchQuery: "",
       suggestions: [],
       showSuggestions: false,
@@ -307,6 +312,12 @@ export default {
   },
 
   mounted() {
+    // Cập nhật username khi thay đổi localStorage
+    window.addEventListener("storage", () => {
+      this.username = localStorage.getItem("username") || "";
+    });
+
+    // Lấy vị trí ban đầu
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {

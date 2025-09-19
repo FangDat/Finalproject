@@ -42,6 +42,7 @@ export default {
       localStorage.removeItem("username");
       this.username = "";
       this.$router.push("/");
+      window.location.reload();
     },
   },
   mounted() {
