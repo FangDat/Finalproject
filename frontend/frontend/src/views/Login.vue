@@ -108,9 +108,11 @@ export default {
 
         // ✅ Lấy username từ backend (res.data.user) hoặc fallback từ input
         const user = res.data?.user || this.username;
+        const email = res.data?.email || "";
 
         // ✅ Lưu vào localStorage để App.vue nhận ra
         localStorage.setItem("username", user);
+         localStorage.setItem("email", email);
         localStorage.setItem("access", res.data?.access || "");
         localStorage.setItem("refresh", res.data?.refresh || "");
 

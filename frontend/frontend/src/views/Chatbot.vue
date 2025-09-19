@@ -16,7 +16,6 @@
     <main v-if="username" class="chat-main">
       <header class="chat-header">
         <h3>🤖 Chat with <span class="brand">Viet Cloud</span></h3>
-        <button class="btn-logout" @click="logout">Logout</button>
       </header>
 
       <section class="chat-window">

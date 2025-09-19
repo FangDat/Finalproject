@@ -33,13 +33,15 @@
       <!-- Basic information -->
       <section class="card" id="basic">
         <h2 class="sub-title">Basic information</h2>
+
         <div class="info-row">
           <label>Email</label>
           <div class="inline-input">
-            <input type="text" value="abcde@gmail.com" readonly />
+            <input type="text" :value="email || 'No email found'" readonly />
             <span class="change-link">change email</span>
           </div>
         </div>
+
         <div class="info-row">
           <label>Username</label>
           <div class="inline-input">
@@ -106,7 +108,7 @@
         <h2 class="sub-title">Support</h2>
         <p>
           Need feedback or assistance? Leave a comment below or email
-          <b>abc@gmail.com</b>
+          <b>{{ email || 'support@vietcloud.com' }}</b>
         </p>
         <textarea rows="3" placeholder="Enter your message..."></textarea>
         <div class="card-actions">
@@ -157,10 +159,12 @@ export default {
       activeTab: "basic",
       showChangePassword: false,
       username: null,
+      email: null,
     };
   },
   created() {
     this.username = localStorage.getItem("username");
+    this.email = localStorage.getItem("email");
     if (!this.username) {
       // Nếu reload ở Profile nhưng chưa login thì đẩy về Home
       this.$router.push("/");
@@ -188,7 +192,9 @@ export default {
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
       localStorage.removeItem("username");
+      localStorage.removeItem("email");
       this.username = null;
+      this.email = null;
       // Quay về Home.vue
       this.$router.push("/");
       // Reload lại app để reset giao diện
@@ -197,6 +203,5 @@ export default {
   },
 };
 </script>
-
 
 <style scoped src="@/assets/Profile.css"></style>

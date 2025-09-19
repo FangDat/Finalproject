@@ -108,6 +108,7 @@ def login(request):
             return Response({
                 "message": "Login successful",
                 "user": user.username,
+                "email": getattr(user, "email", ""),
                 "is_premium": bool(getattr(user, 'is_premium', False)),
                 "refresh": str(refresh),
                 "access": str(access),
