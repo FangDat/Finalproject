@@ -20,4 +20,8 @@ urlpatterns = [
     # JWT Token endpoints (use our custom obtain view)
     path('api/token/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+        # Change password
+    path('api/change-password/', views.change_password, name="change_password"),
+
 ]

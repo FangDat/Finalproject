@@ -33,7 +33,6 @@
       <!-- Basic information -->
       <section class="card" id="basic">
         <h2 class="sub-title">Basic information</h2>
-
         <div class="info-row">
           <label>Email</label>
           <div class="inline-input">
@@ -41,7 +40,6 @@
             <span class="change-link">change email</span>
           </div>
         </div>
-
         <div class="info-row">
           <label>Username</label>
           <div class="inline-input">
@@ -56,9 +54,7 @@
         <h2 class="sub-title">Security</h2>
         <p>Password</p>
         <p class="note">Last change on DD/MM/YYYY</p>
-        <p>
-          Protect your VietCloud account from unauthorized access. Use a strong password !!!
-        </p>
+        <p>Protect your VietCloud account from unauthorized access. Use a strong password !!!</p>
         <div class="card-actions">
           <button class="btn-danger" @click="openChangePassword">Change password</button>
         </div>
@@ -95,9 +91,7 @@
       <!-- Premium -->
       <section class="card">
         <h2 class="sub-title">Premium</h2>
-        <p>
-          Your premium package has expired, please click the "Renew" button to continue using VietCloud's exclusive features.
-        </p>
+        <p>Your premium package has expired, please click the "Renew" button to continue using VietCloud's exclusive features.</p>
         <div class="card-actions">
           <button class="btn-primary" @click="handleAction('renew')">Renew</button>
         </div>
@@ -126,25 +120,35 @@
     <!-- Overlay + Change Password Modal -->
     <div v-if="showChangePassword" class="overlay">
       <div class="modal">
-        <h2>Set Password</h2>
+        <h2>Change Password</h2>
         <p class="note">
           Password needs to be at least <b>8 characters long</b> and contain at least one <b>lowercase letter</b>, one <b>uppercase letter</b>, and a <b>number</b>.
         </p>
+
         <div class="form-group">
           <label>Current Password:</label>
-          <input type="password" placeholder="Enter current password" />
+          <input type="password" v-model="current_password" placeholder="Enter current password" />
         </div>
         <div class="form-group">
           <label>New Password:</label>
-          <input type="password" placeholder="Enter new password" />
+          <input type="password" v-model="new_password" placeholder="Enter new password" />
         </div>
         <div class="form-group">
           <label>Confirm New Password:</label>
-          <input type="password" placeholder="Re-enter new password" />
+          <input type="password" v-model="confirm_password" placeholder="Re-enter new password" />
         </div>
+
+        <!-- Hiển thị thông báo -->
+        <div class="alert-box" v-if="passwordAlert" :class="{'success': passwordSuccess, 'error': !passwordSuccess}">
+          {{ passwordAlert }}
+        </div>
+
         <div class="modal-actions">
           <button class="btn-secondary" @click="closeChangePassword">Close</button>
-          <button class="btn-danger">Set password</button>
+          <button class="btn-danger" @click="submitChangePassword" :disabled="submittingPassword">
+            <span v-if="!submittingPassword">Set password</span>
+            <span v-else>Processing...</span>
+          </button>
         </div>
       </div>
     </div>
@@ -152,6 +156,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Profile",
   data() {
@@ -160,13 +166,18 @@ export default {
       showChangePassword: false,
       username: null,
       email: null,
+      current_password: "",
+      new_password: "",
+      confirm_password: "",
+      passwordAlert: "",
+      passwordSuccess: false,
+      submittingPassword: false,
     };
   },
   created() {
     this.username = localStorage.getItem("username");
     this.email = localStorage.getItem("email");
     if (!this.username) {
-      // Nếu reload ở Profile nhưng chưa login thì đẩy về Home
       this.$router.push("/");
     }
   },
@@ -174,9 +185,7 @@ export default {
     scrollTo(section) {
       this.activeTab = section;
       const el = document.getElementById(section);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      }
+      if (el) el.scrollIntoView({ behavior: "smooth" });
     },
     handleAction(action) {
       alert(`Action triggered: ${action}`);
@@ -186,19 +195,64 @@ export default {
     },
     closeChangePassword() {
       this.showChangePassword = false;
+      this.passwordAlert = "";
+      this.passwordSuccess = false;
+      this.current_password = "";
+      this.new_password = "";
+      this.confirm_password = "";
     },
     logout() {
-      // Xóa dữ liệu login
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
       localStorage.removeItem("username");
       localStorage.removeItem("email");
       this.username = null;
       this.email = null;
-      // Quay về Home.vue
       this.$router.push("/");
-      // Reload lại app để reset giao diện
       window.location.reload();
+    },
+    async submitChangePassword() {
+      this.passwordAlert = "";
+      this.passwordSuccess = false;
+      this.submittingPassword = true;
+
+      try {
+        const res = await axios.post(
+          "http://127.0.0.1:8000/api/change-password/",
+          {
+            current_password: this.current_password,
+            new_password: this.new_password,
+            confirm_password: this.confirm_password,
+          },
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+          }
+        );
+
+        if (res.status === 200 && res.data.message) {
+          this.passwordAlert = res.data.message;
+          this.passwordSuccess = true;
+
+          // Logout sau 2 giây
+          setTimeout(() => {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            localStorage.removeItem("username");
+            localStorage.removeItem("email");
+            this.$router.push("/");
+            window.location.reload();
+          }, 3000);
+        }
+      } catch (err) {
+        if (err.response?.data?.error) {
+          this.passwordAlert = err.response.data.error; // Hiện đúng lỗi từ backend
+        } else {
+          this.passwordAlert = "Unexpected error. Please try again.";
+        }
+        this.passwordSuccess = false;
+      } finally {
+        this.submittingPassword = false;
+      }
     },
   },
 };

@@ -161,6 +161,46 @@ def logout(request):
 
 
 # ---------------------------
+# CHANGE PASSWORD
+# ---------------------------
+import re
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    user = request.user
+    current_password = request.data.get("current_password", "")
+    new_password = request.data.get("new_password", "")
+    confirm_password = request.data.get("confirm_password", "")
+
+    # Kiểm tra mật khẩu hiện tại
+    if not check_password(current_password, user.password):
+        return Response({"error": "Current password is incorrect"}, status=400)
+    
+    if check_password(new_password, user.password):
+        return Response({"error": "New password cannot be the same as the old password"}, status=400)
+
+    # Validate mật khẩu mới
+    if len(new_password) < 8:
+        return Response({"error": "Password must be at least 8 characters"}, status=400)
+    if not re.search(r"[a-z]", new_password):
+        return Response({"error": "Password must contain at least one lowercase letter"}, status=400)
+    if not re.search(r"[A-Z]", new_password):
+        return Response({"error": "Password must contain at least one uppercase letter"}, status=400)
+    if not re.search(r"\d", new_password):
+        return Response({"error": "Password must contain at least one number"}, status=400)
+    if new_password != confirm_password:
+        return Response({"error": "New password and confirmation do not match"}, status=400)
+
+    # Cập nhật mật khẩu
+    user.password = new_password
+    user.save()
+
+    return Response({"message": "Password changed successfully, System automatically logged out, please log in again..."})
+
+# ---------------------------
 # CHECK PREMIUM
 # ---------------------------
 # @api_view(['GET'])
