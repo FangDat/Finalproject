@@ -52,8 +52,6 @@
       <!-- Security -->
       <section class="card" id="security">
         <h2 class="sub-title">Security</h2>
-        <p>Password</p>
-        <p class="note">Last change on DD/MM/YYYY</p>
         <p>Protect your VietCloud account from unauthorized access. Use a strong password !!!</p>
         <div class="card-actions">
           <button class="btn-danger" @click="openChangePassword">Change password</button>
@@ -69,7 +67,7 @@
           <b>This action is irreversible</b>.
         </p>
         <div class="card-actions">
-          <button class="btn-danger" @click="logout">Delete your account</button>
+          <button class="btn-danger" @click="openWarningModal">Delete your account</button>
         </div>
       </section>
 
@@ -118,40 +116,103 @@
     </main>
 
     <!-- Overlay + Change Password Modal -->
-    <div v-if="showChangePassword" class="overlay">
-      <div class="modal">
-        <h2>Change Password</h2>
-        <p class="note">
-          Password needs to be at least <b>8 characters long</b> and contain at least one <b>lowercase letter</b>, one <b>uppercase letter</b>, and a <b>number</b>.
-        </p>
+    <transition name="fade">
+      <div v-if="showChangePassword" class="overlay">
+        <div class="modal">
+          <h2>Change Password</h2>
+          <p class="note">
+            Password needs to be at least <b>8 characters long</b> and contain at least one <b>lowercase letter</b>, one <b>uppercase letter</b>, and a <b>number</b>.
+          </p>
 
-        <div class="form-group">
-          <label>Current Password:</label>
-          <input type="password" v-model="current_password" placeholder="Enter current password" />
-        </div>
-        <div class="form-group">
-          <label>New Password:</label>
-          <input type="password" v-model="new_password" placeholder="Enter new password" />
-        </div>
-        <div class="form-group">
-          <label>Confirm New Password:</label>
-          <input type="password" v-model="confirm_password" placeholder="Re-enter new password" />
-        </div>
+          <div class="form-group password-wrapper">
+            <label>Current Password:</label>
+            <input :type="showCurrentPassword ? 'text' : 'password'" v-model="current_password" placeholder="Enter current password" />
+            <span class="toggle-icon" @click="showCurrentPassword = !showCurrentPassword">{{ showCurrentPassword ? '🙈' : '👁' }}</span>
+          </div>
+          <div class="form-group password-wrapper">
+            <label>New Password:</label>
+            <input :type="showNewPassword ? 'text' : 'password'" v-model="new_password" placeholder="Enter new password" />
+            <span class="toggle-icon" @click="showNewPassword = !showNewPassword">{{ showNewPassword ? '🙈' : '👁' }}</span>
+          </div>
+          <div class="form-group password-wrapper">
+            <label>Confirm New Password:</label>
+            <input :type="showConfirmPassword ? 'text' : 'password'" v-model="confirm_password" placeholder="Re-enter new password" />
+            <span class="toggle-icon" @click="showConfirmPassword = !showConfirmPassword">{{ showConfirmPassword ? '🙈' : '👁' }}</span>
+          </div>
 
-        <!-- Hiển thị thông báo -->
-        <div class="alert-box" v-if="passwordAlert" :class="{'success': passwordSuccess, 'error': !passwordSuccess}">
-          {{ passwordAlert }}
-        </div>
+          <!-- Alert -->
+          <div class="alert-box" v-if="passwordAlert" :class="{'success': passwordSuccess, 'error': !passwordSuccess}">
+            {{ passwordAlert }}
+          </div>
 
-        <div class="modal-actions">
-          <button class="btn-secondary" @click="closeChangePassword">Close</button>
-          <button class="btn-danger" @click="submitChangePassword" :disabled="submittingPassword">
-            <span v-if="!submittingPassword">Set password</span>
-            <span v-else>Processing...</span>
-          </button>
+          <div class="modal-actions">
+            <button class="btn-secondary" @click="closeChangePassword">Close</button>
+            <button class="btn-danger" @click="submitChangePassword" :disabled="submittingPassword">
+              <span v-if="!submittingPassword">Set password</span>
+              <span v-else>Processing...</span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
+
+    <!-- Overlay + Warning Modal -->
+    <transition name="fade">
+      <div v-if="showWarning" class="overlay">
+        <div class="modal warning-modal">
+          <h2>⚠️ Warning</h2>
+          <p class="note">
+            Deleting your account will also remove <b>all active subscriptions and services</b> linked to this account.  
+            This action <b>cannot be undone</b>.
+          </p>
+          <div class="modal-actions">
+            <button class="btn-secondary" @click="closeWarning">Cancel</button>
+            <button class="btn-danger" @click="proceedDeleteAccount">I understand, continue</button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Overlay + Delete Account Modal -->
+    <transition name="fade">
+      <div v-if="showDeleteAccount" class="overlay">
+        <div class="modal">
+          <h2>Delete your account</h2>
+          <p class="note">
+            You can delete your account at any time. Recovery is not possible.
+            <b>This action is irreversible.</b>
+          </p>
+
+          <div class="form-group">
+            <label>Username:</label>
+            <input type="text" v-model="delete_username" placeholder="Enter your username" />
+          </div>
+          <div class="form-group password-wrapper">
+            <label>Password:</label>
+            <input :type="showDeletePassword ? 'text' : 'password'" v-model="delete_password" placeholder="Enter your password" />
+            <span class="toggle-icon" @click="showDeletePassword = !showDeletePassword">{{ showDeletePassword ? '🙈' : '👁' }}</span>
+          </div>
+          <div class="form-group password-wrapper">
+            <label>Confirm Password:</label>
+            <input :type="showDeleteConfirm ? 'text' : 'password'" v-model="delete_confirm_password" placeholder="Re-enter your password" />
+            <span class="toggle-icon" @click="showDeleteConfirm = !showDeleteConfirm">{{ showDeleteConfirm ? '🙈' : '👁' }}</span>
+          </div>
+
+          <!-- Alert -->
+          <div class="alert-box" v-if="deleteAlert" :class="{'success': deleteSuccess, 'error': !deleteSuccess}">
+            {{ deleteAlert }}
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-secondary" @click="closeDeleteAccount">Close</button>
+            <button class="btn-danger" @click="submitDeleteAccount" :disabled="submittingDelete">
+              <span v-if="!submittingDelete">Delete my account</span>
+              <span v-else>Processing...</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -164,14 +225,31 @@ export default {
     return {
       activeTab: "basic",
       showChangePassword: false,
+      showWarning: false,
+      showDeleteAccount: false,
       username: null,
       email: null,
+      // change password
       current_password: "",
       new_password: "",
       confirm_password: "",
       passwordAlert: "",
       passwordSuccess: false,
       submittingPassword: false,
+      // toggle visibility
+      showCurrentPassword: false,
+      showNewPassword: false,
+      showConfirmPassword: false,
+      // delete account
+      delete_username: "",
+      delete_password: "",
+      delete_confirm_password: "",
+      deleteAlert: "",
+      deleteSuccess: false,
+      submittingDelete: false,
+      // toggle visibility for delete
+      showDeletePassword: false,
+      showDeleteConfirm: false,
     };
   },
   created() {
@@ -190,6 +268,8 @@ export default {
     handleAction(action) {
       alert(`Action triggered: ${action}`);
     },
+
+    // Change password
     openChangePassword() {
       this.showChangePassword = true;
     },
@@ -200,16 +280,9 @@ export default {
       this.current_password = "";
       this.new_password = "";
       this.confirm_password = "";
-    },
-    logout() {
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      localStorage.removeItem("username");
-      localStorage.removeItem("email");
-      this.username = null;
-      this.email = null;
-      this.$router.push("/");
-      window.location.reload();
+      this.showCurrentPassword = false;
+      this.showNewPassword = false;
+      this.showConfirmPassword = false;
     },
     async submitChangePassword() {
       this.passwordAlert = "";
@@ -232,26 +305,85 @@ export default {
         if (res.status === 200 && res.data.message) {
           this.passwordAlert = res.data.message;
           this.passwordSuccess = true;
-
-          // Logout sau 2 giây
           setTimeout(() => {
-            localStorage.removeItem("access");
-            localStorage.removeItem("refresh");
-            localStorage.removeItem("username");
-            localStorage.removeItem("email");
+            localStorage.clear();
             this.$router.push("/");
             window.location.reload();
           }, 3000);
         }
       } catch (err) {
-        if (err.response?.data?.error) {
-          this.passwordAlert = err.response.data.error; // Hiện đúng lỗi từ backend
-        } else {
-          this.passwordAlert = "Unexpected error. Please try again.";
-        }
+        this.passwordAlert = err.response?.data?.error || "Unexpected error. Please try again.";
         this.passwordSuccess = false;
       } finally {
         this.submittingPassword = false;
+      }
+    },
+
+    // Warning modal
+    openWarningModal() {
+      this.showWarning = true;
+    },
+    closeWarning() {
+      this.showWarning = false;
+    },
+    proceedDeleteAccount() {
+      this.showWarning = false;
+      this.showDeleteAccount = true;
+    },
+
+    // Delete account
+    closeDeleteAccount() {
+      this.showDeleteAccount = false;
+      this.delete_username = "";
+      this.delete_password = "";
+      this.delete_confirm_password = "";
+      this.deleteAlert = "";
+      this.deleteSuccess = false;
+      this.submittingDelete = false;
+      this.showDeletePassword = false;
+      this.showDeleteConfirm = false;
+    },
+    async submitDeleteAccount() {
+      this.deleteAlert = "";
+      this.deleteSuccess = false;
+
+      if (!this.delete_username || !this.delete_password || !this.delete_confirm_password) {
+        this.deleteAlert = "All fields are required.";
+        return;
+      }
+      if (this.delete_password !== this.delete_confirm_password) {
+        this.deleteAlert = "Password and confirm password do not match.";
+        return;
+      }
+
+      this.submittingDelete = true;
+      try {
+        const res = await axios.post(
+          "http://127.0.0.1:8000/api/delete-account/",
+          {
+            username: this.delete_username,
+            password: this.delete_password,
+            confirm_password: this.delete_confirm_password,
+          },
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+          }
+        );
+
+        if (res.status === 200 && res.data.message) {
+          this.deleteAlert = res.data.message;
+          this.deleteSuccess = true;
+          setTimeout(() => {
+            localStorage.clear();
+            this.$router.push("/");
+            window.location.reload();
+          }, 3000);
+        }
+      } catch (err) {
+        this.deleteAlert = err.response?.data?.error || "Failed to delete account. Please try again.";
+        this.deleteSuccess = false;
+      } finally {
+        this.submittingDelete = false;
       }
     },
   },

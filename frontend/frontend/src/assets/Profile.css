@@ -263,7 +263,7 @@ textarea {
   margin-bottom: 6px;
 }
 .form-group input {
-  width: 95%;
+  width: 99%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -345,3 +345,21 @@ a,
   font-weight: bold;
 }
 
+/* Password wrapper với icon */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 95%;
+  padding-right: 40px; /* chừa chỗ cho icon 👁 */
+}
+
+.toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 36px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  user-select: none;
+}

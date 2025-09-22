@@ -23,5 +23,8 @@ urlpatterns = [
     
         # Change password
     path('api/change-password/', views.change_password, name="change_password"),
+        # Delete account
+    path('api/delete-account/', views.delete_account, name="delete_account"),
+
 
 ]

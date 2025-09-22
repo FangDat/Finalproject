@@ -201,6 +201,40 @@ def change_password(request):
     return Response({"message": "Password changed successfully, System automatically logged out, please log in again..."})
 
 # ---------------------------
+# DELETE ACCOUNT
+# ---------------------------
+@api_view(['POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_account(request):
+    try:
+        user = request.user
+        username_input = request.data.get("username")
+        password_input = request.data.get("password")
+        confirm_password_input = request.data.get("confirm_password")
+
+        if not username_input or not password_input or not confirm_password_input:
+            return Response({"error": "username, password and confirm_password are required"}, status=400)
+
+        if username_input != getattr(user, "username", None):
+            return Response({"error": "Username does not match authenticated user"}, status=403)
+
+        if password_input != confirm_password_input:
+            return Response({"error": "Password and confirmation do not match"}, status=400)
+
+        if not check_password(password_input, user.password):
+            return Response({"error": "Password is incorrect"}, status=403)
+
+        db_user = User.objects.get(username=user.username)
+        username = db_user.username
+        db_user.delete()
+
+        logger.info(f"User '{username}' deleted by user request.")
+        return Response({"message": f"User '{username}' deleted successfully"}, status=200)
+    except Exception as e:
+        logger.exception("delete_account failed")
+        return Response({"error": "Failed to delete account", "details": str(e)}, status=500)
+
+# ---------------------------
 # CHECK PREMIUM
 # ---------------------------
 # @api_view(['GET'])
