@@ -359,6 +359,7 @@ a,
   position: absolute;
   right: 12px;
   top: 36px;
+  font-size: 36px; 
   cursor: pointer;
   font-size: 1.1rem;
   user-select: none;

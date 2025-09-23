@@ -2,7 +2,9 @@
   <div class="chatbot-container">
     <!-- Sidebar trái -->
     <aside class="sidebar-left">
-      <h2 class="logo">🌤 Viet Cloud</h2>
+      <h2 class="logo">
+        <router-link to="/">🌤 Viet Cloud</router-link>
+      </h2>
       <nav class="nav-menu">
         <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
         <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
