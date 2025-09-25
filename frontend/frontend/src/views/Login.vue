@@ -57,6 +57,7 @@
 <script>
 import "../assets/Login.css";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default {
   name: "Login",
@@ -102,19 +103,23 @@ export default {
           password: this.password,
         };
 
-        const res = await axios.post("http://127.0.0.1:8000/api/login/", payload, {
-          headers: { "Content-Type": "application/json" },
-        });
+        // Gửi request login với cookie tự động kèm theo
+        const res = await axios.post(
+          "http://127.0.0.1:8000/api/login/",
+          payload,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true, // bắt buộc để gửi cookie HttpOnly
+          }
+        );
 
-        // ✅ Lấy username từ backend (res.data.user) hoặc fallback từ input
+        // Backend trả về thông tin user (nếu cần)
         const user = res.data?.user || this.username;
         const email = res.data?.email || "";
 
-        // ✅ Lưu vào localStorage để App.vue nhận ra
-        localStorage.setItem("username", user);
-         localStorage.setItem("email", email);
-        localStorage.setItem("access", res.data?.access || "");
-        localStorage.setItem("refresh", res.data?.refresh || "");
+        // Chỉ lưu vào cookie, không lưu localStorage
+        Cookies.set("username", user, { expires: 7 });
+        Cookies.set("email", email, { expires: 7 });
 
         this.alertMessage = "Login successful! Redirecting...";
         this.alertType = "success";

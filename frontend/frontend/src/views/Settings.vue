@@ -8,12 +8,11 @@
       <nav class="nav-menu">
         <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
         <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
-       <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
+        <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
         <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
         <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
       </nav>
     </aside>
-
 
     <!-- Nội dung chính -->
     <main class="settings-main">
@@ -110,7 +109,7 @@ export default {
   name: "Settings",
   data() {
     return {
-      username: localStorage.getItem("username") || "",
+      username: this.getCookie("username") || "",
       temperature: "Celsius",
       windSpeed: "Km/h",
       distance: "Kilometers",
@@ -118,11 +117,23 @@ export default {
       generalLocation: false,
     };
   },
+  methods: {
+    getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? decodeURIComponent(match[2]) : null;
+    },
+  },
   mounted() {
-    // Cập nhật username khi localStorage thay đổi (ví dụ khi login/logout)
-    window.addEventListener("storage", () => {
-      this.username = localStorage.getItem("username") || "";
-    });
+    // Kiểm tra cookie username mỗi giây để đồng bộ login/logout
+    this.cookieCheckInterval = setInterval(() => {
+      const cookieUsername = this.getCookie("username") || "";
+      if (cookieUsername !== this.username) {
+        this.username = cookieUsername;
+      }
+    }, 1000);
+  },
+  beforeUnmount() {
+    clearInterval(this.cookieCheckInterval);
   },
 };
 </script>

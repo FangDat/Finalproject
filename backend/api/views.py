@@ -1,48 +1,40 @@
-# backend/api/views.py
 import requests
 import datetime
 from urllib.parse import quote
 import logging
+import re
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import AuthenticationFailed, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.exceptions import AuthenticationFailed
-
 from django.contrib.auth.hashers import check_password
-from django.utils import timezone
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from .permissions import IsPremiumUser
 
-from .models import User, RevokedToken
+from .permissions import IsPremiumUser
+from .models import User
 from .serializers import UserSerializer
 from .authentication import CustomJWTAuthentication
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
 # ---------------------------
-# Custom TokenObtainPairSerializer
+# Custom Token Serializer
 # ---------------------------
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    Override validate để dùng custom User model (MongoDB) thay vì authenticate().
-    Chèn 'user_id' (_id) vào payload để CustomJWTAuthentication hoạt động.
-    """
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        # Thêm user_id vào token payload
-        token['user_id'] = str(user._id)  # MongoDB _id -> str
+        token['user_id'] = str(user._id)
         return token
 
     def validate(self, attrs):
-        username = attrs.get(self.username_field) or attrs.get("username")
+        username = attrs.get("username")
         password = attrs.get("password")
 
         if not username or not password:
@@ -56,20 +48,20 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if not check_password(password, user.password):
             raise AuthenticationFailed("No active account found with the given credentials")
 
-        # Dùng get_token để tạo JWT, payload đã có user_id
         refresh = self.get_token(user)
         data = {
             "refresh": str(refresh),
             "access": str(refresh.access_token),
             "username": user.username,
             "is_premium": bool(getattr(user, "is_premium", False)),
-            "user_id": str(user._id),  # MongoDB _id
+            "user_id": str(user._id),
         }
         return data
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
 
 # ---------------------------
 # SIGNUP
@@ -85,7 +77,7 @@ def signup(request):
 
 
 # ---------------------------
-# LOGIN
+# LOGIN → set HttpOnly cookies
 # ---------------------------
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -98,107 +90,116 @@ def login(request):
 
     try:
         user = User.objects.get(username=username)
-        if check_password(password, user.password):
-            refresh = RefreshToken.for_user(user)
-            # Thêm user_id vào payload của refresh token và access token
-            refresh['user_id'] = str(user._id)
-            access = refresh.access_token
-            access['user_id'] = str(user._id)
-
-            return Response({
-                "message": "Login successful",
-                "user": user.username,
-                "email": getattr(user, "email", ""),
-                "is_premium": bool(getattr(user, 'is_premium', False)),
-                "refresh": str(refresh),
-                "access": str(access),
-                "user_id": str(user._id)
-            })
-        else:
+        if not check_password(password, user.password):
             return Response({"error": "Invalid password"}, status=400)
+
+        refresh = RefreshToken.for_user(user)
+        refresh['user_id'] = str(user._id)
+        access = refresh.access_token
+        access['user_id'] = str(user._id)
+
+        resp = Response({
+            "message": "Login successful",
+            "username": user.username,
+            "email": getattr(user, "email", ""),
+            "is_premium": bool(getattr(user, 'is_premium', False)),
+            "user_id": str(user._id)
+        })
+
+        # Set cookies HttpOnly
+        resp.set_cookie(
+            key="access_token",
+            value=str(access),
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+            max_age=60 * 30
+        )
+        resp.set_cookie(
+            key="refresh_token",
+            value=str(refresh),
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+            max_age=60 * 60 * 24 * 7
+        )
+        return resp
+
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=404)
 
 
-
 # ---------------------------
-# LOGOUT (revoke refresh token)
+# LOGOUT → clear cookies
 # ---------------------------
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout(request):
-    token_str = request.data.get("refresh")
-    if not token_str:
-        return Response({"error": "refresh token required"}, status=400)
+    resp = Response({"message": "Logged out successfully"})
+    resp.delete_cookie("access_token")
+    resp.delete_cookie("refresh_token")
+    return resp
+
+
+# ---------------------------
+# REFRESH TOKEN from Cookie
+# ---------------------------
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def refresh_token(request):
+    refresh_token = request.COOKIES.get("refresh_token")
+    if not refresh_token:
+        return Response({"error": "Refresh token missing"}, status=401)
 
     try:
-        rt = RefreshToken(token_str)
-        jti = rt.get("jti")
-        exp = rt.get("exp")
-        user_id = rt.get("user_id") or None
+        refresh = RefreshToken(refresh_token)
+        access = refresh.access_token
+        access['user_id'] = refresh.get("user_id")
 
-        expires_at = None
-        if exp:
-            try:
-                expires_at = datetime.datetime.fromtimestamp(int(exp), tz=timezone.utc)
-            except Exception:
-                expires_at = None
-
-        if jti:
-            if not RevokedToken.objects.filter(jti=jti).exists():
-                RevokedToken.objects.create(
-                    jti=jti,
-                    token=token_str,
-                    user_id=str(user_id) if user_id else None,
-                    expires_at=expires_at
-                )
-            return Response({"message": "Token revoked"}, status=200)
-        else:
-            return Response({"error": "Token has no jti"}, status=400)
-    except Exception as e:
-        logger.exception("logout failed")
-        return Response({"error": "Invalid token", "details": str(e)}, status=400)
+        resp = Response({"message": "Access token refreshed"})
+        resp.set_cookie(
+            key="access_token",
+            value=str(access),
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+            max_age=60 * 30
+        )
+        return resp
+    except TokenError:
+        return Response({"error": "Invalid or expired refresh token"}, status=401)
 
 
 # ---------------------------
 # CHANGE PASSWORD
 # ---------------------------
-import re
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
-    user = request.user
+    user = request.user  # ✅ lấy từ CustomJWTAuthentication
     current_password = request.data.get("current_password", "")
     new_password = request.data.get("new_password", "")
     confirm_password = request.data.get("confirm_password", "")
 
-    # Kiểm tra mật khẩu hiện tại
     if not check_password(current_password, user.password):
         return Response({"error": "Current password is incorrect"}, status=400)
-    
     if check_password(new_password, user.password):
-        return Response({"error": "New password cannot be the same as the old password"}, status=400)
-
-    # Validate mật khẩu mới
+        return Response({"error": "New password cannot be the same"}, status=400)
     if len(new_password) < 8:
         return Response({"error": "Password must be at least 8 characters"}, status=400)
     if not re.search(r"[a-z]", new_password):
-        return Response({"error": "Password must contain at least one lowercase letter"}, status=400)
+        return Response({"error": "Must contain lowercase"}, status=400)
     if not re.search(r"[A-Z]", new_password):
-        return Response({"error": "Password must contain at least one uppercase letter"}, status=400)
+        return Response({"error": "Must contain uppercase"}, status=400)
     if not re.search(r"\d", new_password):
-        return Response({"error": "Password must contain at least one number"}, status=400)
+        return Response({"error": "Must contain number"}, status=400)
     if new_password != confirm_password:
-        return Response({"error": "New password and confirmation do not match"}, status=400)
+        return Response({"error": "Passwords do not match"}, status=400)
 
-    # Cập nhật mật khẩu
     user.password = new_password
     user.save()
+    return Response({"message": "Password changed. Please login again."})
 
-    return Response({"message": "Password changed successfully, System automatically logged out, please log in again..."})
 
 # ---------------------------
 # DELETE ACCOUNT
@@ -234,41 +235,6 @@ def delete_account(request):
         logger.exception("delete_account failed")
         return Response({"error": "Failed to delete account", "details": str(e)}, status=500)
 
-# ---------------------------
-# CHECK PREMIUM
-# ---------------------------
-# @api_view(['GET'])
-# @permission_classes([AllowAny])  # Cho phép test token mà không cần login DRF chuẩn
-# def check_premium(request):
-#     """
-#     Test API check premium: lấy token từ header Authorization và xác thực
-#     """
-#     auth_header = request.headers.get("Authorization") or request.META.get("HTTP_AUTHORIZATION")
-#     if not auth_header:
-#         return Response({"error": "Authorization header missing"}, status=401)
-
-#     try:
-#         # Token dạng "Bearer <token>"
-#         prefix, token_str = auth_header.split()
-#         if prefix.lower() != "bearer":
-#             return Response({"error": "Authorization header must start with Bearer"}, status=401)
-#     except ValueError:
-#         return Response({"error": "Invalid Authorization header"}, status=401)
-
-#     try:
-#         validated_token = CustomJWTAuthentication().get_validated_token(token_str)
-#         user = CustomJWTAuthentication().get_user(validated_token)
-#     except AuthenticationFailed as e:
-#         return Response({"error": "Token invalid or expired", "details": str(e)}, status=401)
-#     except Exception as e:
-#         return Response({"error": "Token verification failed", "details": str(e)}, status=400)
-
-#     return Response({
-#         "user_id": str(user._id),
-#         "username": user.username,
-#         "is_premium": bool(getattr(user, "is_premium", False)),
-#         "token_received": token_str
-#     })
 
 # ---------------------------
 # CHECK PREMIUM
@@ -281,7 +247,6 @@ def check_premium(request):
         "username": user.username,
         "is_premium": bool(getattr(user, 'is_premium', False))
     })
-
 
 # ---------------------------
 # Helpers / Weather / Autocomplete

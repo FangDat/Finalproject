@@ -6,12 +6,11 @@
         <router-link to="/">🌤 Viet Cloud</router-link>
       </h2>
       <nav class="nav-menu">
-      <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
-      <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
-      <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
-      <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-      <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
-
+        <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
+        <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
+        <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
+        <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
+        <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
       </nav>
     </aside>
 
@@ -48,7 +47,7 @@ export default {
   name: "Map",
   data() {
     return {
-      username: localStorage.getItem("username") || "",
+      username: this.getCookie("username") || "",
       cities: [
         { name: "Ha Noi", time: "10:23", temp: 18, icon: "🌧️" },
         { name: "Ho Chi Minh", time: "10:23", temp: 28, icon: "⛅" },
@@ -56,11 +55,23 @@ export default {
       ],
     };
   },
+  methods: {
+    getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? decodeURIComponent(match[2]) : null;
+    },
+  },
   mounted() {
-    // Đồng bộ username khi login/logout
-    window.addEventListener("storage", () => {
-      this.username = localStorage.getItem("username") || "";
-    });
+    // Kiểm tra cookie username mỗi giây để đồng bộ login/logout
+    this.cookieCheckInterval = setInterval(() => {
+      const cookieUsername = this.getCookie("username") || "";
+      if (cookieUsername !== this.username) {
+        this.username = cookieUsername;
+      }
+    }, 1000);
+  },
+  beforeUnmount() {
+    clearInterval(this.cookieCheckInterval);
   },
 };
 </script>

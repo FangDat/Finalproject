@@ -9,6 +9,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# ----------------------
+# Installed Apps
+# ----------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -22,15 +25,18 @@ INSTALLED_APPS = [
     'backend.api',
 ]
 
+# ----------------------
+# Middleware
+# ----------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # 🡐 corsheaders lên trên CommonMiddleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.myproject.urls'
@@ -52,6 +58,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.myproject.wsgi.application'
 
+# ----------------------
+# Database
+# ----------------------
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -63,6 +72,9 @@ DATABASES = {
     }
 }
 
+# ----------------------
+# Cache
+# ----------------------
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -70,6 +82,9 @@ CACHES = {
     }
 }
 
+# ----------------------
+# Password Validators
+# ----------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -77,8 +92,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:8080",]
-
+# ----------------------
+# Language / Timezone
+# ----------------------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -87,11 +103,31 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ----------------------
-# REST FRAMEWORK / JWT
+# CORS / CSRF / Cookies
+# ----------------------
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+]
+CORS_ALLOW_CREDENTIALS = True   # ✅ quan trọng để frontend gửi cookie
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+]
+
+SESSION_COOKIE_SECURE = False   # True khi deploy HTTPS
+CSRF_COOKIE_SECURE = False
+# Nếu dùng cookie
+SESSION_COOKIE_SAMESITE = None
+SESSION_COOKIE_SECURE = True  # cần HTTPS
+CSRF_COOKIE_SAMESITE = None
+CSRF_COOKIE_SECURE = True      # cần HTTPS
+
+# ----------------------
+# REST Framework / JWT
 # ----------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'backend.api.authentication.CustomJWTAuthentication',
+        'backend.api.authentication.CustomJWTAuthentication',  # đọc token từ cookie
     ),
 }
 
@@ -100,4 +136,5 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }

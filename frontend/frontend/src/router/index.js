@@ -51,9 +51,15 @@ const router = createRouter({
   },
 });
 
+// 🔐 Helper: đọc cookie
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
 // 🔐 Navigation Guard toàn cục
 router.beforeEach((to, from, next) => {
-  const username = localStorage.getItem("username");
+  const username = getCookie("username");  // ✅ dùng cookie thay localStorage
   if (to.matched.some(record => record.meta.requiresAuth) && !username) {
     next("/");  // chưa login → về Home
   } else {

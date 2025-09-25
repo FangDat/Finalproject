@@ -2,7 +2,7 @@
   <div class="profile-container">
     <!-- Sidebar trái -->
     <aside class="sidebar-left">
-            <h2 class="logo">
+      <h2 class="logo">
         <router-link to="/">🌤 Viet Cloud</router-link>
       </h2>
       <nav class="nav-menu">
@@ -238,7 +238,6 @@ export default {
       passwordAlert: "",
       passwordSuccess: false,
       submittingPassword: false,
-      // toggle visibility
       showCurrentPassword: false,
       showNewPassword: false,
       showConfirmPassword: false,
@@ -249,32 +248,26 @@ export default {
       deleteAlert: "",
       deleteSuccess: false,
       submittingDelete: false,
-      // toggle visibility for delete
       showDeletePassword: false,
       showDeleteConfirm: false,
     };
   },
   created() {
-    this.username = localStorage.getItem("username");
-    this.email = localStorage.getItem("email");
-    if (!this.username) {
-      this.$router.push("/");
-    }
+    // Lấy thông tin user/email từ cookie
+    const getCookie = (name) => {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? decodeURIComponent(match[2]) : null;
+    };
+    this.username = getCookie("username");
+    this.email = getCookie("email");
+    if (!this.username) this.$router.push("/");
   },
   methods: {
-    scrollTo(section) {
-      this.activeTab = section;
-      const el = document.getElementById(section);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    },
-    handleAction(action) {
-      alert(`Action triggered: ${action}`);
-    },
+    scrollTo(section) { /* giữ nguyên */ },
+    handleAction(action) { /* giữ nguyên */ },
 
     // Change password
-    openChangePassword() {
-      this.showChangePassword = true;
-    },
+    openChangePassword() { this.showChangePassword = true; },
     closeChangePassword() {
       this.showChangePassword = false;
       this.passwordAlert = "";
@@ -300,21 +293,23 @@ export default {
             confirm_password: this.confirm_password,
           },
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+            withCredentials: true, // gửi cookie HttpOnly
           }
         );
 
-        if (res.status === 200 && res.data.message) {
-          this.passwordAlert = res.data.message;
-          this.passwordSuccess = true;
-          setTimeout(() => {
-            localStorage.clear();
-            this.$router.push("/");
-            window.location.reload();
-          }, 3000);
-        }
+        this.passwordAlert = res.data.message || "Password changed successfully.";
+        this.passwordSuccess = true;
+
+        // logout và redirect sau 3s
+        setTimeout(() => {
+          document.cookie.split(";").forEach(c => {
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+          });
+          this.$router.push("/");
+          window.location.reload();
+        }, 3000);
       } catch (err) {
-        this.passwordAlert = err.response?.data?.error || "Unexpected error. Please try again.";
+        this.passwordAlert = err.response?.data?.error || err.response?.data?.detail || err.message;
         this.passwordSuccess = false;
       } finally {
         this.submittingPassword = false;
@@ -322,16 +317,9 @@ export default {
     },
 
     // Warning modal
-    openWarningModal() {
-      this.showWarning = true;
-    },
-    closeWarning() {
-      this.showWarning = false;
-    },
-    proceedDeleteAccount() {
-      this.showWarning = false;
-      this.showDeleteAccount = true;
-    },
+    openWarningModal() { this.showWarning = true; },
+    closeWarning() { this.showWarning = false; },
+    proceedDeleteAccount() { this.showWarning = false; this.showDeleteAccount = true; },
 
     // Delete account
     closeDeleteAccount() {
@@ -367,22 +355,21 @@ export default {
             password: this.delete_password,
             confirm_password: this.delete_confirm_password,
           },
-          {
-            headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
-          }
+          { withCredentials: true } // gửi cookie HttpOnly
         );
 
-        if (res.status === 200 && res.data.message) {
-          this.deleteAlert = res.data.message;
-          this.deleteSuccess = true;
-          setTimeout(() => {
-            localStorage.clear();
-            this.$router.push("/");
-            window.location.reload();
-          }, 3000);
-        }
+        this.deleteAlert = res.data.message || "Account deleted successfully.";
+        this.deleteSuccess = true;
+
+        setTimeout(() => {
+          document.cookie.split(";").forEach(c => {
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+          });
+          this.$router.push("/");
+          window.location.reload();
+        }, 3000);
       } catch (err) {
-        this.deleteAlert = err.response?.data?.error || "Failed to delete account. Please try again.";
+        this.deleteAlert = err.response?.data?.error || err.response?.data?.detail || err.message;
         this.deleteSuccess = false;
       } finally {
         this.submittingDelete = false;
@@ -391,5 +378,6 @@ export default {
   },
 };
 </script>
+
 
 <style scoped src="@/assets/Profile.css"></style>

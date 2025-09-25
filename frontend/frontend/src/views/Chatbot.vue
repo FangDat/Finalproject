@@ -51,24 +51,38 @@ export default {
   name: "Chatbot",
   data() {
     return {
-      username: localStorage.getItem("username") || "",
+      username: this.getCookie("username") || "",
     };
   },
   methods: {
+    // 🔐 Helper đọc cookie
+    getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? decodeURIComponent(match[2]) : null;
+    },
+
     logout() {
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      localStorage.removeItem("username");
+      // Xóa cookie
+      document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
       this.username = "";
       this.$router.push("/");   // quay về Home
       window.location.reload(); // refresh để về trạng thái chưa login
     },
   },
   mounted() {
-    // Theo dõi thay đổi localStorage để update username
-    window.addEventListener("storage", () => {
-      this.username = localStorage.getItem("username") || "";
-    });
+    // Theo dõi thay đổi cookie để update username
+    this.checkCookieInterval = setInterval(() => {
+      const cookieUsername = this.getCookie("username") || "";
+      if (cookieUsername !== this.username) {
+        this.username = cookieUsername;
+      }
+    }, 1000);
+  },
+  beforeUnmount() {
+    clearInterval(this.checkCookieInterval);
   },
 };
 </script>

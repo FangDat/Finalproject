@@ -79,6 +79,7 @@
 
 <script>
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default {
   name: "SignUp",
@@ -139,9 +140,17 @@ export default {
           password: this.password,
         };
 
-        await axios.post("http://127.0.0.1:8000/api/signup/", payload, {
+        const res = await axios.post("http://127.0.0.1:8000/api/signup/", payload, {
           headers: { "Content-Type": "application/json" },
+          withCredentials: true, // cookie gửi kèm nếu backend hỗ trợ
         });
+
+        // ✅ Lưu thông tin vào cookie (chỉ lưu thông tin cần thiết)
+        const user = res.data?.user || this.username;
+        const email = res.data?.email || this.email;
+
+        Cookies.set("username", user, { expires: 7 });
+        Cookies.set("email", email, { expires: 7 });
 
         this.alertMessage = "Signup successful! Redirecting to Payment Page..";
         this.alertType = "success";
@@ -151,11 +160,12 @@ export default {
         }, 3000);
       } catch (err) {
         if (err.response && err.response.status === 400 && err.response.data) {
-          if (err.response.data.email?.[0]?.includes("already exists")) {
+          const data = err.response.data;
+          if (data.email?.[0]?.includes("already exists")) {
             this.errors.email = "This email is already in use!";
             this.alertMessage = "This email is already in use!";
             this.alertType = "warning";
-          } else if (err.response.data.username?.[0]?.includes("already exists")) {
+          } else if (data.username?.[0]?.includes("already exists")) {
             this.errors.username = "Username already exists!";
             this.alertMessage = "Username already exists!";
             this.alertType = "warning";
@@ -291,7 +301,7 @@ export default {
 /* Button */
 .btn-signup {
   margin-top: 10px;
-  padding: 12px 30px; /* thêm padding ngang cho đẹp */
+  padding: 12px 30px;
   background: #2196f3;
   color: white;
   border: none;
@@ -303,9 +313,8 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  align-self: center; /* ✅ căn giữa nút trong form */
+  align-self: center;
 }
-
 .btn-signup[disabled] {
   opacity: 0.7;
   cursor: not-allowed;
@@ -326,6 +335,3 @@ export default {
   text-decoration: underline;
 }
 </style>
-
-
-<!-- check check check -->

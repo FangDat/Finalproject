@@ -22,11 +22,13 @@
 </template>
 
 <script>
+// import { testChangePassword } from "./testChangePassword";
+
 export default {
   name: "App",
   data() {
     return {
-      username: localStorage.getItem("username") || "",
+      username: this.getCookie("username") || "",
     };
   },
   computed: {
@@ -36,26 +38,41 @@ export default {
     },
   },
   methods: {
+    getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? decodeURIComponent(match[2]) : null;
+    },
     logout() {
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      localStorage.removeItem("username");
+      // Xoá cookie username/email (token HttpOnly backend tự quản lý)
+      document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       this.username = "";
       this.$router.push("/");
       window.location.reload();
     },
   },
   mounted() {
-    window.addEventListener("storage", () => {
-      this.username = localStorage.getItem("username") || "";
-    });
+    // Đồng bộ cookie username mỗi giây để update UI
+    this.cookieCheckInterval = setInterval(() => {
+      const cookieUsername = this.getCookie("username") || "";
+      if (cookieUsername !== this.username) {
+        this.username = cookieUsername;
+      }
+    }, 1000);
 
+    // Watch route thay đổi
     this.$watch(
       () => this.$route.path,
       () => {
-        this.username = localStorage.getItem("username") || "";
+        this.username = this.getCookie("username") || "";
       }
     );
+
+    // 💡 Test change-password ngay khi App mount
+    testChangePassword();
+  },
+  beforeUnmount() {
+    clearInterval(this.cookieCheckInterval);
   },
 };
 </script>

@@ -10,7 +10,6 @@
         <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
         <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
       </nav>
-
     </aside>
 
     <!-- Nội dung chính -->
@@ -102,9 +101,9 @@
           {{ day.temp.split('/').map(t => Math.round(t)).join('/') }}
         </div>
       </div>
-        <p v-if="!username" class="premium-text">
-          Want forecast for 7 days? → Sign up for VietCloud premium now!
-        </p>
+      <p v-if="!username" class="premium-text">
+        Want forecast for 7 days? → Sign up for VietCloud premium now!
+      </p>
       <!-- Nút signup chỉ hiện nếu chưa login -->
       <router-link v-if="!username" to="/signup" class="btn-signup">Sign up</router-link>
     </aside>
@@ -116,7 +115,7 @@ export default {
   name: "Home",
   data() {
     return {
-      username: localStorage.getItem("username") || "",
+      username: this.getCookie("username") || "",
       searchQuery: "",
       suggestions: [],
       showSuggestions: false,
@@ -135,6 +134,11 @@ export default {
     };
   },
   methods: {
+    getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? decodeURIComponent(match[2]) : null;
+    },
+
     // --- Icon logic ban ngày / ban đêm ---
     getIconSrc(iconName, timeStr = null) {
       let hour = null;
@@ -312,10 +316,13 @@ export default {
   },
 
   mounted() {
-    // Cập nhật username khi thay đổi localStorage
-    window.addEventListener("storage", () => {
-      this.username = localStorage.getItem("username") || "";
-    });
+    // Cập nhật username khi cookie thay đổi
+    this.cookieCheckInterval = setInterval(() => {
+      const cookieUsername = this.getCookie("username") || "";
+      if (cookieUsername !== this.username) {
+        this.username = cookieUsername;
+      }
+    }, 1000);
 
     // Lấy vị trí ban đầu
     if (navigator.geolocation) {
@@ -330,6 +337,9 @@ export default {
     } else {
       this.fetchWeather();
     }
+  },
+  beforeUnmount() {
+    clearInterval(this.cookieCheckInterval);
   },
 };
 </script>
