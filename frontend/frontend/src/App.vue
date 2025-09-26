@@ -69,7 +69,7 @@ export default {
     );
 
     // 💡 Test change-password ngay khi App mount
-    testChangePassword();
+    // testChangePassword();
   },
   beforeUnmount() {
     clearInterval(this.cookieCheckInterval);

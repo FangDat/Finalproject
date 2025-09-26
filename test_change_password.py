@@ -3,7 +3,7 @@ import requests
 # ---------------------------
 # 1. Config
 # ---------------------------
-BASE_URL = "http://127.0.0.1:8000/"  # đổi nếu backend chạy trên port khác
+BASE_URL = "localhost:8000/"  # đổi nếu backend chạy trên port khác
 USERNAME = "a"
 PASSWORD = "D@t15112005"
 
@@ -46,7 +46,8 @@ change_pw_data = {
     "confirm_password": CONFIRM_PASSWORD
 }
 
-change_resp = requests.post(change_pw_url, json=change_pw_data, headers=headers)
+change_resp = requests.post(
+    change_pw_url, json=change_pw_data, headers=headers)
 print("\nChange password response:")
 print("Status code:", change_resp.status_code)
 print("Response body:", change_resp.json())

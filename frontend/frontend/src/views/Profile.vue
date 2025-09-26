@@ -286,7 +286,7 @@ export default {
 
       try {
         const res = await axios.post(
-          "http://127.0.0.1:8000/api/change-password/",
+          "http://localhost:8000/api/change-password/",
           {
             current_password: this.current_password,
             new_password: this.new_password,
@@ -349,7 +349,7 @@ export default {
       this.submittingDelete = true;
       try {
         const res = await axios.post(
-          "http://127.0.0.1:8000/api/delete-account/",
+          "http://localhost:8000/api/delete-account/",
           {
             username: this.delete_username,
             password: this.delete_password,

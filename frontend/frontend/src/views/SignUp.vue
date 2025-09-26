@@ -140,7 +140,7 @@ export default {
           password: this.password,
         };
 
-        const res = await axios.post("http://127.0.0.1:8000/api/signup/", payload, {
+        const res = await axios.post("http://localhost:8000/api/signup/", payload, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true, // cookie gửi kèm nếu backend hỗ trợ
         });

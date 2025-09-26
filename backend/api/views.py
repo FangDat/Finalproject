@@ -43,10 +43,12 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            raise AuthenticationFailed("No active account found with the given credentials")
+            raise AuthenticationFailed(
+                "No active account found with the given credentials")
 
         if not check_password(password, user.password):
-            raise AuthenticationFailed("No active account found with the given credentials")
+            raise AuthenticationFailed(
+                "No active account found with the given credentials")
 
         refresh = self.get_token(user)
         data = {
@@ -251,6 +253,8 @@ def check_premium(request):
 # ---------------------------
 # Helpers / Weather / Autocomplete
 # ---------------------------
+
+
 def strip_country_suffix(formatted):
     if not formatted:
         return formatted
@@ -272,7 +276,8 @@ def clean_city_name(raw_name):
 
 
 def build_display_name(comps, fallback):
-    district = comps.get("suburb") or comps.get("city_district") or comps.get("county")
+    district = comps.get("suburb") or comps.get(
+        "city_district") or comps.get("county")
     city = comps.get("city") or comps.get("town")
     state = comps.get("state") or comps.get("province")
 
@@ -308,7 +313,8 @@ def autocomplete(request):
         score = 0
         if comps.get("country_code", "").lower() == "vn":
             score += 10
-        main_keys = ["city", "town", "village", "municipality", "county", "state", "province", "region"]
+        main_keys = ["city", "town", "village", "municipality",
+                     "county", "state", "province", "region"]
         lower_q = q.lower()
         for k in main_keys:
             v = comps.get(k)
@@ -394,7 +400,7 @@ def get_city_from_coordinates(lat, lon, geocode_key):
 @api_view(['GET'])
 def get_weather(request):
     api_key = "49d2545d1cdff8820a039e6e2f451ffc"
-    geocode_key = "c173e9b1e4c14ee3845dfa894f82a9c7"
+    geocode_key = "f70417a9320a42c28e2f87398e996e6f"
 
     city_input = request.GET.get("city")
     lat = request.GET.get("lat")
@@ -447,8 +453,10 @@ def get_weather(request):
 
         upcoming_hours, daily_forecast = [], {}
         for item in forecast_data.get('list', []):
-            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
+            dt_utc = datetime.datetime.strptime(
+                item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt_local = dt_utc.replace(
+                tzinfo=datetime.timezone.utc).astimezone(tz)
 
             if dt_local > now and len(upcoming_hours) < 5:
                 upcoming_hours.append({
@@ -459,13 +467,16 @@ def get_weather(request):
 
             day_str = dt_local.date().isoformat()
             if day_str not in daily_forecast:
-                daily_forecast[day_str] = {"temps": [], "condition": item['weather'][0]['main'].lower()}
+                daily_forecast[day_str] = {
+                    "temps": [], "condition": item['weather'][0]['main'].lower()}
             daily_forecast[day_str]["temps"].append(item['main']['temp'])
 
         chance_of_rain = 0
         for item in forecast_data.get('list', []):
-            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
+            dt_utc = datetime.datetime.strptime(
+                item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt_local = dt_utc.replace(
+                tzinfo=datetime.timezone.utc).astimezone(tz)
             if dt_local > now:
                 chance_of_rain = item.get("pop", 0) * 100
                 break
@@ -493,4 +504,3 @@ def get_weather(request):
     except Exception as e:
         logger.exception("get_weather failed")
         return Response({"error": str(e)}, status=500)
-
