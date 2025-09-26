@@ -5,7 +5,7 @@
 
 //   try {
 //     const response = await axios.post(
-//       "http://127.0.0.1:8000/api/change-password/",
+//       "http://localhost:8000/api/change-password/",
 //       {
 //         current_password: "D@t15112005",
 //         new_password: "D@t15112004",

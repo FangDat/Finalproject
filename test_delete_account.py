@@ -3,7 +3,7 @@ import requests
 # ---------------------------
 # 1. Config
 # ---------------------------
-BASE_URL = "http://127.0.0.1:8000/"  # đổi nếu backend chạy port khác
+BASE_URL = "http://localhost:8000/"  # đổi nếu backend chạy port khác
 USERNAME = "a"
 PASSWORD = "D@t15112004"
 
@@ -59,4 +59,3 @@ try:
     print("Response body:", login_again_resp.json())
 except Exception:
     print("Response body (raw):", login_again_resp.text)
-
