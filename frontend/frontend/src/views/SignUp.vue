@@ -114,7 +114,7 @@ export default {
     async handleSignup() {
       this.resetErrors();
 
-      // ✅ Client-side validation
+      // Client-side validation
       if (!this.username || !this.email || !this.password || !this.confirmPassword) {
         if (!this.username) this.errors.username = "Please enter your username.";
         if (!this.email) this.errors.email = "Please enter your email.";
@@ -140,36 +140,39 @@ export default {
           password: this.password,
         };
 
+        // withCredentials cần true để browser lưu cookie HttpOnly từ server (access/refresh)
         const res = await axios.post("http://localhost:8000/api/signup/", payload, {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true, // cookie gửi kèm nếu backend hỗ trợ
+          withCredentials: true,
         });
 
-        // ✅ Lưu thông tin vào cookie (chỉ lưu thông tin cần thiết)
-        const user = res.data?.user || this.username;
-        const email = res.data?.email || this.email;
+        // Server trả về username/email trong body; server cũng set cookie token HttpOnly.
+        const returnedUsername = res.data?.username || this.username;
+        const returnedEmail = res.data?.email || this.email;
 
-        Cookies.set("username", user, { expires: 7 });
-        Cookies.set("email", email, { expires: 7 });
+        // Lưu username/email (non-HttpOnly) để UI có thể đọc
+        Cookies.set("username", returnedUsername, { expires: 7 });
+        Cookies.set("email", returnedEmail, { expires: 7 });
 
         this.alertMessage = "Signup successful! Redirecting to Payment Page..";
         this.alertType = "success";
 
         setTimeout(() => {
           this.$router.push("/credit-card");
-        }, 3000);
+        }, 1500);
       } catch (err) {
         if (err.response && err.response.status === 400 && err.response.data) {
           const data = err.response.data;
-          if (data.email?.[0]?.includes("already exists")) {
+          if (data.email?.[0]?.toLowerCase().includes("already exists")) {
             this.errors.email = "This email is already in use!";
             this.alertMessage = "This email is already in use!";
             this.alertType = "warning";
-          } else if (data.username?.[0]?.includes("already exists")) {
+          } else if (data.username?.[0]?.toLowerCase().includes("already exists")) {
             this.errors.username = "Username already exists!";
             this.alertMessage = "Username already exists!";
             this.alertType = "warning";
           } else {
+            // Generic messages from serializer
             this.alertMessage = "Signup failed. Please check your inputs.";
             this.alertType = "error";
           }
