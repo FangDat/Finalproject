@@ -90,8 +90,10 @@ class CustomJWTAuthentication(JWTAuthentication):
             logger.debug(f"Không tìm thấy user với _id={oid}")
             raise AuthenticationFailed("User not found", code="user_not_found")
 
-        logger.debug(f"Tìm thấy user: {user.username}")
+        logger.debug(f"Đã tìm thấy user: {user.username}")
         return user
     
     
     ### check check check check alo alo
+    
+    ### 12 4 5 6 
