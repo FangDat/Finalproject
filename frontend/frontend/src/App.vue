@@ -22,8 +22,6 @@
 </template>
 
 <script>
-// import { testChangePassword } from "./testChangePassword";
-
 export default {
   name: "App",
   data() {
@@ -42,13 +40,46 @@ export default {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
     },
-    logout() {
-      // Xoá cookie username/email (token HttpOnly backend tự quản lý)
-      document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      this.username = "";
-      this.$router.push("/");
-      window.location.reload();
+
+    async logout() {
+      try {
+        // Gọi backend để backend xóa cookie HttpOnly (server-side)
+        const res = await fetch("http://localhost:8000/api/logout/", {
+          method: "POST",
+          credentials: "include", // rất quan trọng: gửi cookie kèm request
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({}), // body optional
+        });
+
+        // Nếu backend trả OK thì client sẽ xóa cookie non-Httponly (username,email) và reload
+        if (res.ok) {
+          // xoá cookie client-visible
+          document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+          document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+          this.username = "";
+          this.$router.push("/");
+          // reload để UI cập nhật cookie phía server (HttpOnly cookies) đã bị xóa
+          window.location.reload();
+        } else {
+          // fallback: vẫn xóa client cookies để tránh "dangling UI"
+          document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+          document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+          this.username = "";
+          this.$router.push("/");
+          window.location.reload();
+        }
+      } catch (err) {
+        console.error("Logout failed", err);
+        // dù lỗi, xóa client visible cookies để tránh UI vẫn hiển thị logged in
+        document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        this.username = "";
+        this.$router.push("/");
+        window.location.reload();
+      }
     },
   },
   mounted() {
@@ -67,9 +98,6 @@ export default {
         this.username = this.getCookie("username") || "";
       }
     );
-
-    // 💡 Test change-password ngay khi App mount
-    // testChangePassword();
   },
   beforeUnmount() {
     clearInterval(this.cookieCheckInterval);
@@ -164,7 +192,3 @@ export default {
   background: #d32f2f;
 }
 </style>
-
-
-<!-- 
-# check github status 26/09/2025 -->

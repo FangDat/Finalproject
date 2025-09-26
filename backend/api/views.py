@@ -114,6 +114,8 @@ def login(request):
             value=str(access),
             httponly=True,
             secure=False,
+            domain="localhost",
+            path="/",
             samesite="Lax",
             max_age=60 * 30
         )
@@ -123,6 +125,8 @@ def login(request):
             httponly=True,
             secure=False,
             samesite="Lax",
+            domain="localhost",
+            path="/",
             max_age=60 * 60 * 24 * 7
         )
         return resp
@@ -138,8 +142,10 @@ def login(request):
 @permission_classes([AllowAny])
 def logout(request):
     resp = Response({"message": "Logged out successfully"})
-    resp.delete_cookie("access_token")
-    resp.delete_cookie("refresh_token")
+
+    # Delete cookies server-side (include domain/path used when setting)
+    resp.delete_cookie("access_token", domain="localhost", path="/")
+    resp.delete_cookie("refresh_token", domain="localhost", path="/")
     return resp
 
 
@@ -164,7 +170,9 @@ def refresh_token(request):
             value=str(access),
             httponly=True,
             secure=False,
-            samesite="Lax",
+            samesite="None",
+            domain="localhost",
+            path="/",
             max_age=60 * 30
         )
         return resp
@@ -178,7 +186,7 @@ def refresh_token(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
-    user = request.user  # ✅ lấy từ CustomJWTAuthentication
+    user = request.user
     current_password = request.data.get("current_password", "")
     new_password = request.data.get("new_password", "")
     confirm_password = request.data.get("confirm_password", "")
@@ -200,7 +208,12 @@ def change_password(request):
 
     user.password = new_password
     user.save()
-    return Response({"message": "Password changed. Please login again."})
+
+    resp = Response({"message": "Password changed. Logged out automatically."})
+    resp.delete_cookie("access_token", domain="localhost", path="/")
+    resp.delete_cookie("refresh_token", domain="localhost", path="/")
+    return resp
+
 
 
 # ---------------------------
@@ -232,10 +245,16 @@ def delete_account(request):
         db_user.delete()
 
         logger.info(f"User '{username}' deleted by user request.")
-        return Response({"message": f"User '{username}' deleted successfully"}, status=200)
+
+        resp = Response({"message": f"User '{username}' deleted successfully. Logged out automatically."})
+        resp.delete_cookie("access_token", domain="localhost", path="/")
+        resp.delete_cookie("refresh_token", domain="localhost", path="/")
+        return resp
+
     except Exception as e:
         logger.exception("delete_account failed")
         return Response({"error": "Failed to delete account", "details": str(e)}, status=500)
+
 
 
 # ---------------------------

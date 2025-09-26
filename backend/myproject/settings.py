@@ -119,9 +119,9 @@ SESSION_COOKIE_SECURE = False   # True khi deploy HTTPS
 CSRF_COOKIE_SECURE = False
 # Nếu dùng cookie
 SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = True  # cần HTTPS
+# SESSION_COOKIE_SECURE = True  # cần HTTPS, khi deploy đặt True
 CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = True      # cần HTTPS
+# CSRF_COOKIE_SECURE = True      # cần HTTPS, khi deploy đặt True
 
 # ----------------------
 # REST Framework / JWT
