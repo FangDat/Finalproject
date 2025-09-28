@@ -39,10 +39,10 @@
           <p><strong>WIND SPEED</strong></p>
           <button
             class="settings-unit-btn"
-            :class="{ active: windSpeed === 'Km/h' }"
-            @click="windSpeed = 'Km/h'"
+            :class="{ active: windSpeed === 'm/s' }"
+            @click="windSpeed = 'm/s'"
           >
-            Km/h
+            m/s
           </button>
           <button
             class="settings-unit-btn"
@@ -52,18 +52,19 @@
             Mph
           </button>
 
-          <p><strong>DISTANCE</strong></p>
+
+          <p><strong>VISIBILITY</strong></p>
           <button
             class="settings-unit-btn"
-            :class="{ active: distance === 'Kilometers' }"
-            @click="distance = 'Kilometers'"
+            :class="{ active: Visibility === 'Kilometers' }"
+            @click="Visibility = 'Kilometers'"
           >
             Kilometers
           </button>
           <button
             class="settings-unit-btn"
-            :class="{ active: distance === 'Miles' }"
-            @click="distance = 'Miles'"
+            :class="{ active: Visibility === 'Miles' }"
+            @click="Visibility = 'Miles'"
           >
             Miles
           </button>
@@ -87,6 +88,11 @@
           <span class="settings-check" v-if="generalLocation">✔</span>
         </div>
       </section>
+
+      <!-- Nút Done -->
+      <div class="settings-done-box">
+        <button class="settings-done-btn" @click="saveSettings">Done</button>
+      </div>
     </main>
 
     <!-- Sidebar phải -->
@@ -101,6 +107,11 @@
         <router-link v-if="!username" to="/signup" class="settings-btn-signup">Sign up</router-link>
       </div>
     </aside>
+
+    <!-- Popup thông báo -->
+    <div v-if="showPopup" class="settings-popup">
+      ✅ Settings saved successfully! Automatically return to Home page.
+    </div>
   </div>
 </template>
 
@@ -111,10 +122,11 @@ export default {
     return {
       username: this.getCookie("username") || "",
       temperature: "Celsius",
-      windSpeed: "Km/h",
-      distance: "Kilometers",
+      windSpeed: "m/s", 
+      Visibility: "Kilometers",
       notifications: false,
       generalLocation: false,
+      showPopup: false,
     };
   },
   methods: {
@@ -122,9 +134,40 @@ export default {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
     },
+    saveSettings() {
+      // lưu settings
+      const settings = {
+        temperature: this.temperature,
+        windSpeed: this.windSpeed,
+        Visibility: this.Visibility,
+        notifications: this.notifications,
+        generalLocation: this.generalLocation,
+      };
+      localStorage.setItem("vietcloud_settings", JSON.stringify(settings));
+
+      // hiện popup
+      this.showPopup = true;
+
+      // sau 3 giây chuyển về Home + refresh
+      setTimeout(() => {
+        this.showPopup = false;
+        window.location.href = "/"; // điều hướng về Home + reload cứng trang
+      }, 3000);
+    },
+    loadSettings() {
+      const saved = localStorage.getItem("vietcloud_settings");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        this.temperature = parsed.temperature || this.temperature;
+        this.windSpeed = parsed.windSpeed || this.windSpeed;
+        this.Visibility = parsed.Visibility || this.Visibility;
+        this.notifications = parsed.notifications ?? this.notifications;
+        this.generalLocation = parsed.generalLocation ?? this.generalLocation;
+      }
+    },
   },
   mounted() {
-    // Kiểm tra cookie username mỗi giây để đồng bộ login/logout
+    this.loadSettings();
     this.cookieCheckInterval = setInterval(() => {
       const cookieUsername = this.getCookie("username") || "";
       if (cookieUsername !== this.username) {

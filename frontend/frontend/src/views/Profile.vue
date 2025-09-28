@@ -263,7 +263,16 @@ export default {
     if (!this.username) this.$router.push("/");
   },
   methods: {
-    scrollTo(section) { /* giữ nguyên */ },
+        scrollTo(section) {
+      // set tab đang active
+      this.activeTab = section;
+      // cuộn tới section có id tương ứng
+      const el = document.getElementById(section);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    },
+
     handleAction(action) { /* giữ nguyên */ },
 
     // Change password

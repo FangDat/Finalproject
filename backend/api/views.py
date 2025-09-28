@@ -521,6 +521,7 @@ def get_weather(request):
         current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"
         current_resp = requests.get(current_url)
         current_data = current_resp.json()
+        visibility = current_data.get('visibility', None)
         if current_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu thời tiết", "details": current_data}, status=400)
 
@@ -583,6 +584,7 @@ def get_weather(request):
             "chance_of_rain": round(chance_of_rain),
             "upcoming_hours": upcoming_hours,
             "daily_forecast": daily_forecast_list,
+            "visibility": visibility,
             "source": "OpenWeather"
         }
         return Response(result)

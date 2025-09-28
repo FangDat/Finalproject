@@ -223,3 +223,64 @@ a,
   color: #fff;
   font-weight: bold;
 }
+
+/* ... phần cũ giữ nguyên ... */
+
+/* Hộp chứa nút Done */
+.settings-done-box {
+  display: flex;
+  justify-content: center; /* cho nút ở giữa */
+  margin-top: 30px;
+}
+
+/* Nút Done to hơn */
+.settings-done-btn {
+  padding: 16px 69px;
+  background: #2196f3;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.settings-done-btn:hover {
+  background: #0077b6;
+  transform: translateY(-2px);
+}
+
+/* Popup xanh lá giữa đầu trang */
+.settings-popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #22c55e;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  animation: fadeInOut 3s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+}

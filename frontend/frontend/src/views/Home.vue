@@ -50,7 +50,7 @@
           <h1 class="city">{{ city }}</h1>
           <p class="rain">Chance of rain: {{ chanceOfRain }}</p>
           <h2 class="temperature">
-            {{ temperature !== null ? Math.round(temperature) + '°C' : '—' }}
+            {{ temperature !== null ? Math.round(formatTemp(temperature)) + tempUnitSymbol : '—' }}
           </h2>
         </div>
         <div class="weather-icon">
@@ -69,7 +69,7 @@
           >
             <p>{{ item.time }}</p>
             <img :src="getIconSrc(item.icon, item.time)" class="forecast-icon" />
-            <p>{{ Math.round(item.temp) }}°C</p>
+            <p>{{ Math.round(formatTemp(item.temp)) + tempUnitSymbol }}</p>
           </div>
         </div>
       </section>
@@ -78,9 +78,10 @@
       <section class="card">
         <h3 class="section-title">Air Condition</h3>
         <div class="air-grid">
-          <div>🌡️ Real feel: {{ realFeel ? Math.round(realFeel) + '°C' : '—' }}</div>
-          <div>💨 Wind: {{ wind ? Math.round(wind) + ' km/h' : '—' }}</div>
-          <div>👁️ Visibility: {{ visibility }} km</div>
+          <div>🌡️ Real feel: {{ realFeel ? Math.round(formatTemp(realFeel)) + tempUnitSymbol : '—' }}</div>
+          <div>🫧 Humidity: {{ humidity ? humidity + '%' : '—' }}</div>
+          <div>💨 Wind: {{ wind ? Math.round(formatSpeed(wind)) + windUnitSymbol : '—' }}</div>
+          <div>👁️ Visibility: {{ formatDistance(visibility) }} {{ distanceUnitSymbol }}</div>
           <div>🌞 UV index: {{ uvIndex }}</div>
           <div>💧 Chance of rain: {{ chanceOfRain }}</div>
         </div>
@@ -98,19 +99,27 @@
         <div>{{ day.day }}</div>
         <img :src="getDayIcon(day.icon)" class="forecast-icon" />
         <div>
-          {{ day.temp.split('/').map(t => Math.round(t)).join('/') }}
+          {{ day.temp.split('/').map(t => Math.round(formatTemp(t))).join('/') }}{{ tempUnitSymbol }}
         </div>
       </div>
       <p v-if="!username" class="premium-text">
         Want forecast for 7 days? → Sign up for VietCloud premium now!
       </p>
-      <!-- Nút signup chỉ hiện nếu chưa login -->
       <router-link v-if="!username" to="/signup" class="btn-signup">Sign up</router-link>
     </aside>
   </div>
 </template>
 
 <script>
+import { 
+  cToF, 
+  msToKmh, 
+  msToMph, 
+  kmToMiles, 
+  mToKm, 
+  mToMiles 
+} from '@/utils.js'
+
 export default {
   name: "Home",
   data() {
@@ -125,13 +134,32 @@ export default {
       chanceOfRain: "0%",
       realFeel: null,
       wind: null,
-      visibility: 11,
+      visibility: null,
       uvIndex: 2,
       condition: "",
       weatherIcon: require("@/assets/clear.png"),
       forecastToday: [],
       forecast3days: [],
+      humidity: null,
+
+      // thêm settings
+      settings: {
+        temperature: 'Celsius',
+        windSpeed: 'Km/h',
+        Visibility: 'Kilometers'
+      }
     };
+  },
+  computed: {
+    tempUnitSymbol() {
+      return this.settings.temperature === 'Fahrenheit' ? '°F' : '°C'
+    },
+    windUnitSymbol() {
+      return this.settings.windSpeed === 'Mph' ? ' mph' : ' km/h'
+    },
+    distanceUnitSymbol() {
+      return this.settings.Visibility === 'Miles' ? ' miles' : ' km'
+    }
   },
   methods: {
     getCookie(name) {
@@ -139,7 +167,20 @@ export default {
       return match ? decodeURIComponent(match[2]) : null;
     },
 
-    // --- Icon logic ban ngày / ban đêm ---
+    // chuyển đổi
+    formatTemp(tempC) {
+      return this.settings.temperature === 'Fahrenheit' ? cToF(tempC) : tempC
+    },
+    formatSpeed(speedMs) {
+      return this.settings.windSpeed === 'Mph' ? msToMph(speedMs) : msToKmh(speedMs)
+    },
+    formatDistance(meters) {
+      if (meters == null) return '—'
+      return this.settings.Visibility === 'Miles' ? 
+        Math.round(mToMiles(meters)) : 
+        Math.round(mToKm(meters))
+    },
+
     getIconSrc(iconName, timeStr = null) {
       let hour = null;
       if (timeStr) {
@@ -181,7 +222,6 @@ export default {
       }
     },
 
-    // --- Autocomplete handling ---
     onSearchInput() {
       if (this.suggestTimer) clearTimeout(this.suggestTimer);
       const q = this.searchQuery.trim();
@@ -242,7 +282,6 @@ export default {
       this.onEnterSearch();
     },
 
-    // --- Fetch thời tiết ---
     async fetchWeather(city = "") {
       try {
         let url = city
@@ -288,6 +327,8 @@ export default {
       this.wind = data.wind_speed;
       this.chanceOfRain = data.chance_of_rain ? data.chance_of_rain + "%" : "0%";
       this.condition = data.condition;
+      this.humidity = data.humidity;
+      this.visibility = data.visibility; // mét từ API
 
       let localHour = null;
       if (data.upcoming_hours?.length > 0) {
@@ -316,7 +357,11 @@ export default {
   },
 
   mounted() {
-    // Cập nhật username khi cookie thay đổi
+    const saved = localStorage.getItem("vietcloud_settings");
+    if (saved) {
+      this.settings = JSON.parse(saved);
+    }
+
     this.cookieCheckInterval = setInterval(() => {
       const cookieUsername = this.getCookie("username") || "";
       if (cookieUsername !== this.username) {
@@ -324,7 +369,6 @@ export default {
       }
     }, 1000);
 
-    // Lấy vị trí ban đầu
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
