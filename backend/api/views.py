@@ -524,6 +524,13 @@ def get_weather(request):
         visibility = current_data.get('visibility', None)
         if current_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu thời tiết", "details": current_data}, status=400)
+        
+                # --- lấy UV index ---
+        uv_url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,daily,alerts&appid={api_key}"
+        uv_resp = requests.get(uv_url, timeout=8)
+        uv_data = uv_resp.json()
+        uv_index = uv_data.get("current", {}).get("uvi", None)
+
 
         timezone_offset = current_data.get("timezone", 0)
         offset = datetime.timedelta(seconds=timezone_offset)
@@ -585,6 +592,7 @@ def get_weather(request):
             "upcoming_hours": upcoming_hours,
             "daily_forecast": daily_forecast_list,
             "visibility": visibility,
+            "uv_index": uv_index,  
             "source": "OpenWeather"
         }
         return Response(result)

@@ -141,6 +141,7 @@ export default {
       forecastToday: [],
       forecast3days: [],
       humidity: null,
+      uvIndex: null, 
 
       // thêm settings
       settings: {
@@ -328,6 +329,7 @@ export default {
       this.chanceOfRain = data.chance_of_rain ? data.chance_of_rain + "%" : "0%";
       this.condition = data.condition;
       this.humidity = data.humidity;
+      this.uvIndex = data.uv_index;  
       this.visibility = data.visibility; // mét từ API
 
       let localHour = null;
