@@ -98,17 +98,28 @@
       </section>
 
       <!-- Feedback -->
+      <!-- Feedback -->
       <section class="card" id="support">
         <h2 class="sub-title">Support</h2>
         <p>
-          Need feedback or assistance? Leave a comment below or email
-          <b>{{ email || 'support@vietcloud.com' }}</b>
+          Need feedback or assistance? Leave a comment below.<br>
+          Success notification will appear soon, please do not spam !!!
         </p>
-        <textarea rows="3" placeholder="Enter your message..."></textarea>
+        <textarea v-model="feedbackMessage" rows="3" placeholder="Enter your message..."></textarea>
         <div class="card-actions">
-          <button class="btn-primary" @click="handleAction('send-feedback')">Send</button>
+          <button
+            class="btn-primary"
+            @click="sendFeedback"
+            :disabled="sendingDisabled"
+          >
+            <span v-if="sendingDisabled">
+              Please wait {{ countdown }}s…
+            </span>
+            <span v-else>Send</span>
+          </button>
         </div>
       </section>
+
 
       <!-- Footer links -->
       <footer class="footer-links">
@@ -231,6 +242,9 @@ export default {
       showDeleteAccount: false,
       username: null,
       email: null,
+      feedbackMessage: "",
+      sendingDisabled: false,
+      countdown: 0,
       // change password
       current_password: "",
       new_password: "",
@@ -384,7 +398,47 @@ export default {
         this.submittingDelete = false;
       }
     },
-  },
+        async sendFeedback() {
+  if (!this.feedbackMessage.trim()) {
+    alert("Please enter your feedback message.");
+    return;
+  }
+
+  // nếu đang cooldown thì thoát
+  if (this.sendingDisabled) return;
+
+  // BẮT ĐẦU cooldown ngay khi click
+  this.sendingDisabled = true;
+  this.countdown = 8;
+  const interval = setInterval(() => {
+    this.countdown--;
+    if (this.countdown <= 0) {
+      this.sendingDisabled = false;
+      clearInterval(interval);
+    }
+  }, 1000);
+
+  try {
+    await axios.post(
+      "http://localhost:8000/api/send-feedback/",
+      {
+        message: this.feedbackMessage,
+        email: this.email || "",
+      },
+      { withCredentials: true }
+    );
+    alert("Feedback sent successfully!");
+    this.feedbackMessage = "";
+  } catch (err) {
+    console.error(err);
+    alert(
+      err.response?.data?.error ||
+        err.response?.data?.detail ||
+        "Failed to send feedback."
+        );
+      }
+    }
+  }
 };
 </script>
 

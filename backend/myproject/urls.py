@@ -26,4 +26,7 @@ urlpatterns = [
 
     # Premium
     path('api/check-premium/', views.check_premium, name="check_premium"),
+    
+    
+    path('api/send-feedback/', views.send_feedback, name="send_feedback"),
 ]
