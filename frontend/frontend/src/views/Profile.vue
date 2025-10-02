@@ -98,7 +98,6 @@
       </section>
 
       <!-- Feedback -->
-      <!-- Feedback -->
       <section class="card" id="support">
         <h2 class="sub-title">Support</h2>
         <p>
@@ -119,7 +118,6 @@
           </button>
         </div>
       </section>
-
 
       <!-- Footer links -->
       <footer class="footer-links">
@@ -226,6 +224,16 @@
         </div>
       </div>
     </transition>
+
+    <!-- Overlay + Popup notification -->
+    <transition name="fade">
+      <div v-if="showPopup" class="overlay">
+        <div class="popup-box" :class="popupSuccess ? 'popup-success' : 'popup-error'">
+          <h3>{{ popupMessage }}</h3>
+          <button class="btn-primary" @click="showPopup=false">OK</button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -264,10 +272,13 @@ export default {
       submittingDelete: false,
       showDeletePassword: false,
       showDeleteConfirm: false,
+      // popup
+      showPopup: false,
+      popupMessage: "",
+      popupSuccess: true,
     };
   },
   created() {
-    // Lấy thông tin user/email từ cookie
     const getCookie = (name) => {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
@@ -277,10 +288,8 @@ export default {
     if (!this.username) this.$router.push("/");
   },
   methods: {
-        scrollTo(section) {
-      // set tab đang active
+    scrollTo(section) {
       this.activeTab = section;
-      // cuộn tới section có id tương ứng
       const el = document.getElementById(section);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -289,7 +298,6 @@ export default {
 
     handleAction(action) { /* giữ nguyên */ },
 
-    // Change password
     openChangePassword() { this.showChangePassword = true; },
     closeChangePassword() {
       this.showChangePassword = false;
@@ -316,14 +324,13 @@ export default {
             confirm_password: this.confirm_password,
           },
           {
-            withCredentials: true, // gửi cookie HttpOnly
+            withCredentials: true,
           }
         );
 
         this.passwordAlert = res.data.message || "Password changed successfully.";
         this.passwordSuccess = true;
 
-        // logout và redirect sau 3s
         setTimeout(() => {
           document.cookie.split(";").forEach(c => {
             document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
@@ -339,12 +346,10 @@ export default {
       }
     },
 
-    // Warning modal
     openWarningModal() { this.showWarning = true; },
     closeWarning() { this.showWarning = false; },
     proceedDeleteAccount() { this.showWarning = false; this.showDeleteAccount = true; },
 
-    // Delete account
     closeDeleteAccount() {
       this.showDeleteAccount = false;
       this.delete_username = "";
@@ -378,7 +383,7 @@ export default {
             password: this.delete_password,
             confirm_password: this.delete_confirm_password,
           },
-          { withCredentials: true } // gửi cookie HttpOnly
+          { withCredentials: true }
         );
 
         this.deleteAlert = res.data.message || "Account deleted successfully.";
@@ -398,49 +403,48 @@ export default {
         this.submittingDelete = false;
       }
     },
-        async sendFeedback() {
-  if (!this.feedbackMessage.trim()) {
-    alert("Please enter your feedback message.");
-    return;
-  }
 
-  // nếu đang cooldown thì thoát
-  if (this.sendingDisabled) return;
+    async sendFeedback() {
+      if (!this.feedbackMessage.trim()) {
+        this.popupMessage = "Please enter your feedback message.";
+        this.popupSuccess = false;
+        this.showPopup = true;
+        return;
+      }
+      if (this.sendingDisabled) return;
 
-  // BẮT ĐẦU cooldown ngay khi click
-  this.sendingDisabled = true;
-  this.countdown = 8;
-  const interval = setInterval(() => {
-    this.countdown--;
-    if (this.countdown <= 0) {
-      this.sendingDisabled = false;
-      clearInterval(interval);
-    }
-  }, 1000);
+      this.sendingDisabled = true;
+      this.countdown = 8;
+      const interval = setInterval(() => {
+        this.countdown--;
+        if (this.countdown <= 0) {
+          this.sendingDisabled = false;
+          clearInterval(interval);
+        }
+      }, 1000);
 
-  try {
-    await axios.post(
-      "http://localhost:8000/api/send-feedback/",
-      {
-        message: this.feedbackMessage,
-        email: this.email || "",
-      },
-      { withCredentials: true }
-    );
-    alert("Feedback sent successfully!");
-    this.feedbackMessage = "";
-  } catch (err) {
-    console.error(err);
-    alert(
-      err.response?.data?.error ||
-        err.response?.data?.detail ||
-        "Failed to send feedback."
+      try {
+        await axios.post(
+          "http://localhost:8000/api/send-feedback/",
+          {
+            message: this.feedbackMessage,
+            email: this.email || "",
+          },
+          { withCredentials: true }
         );
+        this.popupMessage = "Feedback sent successfully! Support will respond to your email soon.";
+        this.popupSuccess = true;
+        this.showPopup = true;
+        this.feedbackMessage = "";
+      } catch (err) {
+        console.error(err);
+        this.popupMessage = err.response?.data?.error || err.response?.data?.detail || "Failed to send feedback.";
+        this.popupSuccess = false;
+        this.showPopup = true;
       }
     }
   }
 };
 </script>
-
 
 <style scoped src="@/assets/Profile.css"></style>

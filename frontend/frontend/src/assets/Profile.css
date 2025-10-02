@@ -369,3 +369,48 @@ button[disabled] {
   opacity: 0.6;
   cursor: not-allowed;
 }
+/* Popup box */
+.popup-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  width: 420px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  animation: popup 0.3s ease;
+}
+.popup-box h3 {
+  margin-bottom: 20px;
+}
+
+
+/* Popup box chung */
+.popup-box {
+  border-radius: 12px;
+  padding: 30px;
+  width: 420px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  animation: popup 0.3s ease;
+}
+
+/* Tiêu đề */
+.popup-box h3 {
+  margin-bottom: 20px;
+}
+
+/* Success – nền xanh nhạt */
+.popup-success {
+  background-color: #e8f5e9; /* xanh lá nhạt */
+  color: #2e7d32;            /* chữ xanh đậm */
+}
+
+/* Error – nền đỏ nhạt */
+.popup-error {
+  background-color: #ffebee; /* đỏ nhạt */
+  color: #b71c1c;            /* chữ đỏ đậm */
+}
+
+
