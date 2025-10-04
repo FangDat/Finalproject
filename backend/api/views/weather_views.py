@@ -3,7 +3,7 @@ import datetime
 from urllib.parse import quote
 import logging
 import re
-
+from collections import Counter
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -165,6 +165,29 @@ def get_city_from_coordinates(lat, lon, geocode_key):
 
 
 # ---------------------------
+# Helper chọn icon ban ngày
+# ---------------------------
+def choose_daytime_icon(icons):
+    """
+    Chọn icon phổ biến nhất cho ngày.
+    Nếu icon phổ biến nhất là ban đêm (01n, 02n, ...), 
+    fallback sang icon ban ngày (01d, 02d, ...) gần nhất.
+    """
+    if not icons:
+        return None
+    counter = Counter(icons)
+    most_common_icon = counter.most_common(1)[0][0]
+
+    # Nếu icon phổ biến nhất là ban đêm
+    if most_common_icon.endswith('n'):
+        # Tìm icon ban ngày cùng loại
+        daytime_icons = [i for i in icons if i.endswith('d')]
+        if daytime_icons:
+            daytime_counter = Counter(daytime_icons)
+            most_common_icon = daytime_counter.most_common(1)[0][0]
+    return most_common_icon
+
+# ---------------------------
 # GET WEATHER
 # ---------------------------
 @api_view(['GET'])
@@ -246,9 +269,9 @@ def get_weather(request):
 
             day_str = dt_local.date().isoformat()
             if day_str not in daily_forecast:
-                daily_forecast[day_str] = {
-                    "temps": [], "condition": item['weather'][0]['main'].lower()}
+                daily_forecast[day_str] = {"temps": [], "icons": []}
             daily_forecast[day_str]["temps"].append(item['main']['temp'])
+            daily_forecast[day_str]["icons"].append(item['weather'][0]['icon'])
 
         chance_of_rain = 0
         for item in forecast_data.get('list', []):
@@ -259,15 +282,19 @@ def get_weather(request):
             if dt_local > now:
                 chance_of_rain = item.get("pop", 0) * 100
                 break
-
+            
+                # Tạo danh sách forecast theo ngày
         daily_forecast_list = []
         for day, info in list(daily_forecast.items())[:3]:
+            # Chọn icon xuất hiện nhiều nhất trong ngày, với fallback ban ngày
+            most_common_icon = choose_daytime_icon(info.get("icons", []))
+            
             daily_forecast_list.append({
                 "day": day,
-                "condition": info["condition"],
                 "temp": f"{int(max(info['temps']))}/{int(min(info['temps']))}",
-                "icon": item['weather'][0]['icon'] 
+                "icon": most_common_icon
             })
+
 
         result = {
             "location": city_name,
