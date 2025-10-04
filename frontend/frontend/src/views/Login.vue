@@ -3,7 +3,7 @@
     <div class="login-box">
       <!-- Logo -->
       <div class="logo">
-        <img src="@/assets/clouds.png" alt="logo" class="logo-img" />
+        <img src="@/assets/cloudy.png" alt="logo" class="logo-img" />
         <h1>VietCloud</h1>
       </div>
 

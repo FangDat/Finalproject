@@ -44,8 +44,16 @@
         </div>
       </header>
 
+      <!-- Nếu có lỗi thì hiển thị component lỗi -->
+      <WeatherError
+        v-if="errorMessage"
+        :message="errorMessage"
+        :gif="errorGif"
+        @close="errorMessage = ''"
+      />
+
       <!-- Thông tin thời tiết -->
-      <section class="weather-main card">
+      <section class="weather-main card" v-if="!errorMessage">
         <div>
           <h1 class="city">{{ city }}</h1>
           <p class="rain">Chance of rain: {{ chanceOfRain }}</p>
@@ -59,7 +67,7 @@
       </section>
 
       <!-- Forecast trong ngày -->
-      <section class="card">
+      <section class="card" v-if="!errorMessage">
         <h3 class="section-title">Today's Forecast</h3>
         <div class="forecast-today">
           <div
@@ -68,14 +76,14 @@
             class="forecast-item"
           >
             <p>{{ item.time }}</p>
-            <img :src="getIconSrc(item.icon, item.time)" class="forecast-icon" />
+            <img :src="getIconSrc(item.icon)" class="forecast-icon" />
             <p>{{ Math.round(formatTemp(item.temp)) + tempUnitSymbol }}</p>
           </div>
         </div>
       </section>
 
       <!-- Điều kiện không khí -->
-      <section class="card">
+      <section class="card" v-if="!errorMessage">
         <h3 class="section-title">Air Condition</h3>
         <div class="air-grid">
           <div>🌡️ Real feel: {{ realFeel ? Math.round(formatTemp(realFeel)) + tempUnitSymbol : '—' }}</div>
@@ -89,7 +97,7 @@
     </main>
 
     <!-- Sidebar phải -->
-    <aside class="sidebar-right">
+    <aside class="sidebar-right" v-if="!errorMessage">
       <h3 class="section-title">3-Day Forecast</h3>
       <div
         v-for="(day, index) in forecast3days"
@@ -111,17 +119,19 @@
 </template>
 
 <script>
-import { 
-  cToF, 
-  msToKmh, 
-  msToMph, 
-  kmToMiles, 
-  mToKm, 
-  mToMiles 
+import {
+  cToF,
+  msToKmh,
+  msToMph,
+  kmToMiles,
+  mToKm,
+  mToMiles
 } from '@/utils.js'
+import WeatherError from "@/components/WeatherError.vue";
 
 export default {
   name: "Home",
+  components: { WeatherError },
   data() {
     return {
       username: this.getCookie("username") || "",
@@ -137,13 +147,13 @@ export default {
       visibility: null,
       uvIndex: 2,
       condition: "",
-      weatherIcon: require("@/assets/clear.png"),
+      weatherIcon: require("@/assets/01d.png"),
       forecastToday: [],
       forecast3days: [],
       humidity: null,
-      uvIndex: null, 
-
-      // thêm settings
+      uvIndex: null,
+      errorMessage: "",
+      errorGif: "",
       settings: {
         temperature: 'Celsius',
         windSpeed: 'Km/h',
@@ -167,8 +177,6 @@ export default {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
     },
-
-    // chuyển đổi
     formatTemp(tempC) {
       return this.settings.temperature === 'Fahrenheit' ? cToF(tempC) : tempC
     },
@@ -177,52 +185,24 @@ export default {
     },
     formatDistance(meters) {
       if (meters == null) return '—'
-      return this.settings.Visibility === 'Miles' ? 
-        Math.round(mToMiles(meters)) : 
+      return this.settings.Visibility === 'Miles' ?
+        Math.round(mToMiles(meters)) :
         Math.round(mToKm(meters))
     },
-
-    getIconSrc(iconName, timeStr = null) {
-      let hour = null;
-      if (timeStr) {
-        try {
-          hour = parseInt(timeStr.split(":")[0], 10);
-        } catch {
-          hour = null;
-        }
-      } else {
-        hour = new Date().getHours();
-      }
-      const isNight = hour !== null && (hour >= 19 || hour < 7);
-
-      if (iconName.includes("cloud")) {
-        return isNight
-          ? require("@/assets/moonandclouds.png")
-          : require("@/assets/clouds.png");
-      }
-      if (iconName.includes("clear")) {
-        return isNight ? require("@/assets/moon.png") : require("@/assets/clear.png");
-      }
-      if (iconName.includes("rain")) {
-        return require("@/assets/rain.png");
-      }
+    getIconSrc(iconCode) {
       try {
-        return require(`@/assets/${iconName}.png`);
-      } catch {
-        return require("@/assets/clouds.png");
+        return require(`@/assets/${iconCode}.png`);
+      } catch (e) {
+        return require("@/assets/01d.png");
       }
     },
-    getDayIcon(iconName) {
-      if (iconName.includes("cloud")) return require("@/assets/clouds.png");
-      if (iconName.includes("clear")) return require("@/assets/clear.png");
-      if (iconName.includes("rain")) return require("@/assets/rain.png");
+    getDayIcon(iconCode) {
       try {
-        return require(`@/assets/${iconName}.png`);
-      } catch {
-        return require("@/assets/clouds.png");
+        return require(`@/assets/${iconCode}.png`);
+      } catch (e) {
+        return require("@/assets/01d.png");
       }
     },
-
     onSearchInput() {
       if (this.suggestTimer) clearTimeout(this.suggestTimer);
       const q = this.searchQuery.trim();
@@ -235,7 +215,6 @@ export default {
         this.fetchSuggestions(q);
       }, 100);
     },
-
     async fetchSuggestions(q) {
       try {
         const res = await fetch(
@@ -255,7 +234,6 @@ export default {
         this.showSuggestions = false;
       }
     },
-
     selectSuggestion(s) {
       this.searchQuery = s.name;
       this.showSuggestions = false;
@@ -265,7 +243,6 @@ export default {
         this.fetchWeather(s.name);
       }
     },
-
     onEnterSearch() {
       if (
         this.suggestions.length > 0 &&
@@ -278,11 +255,9 @@ export default {
       this.fetchWeather(this.searchQuery.trim());
       this.showSuggestions = false;
     },
-
     onClickSearch() {
       this.onEnterSearch();
     },
-
     async fetchWeather(city = "") {
       try {
         let url = city
@@ -290,37 +265,49 @@ export default {
           : "http://localhost:8000/api/weather/";
         const response = await fetch(url);
         const data = await response.json();
-
         if (response.ok) {
+          this.errorMessage = "";
+          this.errorGif = "";
           this.applyWeatherData(data);
           this.showSuggestions = false;
         } else {
-          alert(data.error || "Không lấy được dữ liệu thời tiết");
+          // lỗi tìm thành phố
+          this.errorMessage = `Location '${city}' not found\nTry searching another location`;
+          this.errorGif = ""; // dùng umbrella + sad
         }
       } catch (err) {
-        alert("Không thể kết nối đến server");
+        // lỗi tìm thành phố
+        this.errorMessage = `Location '${city}' not found\nTry searching another location`;
+        this.errorGif = "";
         console.error(err);
       }
     },
-
     getWeatherByLocation(lat, lon, name = null) {
       let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(
         lat
       )}&lon=${encodeURIComponent(lon)}`;
       if (name) url += `&name=${encodeURIComponent(name)}`;
       fetch(url)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            alert(data.error);
+        .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+        .then(({ ok, data }) => {
+          if (!ok || data.error) {
+            // lỗi tìm thành phố
+            this.errorMessage = `Location '${this.searchQuery}' not found\nTry searching another location`;
+            this.errorGif = "";
             return;
           }
+          this.errorMessage = "";
+          this.errorGif = "";
           this.applyWeatherData(data);
           this.showSuggestions = false;
         })
-        .catch((err) => console.error("Error location weather:", err));
+        .catch((err) => {
+          // lỗi tìm thành phố
+          this.errorMessage = `Location '${this.searchQuery}' not found\nTry searching another location`;
+          this.errorGif = "";
+          console.error("Error location weather:", err);
+        });
     },
-
     applyWeatherData(data) {
       this.city = data.location || this.searchQuery;
       this.temperature = data.temperature;
@@ -329,59 +316,51 @@ export default {
       this.chanceOfRain = data.chance_of_rain ? data.chance_of_rain + "%" : "0%";
       this.condition = data.condition;
       this.humidity = data.humidity;
-      this.uvIndex = data.uv_index;  
-      this.visibility = data.visibility; // mét từ API
-
-      let localHour = null;
-      if (data.upcoming_hours?.length > 0) {
-        localHour = parseInt(
-          data.upcoming_hours[0].time.split(" ")[1].split(":")[0],
-          10
-        );
+      this.uvIndex = data.uv_index;
+      this.visibility = data.visibility;
+      if (data.icon) {
+        this.weatherIcon = this.getIconSrc(data.icon);
+      } else {
+        this.weatherIcon = require("@/assets/01d.png");
       }
-      this.weatherIcon = this.getIconSrc(
-        data.condition.toLowerCase(),
-        localHour !== null ? localHour + ":00" : null
-      );
-
       this.forecastToday = (data.upcoming_hours || []).map((item) => ({
         time: item.time.split(" ")[1].slice(0, 5),
         temp: item.temp,
-        icon: item.condition.toLowerCase(),
+        icon: item.icon
       }));
-
       this.forecast3days = (data.daily_forecast || []).map((item) => ({
         day: item.day,
         temp: item.temp,
-        icon: item.condition.toLowerCase(),
+        icon: item.icon
       }));
     },
   },
-
   mounted() {
     const saved = localStorage.getItem("vietcloud_settings");
     if (saved) {
       this.settings = JSON.parse(saved);
     }
-
     this.cookieCheckInterval = setInterval(() => {
       const cookieUsername = this.getCookie("username") || "";
       if (cookieUsername !== this.username) {
         this.username = cookieUsername;
       }
     }, 1000);
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           this.getWeatherByLocation(pos.coords.latitude, pos.coords.longitude);
         },
         () => {
-          this.fetchWeather();
+          // lỗi không lấy được lat/lon
+          this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:\n- Refresh your browser.\n- Allow your browser to access your location and try again.`;
+          this.errorGif = "location-pin.gif";
         }
       );
     } else {
-      this.fetchWeather();
+      // lỗi không lấy được lat/lon
+      this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:\n- Refresh your browser.\n- Allow your browser to access your location and try again.`;
+      this.errorGif = "location-pin.gif";
     }
   },
   beforeUnmount() {

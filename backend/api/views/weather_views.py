@@ -240,7 +240,8 @@ def get_weather(request):
                 upcoming_hours.append({
                     "time": dt_local.strftime("%Y-%m-%d %H:%M"),
                     "temp": item['main']['temp'],
-                    "condition": item['weather'][0]['main'].lower()
+                    "condition": item['weather'][0]['main'].lower(),
+                    "icon": item['weather'][0]['icon']
                 })
 
             day_str = dt_local.date().isoformat()
@@ -264,7 +265,8 @@ def get_weather(request):
             daily_forecast_list.append({
                 "day": day,
                 "condition": info["condition"],
-                "temp": f"{int(max(info['temps']))}/{int(min(info['temps']))}"
+                "temp": f"{int(max(info['temps']))}/{int(min(info['temps']))}",
+                "icon": item['weather'][0]['icon'] 
             })
 
         result = {
@@ -272,6 +274,7 @@ def get_weather(request):
             "temperature": current_data['main']['temp'],
             "humidity": current_data['main']['humidity'],
             "condition": current_data['weather'][0]['main'].lower(),
+            "icon": current_data['weather'][0]['icon'],  # ví dụ 01d
             "wind_speed": current_data['wind']['speed'],
             "chance_of_rain": round(chance_of_rain),
             "upcoming_hours": upcoming_hours,
