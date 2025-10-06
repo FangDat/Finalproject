@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 @api_view(['POST'])
-@permission_classes([AllowAny])  # cho phép user đã login hay chưa đều gửi
+@permission_classes([AllowAny]) 
 def send_feedback(request):
     """
     Nhận feedback từ frontend và gửi email đến admin.

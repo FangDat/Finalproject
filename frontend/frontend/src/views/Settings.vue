@@ -3,7 +3,7 @@
     <!-- Sidebar trái -->
     <aside class="sidebar-left">
       <h2 class="logo">
-        <router-link to="/">🌤 Viet Cloud</router-link>
+        <router-link to="/">🌤 VietCloud</router-link>
       </h2>
       <nav class="nav-menu">
         <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
