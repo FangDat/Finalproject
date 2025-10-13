@@ -76,12 +76,21 @@ DATABASES = {
 # ----------------------
 # Cache
 # ----------------------
+# Sử dụng django-redis (đã cài django-redis==4.12.1 và redis==3.5.3)
+# Cache chỉ lưu dữ liệu API (weather, geocoding) — KHÔNG dùng cho session hoặc JWT
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://localhost:6379/1",
+        "BACKEND": "django_redis.cache.RedisCache",
+        # ⚠️ Dùng DB 0 để dễ xem trong redis-cli (mặc định CLI kết nối DB 0)
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "IGNORE_EXCEPTIONS": True,  # không crash khi Redis lỗi
+        },
+        "KEY_PREFIX": "vietcloud"  # dễ lọc bằng redis-cli keys vietcloud*
     }
 }
+
 
 # ----------------------
 # Password Validators
@@ -148,3 +157,47 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'skyfall20192k4@gmail.com'
 EMAIL_HOST_PASSWORD = 'ssgi pllg kryk eias'  # App password Gmail
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# ----------------------
+# Logging Configuration
+# ----------------------
+import sys
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # để Django không tắt các logger mặc định
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} [{name}] {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'debug.log',  # file log ghi ra cùng thư mục project
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'backend.api.views.weather_views': {  # tên module của file weather_views.py
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django': {  # để log thêm info Django
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

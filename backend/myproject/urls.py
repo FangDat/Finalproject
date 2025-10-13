@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
+
 # import các view đã tách
 from backend.api.views.auth_views import (
     signup, login, logout, refresh_token,
