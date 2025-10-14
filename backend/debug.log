@@ -122,3 +122,50 @@
 [2025-10-13 12:08:44,906] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Quảng Ninh
 [2025-10-13 12:08:45,173] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Quảng Ninh
 [2025-10-13 12:08:46,253] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:21.171805:107.201274
+[2025-10-14 15:40:05,746] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050207:108.149454
+[2025-10-14 15:42:04,538] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:huu
+[2025-10-14 15:42:04,730] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:hu
+[2025-10-14 15:42:06,025] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:h
+[2025-10-14 15:42:07,318] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:huế
+[2025-10-14 15:42:07,579] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:huế
+[2025-10-14 15:42:07,784] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.553047:107.690038
+[2025-10-14 15:42:07,795] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
+[2025-10-14 15:42:07,795] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
+[2025-10-14 15:45:21,218] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-14 15:45:21,400] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-14 15:45:21,538] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-14 15:45:22,743] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:hà
+[2025-10-14 15:45:22,750] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
+[2025-10-14 15:45:22,752] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
+[2025-10-14 15:45:22,754] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
+[2025-10-14 15:45:22,756] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
+[2025-10-14 15:45:22,932] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
+[2025-10-14 15:45:24,073] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:hà nội
+[2025-10-14 15:45:24,398] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:hà nội
+[2025-10-14 15:45:24,504] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:21.028333:105.854041
+[2025-10-14 15:45:24,514] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Hà Nội'
+[2025-10-14 15:45:24,514] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:21.028333:105.854041
+[2025-10-14 15:45:50,234] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà Nội
+[2025-10-14 15:45:50,488] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà Nội
+[2025-10-14 15:45:50,638] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà Nội
+[2025-10-14 15:45:50,826] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà Nội
+[2025-10-14 15:45:50,856] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
+[2025-10-14 15:45:50,857] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
+[2025-10-14 15:45:50,919] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
+[2025-10-14 15:45:50,920] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
+[2025-10-14 15:45:50,953] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-14 15:45:53,532] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
+[2025-10-14 15:46:00,370] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-14 15:46:00,546] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-14 15:46:00,700] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-14 15:46:01,098] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
+[2025-10-14 15:46:01,369] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
+[2025-10-14 15:46:01,621] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
+[2025-10-14 15:46:01,772] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
+[2025-10-14 15:46:01,937] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
+[2025-10-14 15:46:02,109] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
+[2025-10-14 15:46:02,286] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'hà nội'
+[2025-10-14 15:46:02,287] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:21.028333:105.854041
+[2025-10-14 15:46:02,341] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'hà nội'
+[2025-10-14 15:46:02,341] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:21.028333:105.854041
+[2025-10-14 15:46:02,383] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà nội
