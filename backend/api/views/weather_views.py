@@ -289,8 +289,11 @@ def get_weather(request):
         # Nếu có trong cache -> trả luôn
         cached_weather = cache.get(weather_cache_key)
         if cached_weather:
+            logger.info(f"💾 [CACHE HIT] Trả dữ liệu từ Redis cho key={weather_cache_key}")
             logger.debug("✅ Trả weather từ Redis cache cho key=%s", weather_cache_key)
             return Response(cached_weather)
+        else:
+            logger.info(f"🌍 [API CALL] Gọi OpenWeather cho key={weather_cache_key}")
 
         # --- gọi API OpenWeather ---
         current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"

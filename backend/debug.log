@@ -1,171 +1,64 @@
-[2025-10-13 12:03:53,857] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.068010:108.241816
-[2025-10-13 12:04:09,689] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:huế
-[2025-10-13 12:04:09,847] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:huế
-[2025-10-13 12:04:10,228] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.553047:107.690038
-[2025-10-13 12:04:10,238] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
-[2025-10-13 12:04:10,238] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
-[2025-10-13 12:04:38,286] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:kyoto
-[2025-10-13 12:04:38,337] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:kyoto
-[2025-10-13 12:04:38,816] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:35.011575:135.768144
-[2025-10-13 12:04:38,839] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Kyoto'
-[2025-10-13 12:04:38,840] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:35.011575:135.768144
-[2025-10-13 12:04:53,979] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.067847:108.241697
-[2025-10-13 12:05:09,537] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Kyoto'
-[2025-10-13 12:05:09,538] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:35.011575:135.768144
-[2025-10-13 12:05:09,635] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Kyoto'
-[2025-10-13 12:05:09,636] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:35.011575:135.768144
-[2025-10-13 12:05:09,636] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Kyoto
-[2025-10-13 12:05:11,420] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:35.011575:135.768144
-[2025-10-13 12:05:14,491] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:京都市, 京都府
-[2025-10-13 12:05:14,496] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=京都市, 京都府
-[2025-10-13 12:05:14,498] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=京都市, 京都府
-[2025-10-13 12:05:14,500] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=京都市, 京都府
-[2025-10-13 12:05:14,502] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=京都市, 京都府
-[2025-10-13 12:05:17,323] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
-[2025-10-13 12:05:17,324] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
-[2025-10-13 12:05:17,417] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-13 12:05:31,852] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-13 12:05:32,035] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-13 12:05:32,227] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-13 12:05:32,407] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-13 12:05:33,237] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:bình
-[2025-10-13 12:05:33,848] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:bình
-[2025-10-13 12:05:34,529] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:bình
-[2025-10-13 12:05:34,694] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:bình đ
-[2025-10-13 12:05:34,701] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Bình Đ
-[2025-10-13 12:05:34,703] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Bình Đ
-[2025-10-13 12:05:34,706] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Bình Đ
-[2025-10-13 12:05:34,708] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Bình Đ
-[2025-10-13 12:05:34,970] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:bình đi
-[2025-10-13 12:05:35,283] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:bình
-[2025-10-13 12:05:35,730] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:bình định
-[2025-10-13 12:05:35,736] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:bình định
-[2025-10-13 12:05:36,276] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:13.887191:109.101382
-[2025-10-13 12:05:36,283] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Bình Định'
-[2025-10-13 12:05:36,284] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:13.887191:109.101382
-[2025-10-13 12:06:39,490] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.067847:108.241697
-[2025-10-13 12:06:50,754] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:new
-[2025-10-13 12:06:50,761] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=New
-[2025-10-13 12:06:50,763] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=New
-[2025-10-13 12:06:50,765] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=New
-[2025-10-13 12:06:51,627] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=New
-[2025-10-13 12:06:53,367] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:new yor
-[2025-10-13 12:06:53,375] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=New Yor
-[2025-10-13 12:06:56,063] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:53.963960:-1.091420
-[2025-10-13 12:06:56,588] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:new york
-[2025-10-13 12:06:59,651] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:york, england
-[2025-10-13 12:07:00,178] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:54.000000:-1.500000
-[2025-10-13 12:07:07,511] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.067851:108.241695
-[2025-10-13 12:07:14,713] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:york
-[2025-10-13 12:07:17,209] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York
-[2025-10-13 12:07:18,501] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:york,
-[2025-10-13 12:07:18,505] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:18,506] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:18,508] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:18,510] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:18,511] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:18,541] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:19,578] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:york, engl
-[2025-10-13 12:07:20,345] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:york, engl
-[2025-10-13 12:07:20,727] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:york, england
-[2025-10-13 12:07:20,957] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'York, england'
-[2025-10-13 12:07:20,957] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:54.000000:-1.500000
-[2025-10-13 12:07:20,977] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:york, engl
-[2025-10-13 12:07:21,880] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:york, engl
-[2025-10-13 12:07:27,491] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.067851:108.241695
-[2025-10-13 12:07:29,665] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:yo
-[2025-10-13 12:07:29,671] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Yo
-[2025-10-13 12:07:29,674] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Yo
-[2025-10-13 12:07:30,581] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:yord,
-[2025-10-13 12:07:31,829] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:yord
-[2025-10-13 12:07:31,998] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:yor
-[2025-10-13 12:07:32,003] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Yor
-[2025-10-13 12:07:32,076] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Yor
-[2025-10-13 12:07:32,426] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Yor
-[2025-10-13 12:07:32,717] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:32,919] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:33,206] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:33,381] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:33,772] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:34,427] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:34,565] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:35,262] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:35,400] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York,
-[2025-10-13 12:07:36,941] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York, England
-[2025-10-13 12:07:41,770] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:53.965658:-1.074305
-[2025-10-13 12:07:50,294] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:york, anh
-[2025-10-13 12:07:50,298] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York, Anh
-[2025-10-13 12:07:50,301] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York, Anh
-[2025-10-13 12:07:50,308] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York, Anh
-[2025-10-13 12:07:50,458] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York, Anh
-[2025-10-13 12:07:50,645] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=York, Anh
-[2025-10-13 12:07:51,655] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:sydney
-[2025-10-13 12:07:51,931] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:sydney
-[2025-10-13 12:07:52,266] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:-33.869844:151.208285
-[2025-10-13 12:07:52,273] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Sydney'
-[2025-10-13 12:07:52,274] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:-33.869844:151.208285
-[2025-10-13 12:07:56,471] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.067851:108.241695
-[2025-10-13 12:08:22,108] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:22,849] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:23,674] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:23,844] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng ninh
-[2025-10-13 12:08:24,469] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:25,089] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:25,794] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:21.171805:107.201274
-[2025-10-13 12:08:39,499] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.067393:108.241656
-[2025-10-13 12:08:41,375] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:42,345] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:42,579] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Quảng Ninh
-[2025-10-13 12:08:43,036] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:43,679] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:44,336] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:quảng
-[2025-10-13 12:08:44,906] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Quảng Ninh
-[2025-10-13 12:08:45,173] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Quảng Ninh
-[2025-10-13 12:08:46,253] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:21.171805:107.201274
-[2025-10-14 15:40:05,746] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050207:108.149454
-[2025-10-14 15:42:04,538] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:huu
-[2025-10-14 15:42:04,730] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:hu
-[2025-10-14 15:42:06,025] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:h
-[2025-10-14 15:42:07,318] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:huế
-[2025-10-14 15:42:07,579] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:huế
-[2025-10-14 15:42:07,784] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.553047:107.690038
-[2025-10-14 15:42:07,795] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
-[2025-10-14 15:42:07,795] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
-[2025-10-14 15:45:21,218] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-14 15:45:21,400] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-14 15:45:21,538] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-14 15:45:22,743] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:hà
-[2025-10-14 15:45:22,750] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
-[2025-10-14 15:45:22,752] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
-[2025-10-14 15:45:22,754] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
-[2025-10-14 15:45:22,756] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
-[2025-10-14 15:45:22,932] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà
-[2025-10-14 15:45:24,073] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:hà nội
-[2025-10-14 15:45:24,398] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:hà nội
-[2025-10-14 15:45:24,504] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:21.028333:105.854041
-[2025-10-14 15:45:24,514] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Hà Nội'
-[2025-10-14 15:45:24,514] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:21.028333:105.854041
-[2025-10-14 15:45:50,234] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà Nội
-[2025-10-14 15:45:50,488] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà Nội
-[2025-10-14 15:45:50,638] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà Nội
-[2025-10-14 15:45:50,826] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hà Nội
-[2025-10-14 15:45:50,856] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
-[2025-10-14 15:45:50,857] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
-[2025-10-14 15:45:50,919] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
-[2025-10-14 15:45:50,920] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
-[2025-10-14 15:45:50,953] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-14 15:45:53,532] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
-[2025-10-14 15:46:00,370] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-14 15:46:00,546] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-14 15:46:00,700] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
-[2025-10-14 15:46:01,098] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
-[2025-10-14 15:46:01,369] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
-[2025-10-14 15:46:01,621] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
-[2025-10-14 15:46:01,772] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
-[2025-10-14 15:46:01,937] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
-[2025-10-14 15:46:02,109] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà
-[2025-10-14 15:46:02,286] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'hà nội'
-[2025-10-14 15:46:02,287] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:21.028333:105.854041
-[2025-10-14 15:46:02,341] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'hà nội'
-[2025-10-14 15:46:02,341] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:21.028333:105.854041
-[2025-10-14 15:46:02,383] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=hà nội
+[2025-10-15 12:01:51,885] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho key=weather:16.050159:108.149381
+[2025-10-15 12:01:52,331] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050159:108.149381
+[2025-10-15 12:02:11,806] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huu
+[2025-10-15 12:02:11,946] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hu
+[2025-10-15 12:02:12,068] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hu
+[2025-10-15 12:02:12,532] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hu
+[2025-10-15 12:02:12,731] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Hu
+[2025-10-15 12:02:12,778] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
+[2025-10-15 12:02:12,778] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:16.553047:107.690038
+[2025-10-15 12:02:12,779] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
+[2025-10-15 12:02:12,849] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Huế'
+[2025-10-15 12:02:12,849] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:16.553047:107.690038
+[2025-10-15 12:02:12,849] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
+[2025-10-15 12:02:12,876] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-15 12:02:14,169] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:16.553047:107.690038
+[2025-10-15 12:02:14,170] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.553047:107.690038
+[2025-10-15 12:02:19,544] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-15 12:02:19,737] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-15 12:02:19,896] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Huế
+[2025-10-15 12:02:20,806] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:lào
+[2025-10-15 12:02:20,813] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào
+[2025-10-15 12:02:20,816] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào
+[2025-10-15 12:02:20,819] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào
+[2025-10-15 12:02:21,636] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:lào cai
+[2025-10-15 12:02:21,637] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho key=weather:22.306930:104.182959
+[2025-10-15 12:02:21,652] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:lào cai
+[2025-10-15 12:02:22,073] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:22.306930:104.182959
+[2025-10-15 12:02:22,083] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Lào Cai'
+[2025-10-15 12:02:22,084] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:22.306930:104.182959
+[2025-10-15 12:02:22,084] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:22.306930:104.182959
+[2025-10-15 12:03:30,899] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:16.050159:108.149381
+[2025-10-15 12:03:30,900] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.050159:108.149381
+[2025-10-15 12:03:35,819] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào
+[2025-10-15 12:03:35,991] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào
+[2025-10-15 12:03:36,247] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào
+[2025-10-15 12:03:36,384] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Lào Cai'
+[2025-10-15 12:03:36,385] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:22.306930:104.182959
+[2025-10-15 12:03:36,385] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:22.306930:104.182959
+[2025-10-15 12:03:36,448] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Lào Cai'
+[2025-10-15 12:03:36,449] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:22.306930:104.182959
+[2025-10-15 12:03:36,449] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:22.306930:104.182959
+[2025-10-15 12:03:36,483] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào Cai
+[2025-10-15 12:03:43,055] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào Cai
+[2025-10-15 12:03:43,262] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào Cai
+[2025-10-15 12:03:43,459] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào Cai
+[2025-10-15 12:03:43,630] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Lào Cai
+[2025-10-15 12:03:44,733] DEBUG [backend.api.views.weather_views] 🔁 Autocomplete: lưu vào Redis cache key=geocode:autocomplete:vinh
+[2025-10-15 12:03:45,148] DEBUG [backend.api.views.weather_views] 🔁 Lưu geocode query vào cache key=geocode:query:vinh
+[2025-10-15 12:03:45,149] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho key=weather:29.445739:104.414762
+[2025-10-15 12:03:45,605] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:29.445739:104.414762
+[2025-10-15 12:03:45,614] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Vinh'
+[2025-10-15 12:03:45,615] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:29.445739:104.414762
+[2025-10-15 12:03:45,615] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:29.445739:104.414762
+[2025-10-15 12:03:59,041] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:16.050159:108.149381
+[2025-10-15 12:03:59,042] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:16.050159:108.149381
+[2025-10-15 12:04:01,369] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Vinh'
+[2025-10-15 12:04:01,370] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:29.445739:104.414762
+[2025-10-15 12:04:01,370] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:29.445739:104.414762
+[2025-10-15 12:04:01,456] DEBUG [backend.api.views.weather_views] ✅ Geocode query trả về từ cache cho 'Vinh'
+[2025-10-15 12:04:01,456] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:29.445739:104.414762
+[2025-10-15 12:04:01,456] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:29.445739:104.414762
+[2025-10-15 12:04:01,464] DEBUG [backend.api.views.weather_views] ✅ Autocomplete: trả về từ Redis cache cho query=Vinh
+[2025-10-15 12:04:04,428] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho key=weather:29.445739:104.414762
+[2025-10-15 12:04:04,428] DEBUG [backend.api.views.weather_views] ✅ Trả weather từ Redis cache cho key=weather:29.445739:104.414762
