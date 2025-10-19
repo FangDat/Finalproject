@@ -108,7 +108,7 @@ export default {
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  margin: 20px;
+  margin: 2px;
 }
 
 /* Header flex: logo trái, auth phải */
@@ -191,4 +191,6 @@ export default {
 .btn-logout:hover {
   background: #d32f2f;
 }
+
+
 </style>

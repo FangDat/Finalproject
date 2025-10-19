@@ -1,121 +1,123 @@
 <template>
-  <div class="home-container">
-    <!-- Sidebar trái -->
-    <aside class="sidebar-left">
-      <h2 class="logo">🌤 VietCloud</h2>
-      <nav class="nav-menu">
-        <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
-        <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
-        <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
-        <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-        <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
-      </nav>
-    </aside>
+  <DynamicBackground :icon-code="currentIcon">
+    <div class="home-container">
+      <!-- Sidebar trái -->
+      <aside class="sidebar-left">
+        <h2 class="logo">🌤 VietCloud</h2>
+        <nav class="nav-menu">
+          <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
+          <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
+          <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
+          <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
+          <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
+        </nav>
+      </aside>
 
-    <!-- Nội dung chính -->
-    <main class="main-content">
-      <!-- Thanh trên cùng -->
-      <header class="top-bar">
-        <div class="left-header">
-          <div class="search-container" style="position:relative;">
-            <input
-              type="text"
-              v-model="searchQuery"
-              @input="onSearchInput"
-              @keyup.enter="onEnterSearch"
-              placeholder="Search city..."
-              class="search-bar"
-              autocomplete="off"
-            />
-            <span class="search-icon" @click="onClickSearch">🔍</span>
+      <!-- Nội dung chính -->
+      <main class="main-content">
+        <!-- Thanh trên cùng -->
+        <header class="top-bar">
+          <div class="left-header">
+            <div class="search-container" style="position:relative;">
+              <input
+                type="text"
+                v-model="searchQuery"
+                @input="onSearchInput"
+                @keyup.enter="onEnterSearch"
+                placeholder="Search city..."
+                class="search-bar"
+                autocomplete="off"
+              />
+              <span class="search-icon" @click="onClickSearch">🔍</span>
 
-            <!-- Suggestions dropdown -->
-            <ul v-if="showSuggestions && suggestions.length" class="suggestions">
-              <li
-                v-for="(s, idx) in suggestions"
-                :key="idx"
-                @click="selectSuggestion(s)"
-                class="suggestion-item"
-              >
-                {{ s.name }} <small v-if="!s.is_vn">· {{ s.raw }}</small>
-              </li>
-            </ul>
+              <!-- Suggestions dropdown -->
+              <ul v-if="showSuggestions && suggestions.length" class="suggestions">
+                <li
+                  v-for="(s, idx) in suggestions"
+                  :key="idx"
+                  @click="selectSuggestion(s)"
+                  class="suggestion-item"
+                >
+                  {{ s.name }} <small v-if="!s.is_vn">· {{ s.raw }}</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </header>
+
+        <!-- Nếu có lỗi thì hiển thị component lỗi -->
+        <WeatherError
+          v-if="errorMessage"
+          :message="errorMessage"
+          :gif="errorGif"
+          @close="errorMessage = ''"
+        />
+
+        <!-- Thông tin thời tiết -->
+        <section class="weather-main card" v-if="!errorMessage">
+          <div>
+            <h1 class="city">{{ city }}</h1>
+            <p class="rain">Chance of rain: {{ chanceOfRain }}</p>
+            <h2 class="temperature">
+              {{ temperature !== null ? Math.round(formatTemp(temperature)) + tempUnitSymbol : '—' }}
+            </h2>
+          </div>
+          <div class="weather-icon">
+            <img :src="weatherIcon" alt="Weather Icon" />
+          </div>
+        </section>
+
+        <!-- Forecast trong ngày -->
+        <section class="card" v-if="!errorMessage">
+          <h3 class="section-title">Today's Forecast</h3>
+          <div class="forecast-today">
+            <div
+              v-for="(item, index) in forecastToday"
+              :key="index"
+              class="forecast-item"
+            >
+              <p>{{ item.time }}</p>
+              <img :src="getIconSrc(item.icon)" class="forecast-icon" />
+              <p>{{ Math.round(formatTemp(item.temp)) + tempUnitSymbol }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Điều kiện không khí -->
+        <section class="card" v-if="!errorMessage">
+          <h3 class="section-title">Air Condition</h3>
+          <div class="air-grid">
+            <div>🌡️ Real feel: {{ realFeel ? Math.round(formatTemp(realFeel)) + tempUnitSymbol : '—' }}</div>
+            <div>🫧 Humidity: {{ humidity ? humidity + '%' : '—' }}</div>
+            <div>💨 Wind: {{ wind ? Math.round(formatSpeed(wind)) + windUnitSymbol : '—' }}</div>
+            <div>👁️ Visibility: {{ formatDistance(visibility) }} {{ distanceUnitSymbol }}</div>
+            <div>🌞 UV index: {{ uvIndex }}</div>
+            <div>💧 Chance of rain: {{ chanceOfRain }}</div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Sidebar phải -->
+      <aside class="sidebar-right" v-if="!errorMessage">
+        <h3 class="section-title">3-Day Forecast</h3>
+        <div
+          v-for="(day, index) in forecast3days"
+          :key="index"
+          class="forecast-3day"
+        >
+          <div>{{ day.day }}</div>
+          <img :src="getDayIcon(day.icon)" class="forecast-icon" />
+          <div>
+            {{ day.temp.split('/').map(t => Math.round(formatTemp(t))).join('/') }}{{ tempUnitSymbol }}
           </div>
         </div>
-      </header>
-
-      <!-- Nếu có lỗi thì hiển thị component lỗi -->
-      <WeatherError
-        v-if="errorMessage"
-        :message="errorMessage"
-        :gif="errorGif"
-        @close="errorMessage = ''"
-      />
-
-      <!-- Thông tin thời tiết -->
-      <section class="weather-main card" v-if="!errorMessage">
-        <div>
-          <h1 class="city">{{ city }}</h1>
-          <p class="rain">Chance of rain: {{ chanceOfRain }}</p>
-          <h2 class="temperature">
-            {{ temperature !== null ? Math.round(formatTemp(temperature)) + tempUnitSymbol : '—' }}
-          </h2>
-        </div>
-        <div class="weather-icon">
-          <img :src="weatherIcon" alt="Weather Icon" />
-        </div>
-      </section>
-
-      <!-- Forecast trong ngày -->
-      <section class="card" v-if="!errorMessage">
-        <h3 class="section-title">Today's Forecast</h3>
-        <div class="forecast-today">
-          <div
-            v-for="(item, index) in forecastToday"
-            :key="index"
-            class="forecast-item"
-          >
-            <p>{{ item.time }}</p>
-            <img :src="getIconSrc(item.icon)" class="forecast-icon" />
-            <p>{{ Math.round(formatTemp(item.temp)) + tempUnitSymbol }}</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Điều kiện không khí -->
-      <section class="card" v-if="!errorMessage">
-        <h3 class="section-title">Air Condition</h3>
-        <div class="air-grid">
-          <div>🌡️ Real feel: {{ realFeel ? Math.round(formatTemp(realFeel)) + tempUnitSymbol : '—' }}</div>
-          <div>🫧 Humidity: {{ humidity ? humidity + '%' : '—' }}</div>
-          <div>💨 Wind: {{ wind ? Math.round(formatSpeed(wind)) + windUnitSymbol : '—' }}</div>
-          <div>👁️ Visibility: {{ formatDistance(visibility) }} {{ distanceUnitSymbol }}</div>
-          <div>🌞 UV index: {{ uvIndex }}</div>
-          <div>💧 Chance of rain: {{ chanceOfRain }}</div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Sidebar phải -->
-    <aside class="sidebar-right" v-if="!errorMessage">
-      <h3 class="section-title">3-Day Forecast</h3>
-      <div
-        v-for="(day, index) in forecast3days"
-        :key="index"
-        class="forecast-3day"
-      >
-        <div>{{ day.day }}</div>
-        <img :src="getDayIcon(day.icon)" class="forecast-icon" />
-        <div>
-          {{ day.temp.split('/').map(t => Math.round(formatTemp(t))).join('/') }}{{ tempUnitSymbol }}
-        </div>
-      </div>
-      <p v-if="!username" class="premium-text">
-        Want forecast for 7 days? → Sign up for VietCloud premium now!
-      </p>
-      <router-link v-if="!username" to="/signup" class="btn-signup">Sign up</router-link>
-    </aside>
-  </div>
+        <p v-if="!username" class="premium-text">
+          Want forecast for 7 days? → Sign up for VietCloud premium now!
+        </p>
+        <router-link v-if="!username" to="/signup" class="btn-signup">Sign up</router-link>
+      </aside>
+    </div>
+  </DynamicBackground>
 </template>
 
 <script>
@@ -128,10 +130,11 @@ import {
   mToMiles
 } from '@/utils.js'
 import WeatherError from "@/components/WeatherError.vue";
+import DynamicBackground from "@/components/DynamicBackground.vue"; 
 
 export default {
   name: "Home",
-  components: { WeatherError },
+  components: { WeatherError, DynamicBackground },
   data() {
     return {
       username: this.getCookie("username") || "",
@@ -158,7 +161,8 @@ export default {
         temperature: 'Celsius',
         windSpeed: 'Km/h',
         Visibility: 'Kilometers'
-      }
+      },
+      currentIcon: "01d", // ✅ thêm để điều khiển nền
     };
   },
   computed: {
@@ -171,6 +175,14 @@ export default {
     distanceUnitSymbol() {
       return this.settings.Visibility === 'Miles' ? ' miles' : ' km'
     }
+  },
+  watch: {
+    condition(newVal) {
+      // ✅ tự động cập nhật icon code khi API trả về icon
+      if (newVal && typeof newVal === "string") {
+        this.currentIcon = newVal;
+      }
+    },
   },
   methods: {
     getCookie(name) {
@@ -185,9 +197,9 @@ export default {
     },
     formatDistance(meters) {
       if (meters == null) return '—'
-      return this.settings.Visibility === 'Miles' ?
-        Math.round(mToMiles(meters)) :
-        Math.round(mToKm(meters))
+      return this.settings.Visibility === 'Miles'
+        ? Math.round(mToMiles(meters))
+        : Math.round(mToKm(meters))
     },
     getIconSrc(iconCode) {
       try {
@@ -217,9 +229,7 @@ export default {
     },
     async fetchSuggestions(q) {
       try {
-        const res = await fetch(
-          `http://localhost:8000/api/autocomplete/?q=${encodeURIComponent(q)}`
-        );
+        const res = await fetch(`http://localhost:8000/api/autocomplete/?q=${encodeURIComponent(q)}`);
         const arr = await res.json();
         if (Array.isArray(arr)) {
           this.suggestions = arr;
@@ -271,27 +281,22 @@ export default {
           this.applyWeatherData(data);
           this.showSuggestions = false;
         } else {
-          // lỗi tìm thành phố
           this.errorMessage = `Location '${city}' not found\nTry searching another location`;
-          this.errorGif = ""; // dùng umbrella + sad
+          this.errorGif = "";
         }
       } catch (err) {
-        // lỗi tìm thành phố
         this.errorMessage = `Location '${city}' not found\nTry searching another location`;
         this.errorGif = "";
         console.error(err);
       }
     },
     getWeatherByLocation(lat, lon, name = null) {
-      let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(
-        lat
-      )}&lon=${encodeURIComponent(lon)}`;
+      let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
       if (name) url += `&name=${encodeURIComponent(name)}`;
       fetch(url)
         .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
         .then(({ ok, data }) => {
           if (!ok || data.error) {
-            // lỗi tìm thành phố
             this.errorMessage = `Location '${this.searchQuery}' not found\nTry searching another location`;
             this.errorGif = "";
             return;
@@ -302,7 +307,6 @@ export default {
           this.showSuggestions = false;
         })
         .catch((err) => {
-          // lỗi tìm thành phố
           this.errorMessage = `Location '${this.searchQuery}' not found\nTry searching another location`;
           this.errorGif = "";
           console.error("Error location weather:", err);
@@ -314,12 +318,13 @@ export default {
       this.realFeel = data.temperature;
       this.wind = data.wind_speed;
       this.chanceOfRain = data.chance_of_rain ? data.chance_of_rain + "%" : "0%";
-      this.condition = data.condition;
+      this.condition = data.icon; // ✅ lấy icon code
       this.humidity = data.humidity;
       this.uvIndex = data.uv_index;
       this.visibility = data.visibility;
       if (data.icon) {
         this.weatherIcon = this.getIconSrc(data.icon);
+        this.currentIcon = data.icon; // ✅ cập nhật luôn cho DynamicBackground
       } else {
         this.weatherIcon = require("@/assets/01d.png");
       }
@@ -352,13 +357,11 @@ export default {
           this.getWeatherByLocation(pos.coords.latitude, pos.coords.longitude);
         },
         () => {
-          // lỗi không lấy được lat/lon
           this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:\n- Refresh your browser.\n- Allow your browser to access your location and try again.`;
           this.errorGif = "location-pin.gif";
         }
       );
     } else {
-      // lỗi không lấy được lat/lon
       this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:\n- Refresh your browser.\n- Allow your browser to access your location and try again.`;
       this.errorGif = "location-pin.gif";
     }

@@ -1,24 +1,30 @@
-/* Layout tổng thể */
+/* 🌤️ Layout tổng thể */
 .home-container {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #cce7ff, #ffd9a8);
+  background: transparent !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow-y: auto;
 }
 
-/* Sidebar trái */
+/* 🌈 Sidebar trái */
 .sidebar-left {
   width: 200px;
-  background: #ffffffcc;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
   padding: 20px;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
   border-radius: 0 20px 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
+
 .logo {
   margin-bottom: 40px;
   font-weight: bold;
   font-size: 1.5rem;
 }
+
 .nav-menu {
   display: flex;
   flex-direction: column;
@@ -26,18 +32,22 @@
   font-size: 1.1rem;
 }
 
-/* Sidebar phải */
+/* 🌈 Sidebar phải */
 .sidebar-right {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
   width: 220px;
-  background: #ffffffcc;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
   padding: 20px;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: -2px 0 15px rgba(0, 0, 0, 0.1);
   border-radius: 20px 0 0 20px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
+
 .forecast-3day {
   display: flex;
   align-items: center;
@@ -45,14 +55,17 @@
   gap: 12px;
   font-size: 1rem;
 }
+
 .forecast-3day img {
   width: 32px;
   height: 32px;
 }
+
 .premium-text {
   font-size: 0.9rem;
   text-align: center;
 }
+
 .btn-signup {
   padding: 8px 16px;
   width: 150px !important;
@@ -64,13 +77,16 @@
   font-weight: bold;
 }
 
-/* Nội dung chính */
+/* 🌍 Nội dung chính */
 .main-content {
   flex: 1;
   padding: 30px;
+  overflow-y: auto;
+  background: transparent !important; /* ❗ Không che nền động */
+  border: none !important;
 }
 
-/* Thanh trên cùng */
+/* 🔝 Thanh trên cùng */
 .top-bar {
   display: flex;
   align-items: center;
@@ -79,7 +95,7 @@
   margin-bottom: 20px;
 }
 
-/* Hello text */
+/* 👋 Hello text */
 .hello-text {
   font-size: 2rem;
   font-weight: 500;
@@ -89,30 +105,81 @@
   flex-shrink: 0;
 }
 
-/* Search box */
+/* 🔍 Search box */
 .search-container {
-  position: relative;
+  position: relative; /* cần để suggestions absolute không đẩy layout */
   width: 460px;
   flex-grow: 1;
+  z-index: 1; /* đảm bảo icon/search nằm trên nền nhưng dưới suggestions khi cần */
 }
+
+/* input chính */
 .search-bar {
   width: 100%;
   padding: 12px 45px 12px 20px;
   border-radius: 30px;
-  border: 1px solid #ccc;
   font-size: 1rem;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #222;
+  box-sizing: border-box;
 }
+
+/* giữ vị trí của placeholder */
+.search-bar::placeholder {
+  color: rgba(50, 50, 50, 0.6);
+}
+
+/* icon tìm kiếm: không thay đổi vị trí của bạn */
 .search-icon {
   position: absolute;
-  right: -39px;
+  right: 16px; /* GIỮ NGUYÊN như yêu cầu */
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.5rem;
   color: #2196f3;
   cursor: pointer;
+  z-index: 10;
 }
 
-/* Auth buttons */
+/* Suggestions dropdown
+   - absolute bên trong .search-container => không ảnh hưởng layout
+   - có z-index cao để đè lên weather card nếu cần
+*/
+.suggestions {
+  position: absolute;
+  top: calc(100% + 8px); /* ngay dưới input, giữ khoảng cách */
+  left: 0;
+  width: 100%; /* bằng input */
+  max-height: 260px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 6px 0;
+  margin: 0;
+  background: #ffffff; /* giữ nền white để đọc rõ */
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  border: 1px solid rgba(0,0,0,0.06);
+  z-index: 9999; /* cao để phủ lên các thẻ khác nếu cần */
+}
+
+/* từng item */
+.suggestion-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* hover */
+.suggestion-item:hover {
+  background: #f2f2f2;
+}
+
+/* 👤 Auth buttons */
 .auth-btn {
   flex-shrink: 0;
   min-width: 200px;
@@ -121,6 +188,7 @@
   align-items: center;
   margin-top: 6px;
 }
+
 .auth-btn button {
   width: 200px;
   padding: 12px 20px;
@@ -132,85 +200,66 @@
   text-align: center;
 }
 
-/* Login (cam) */
 .btn-login {
   background: #ff9800;
   color: #fff;
 }
+
 .btn-login:hover {
   background: #e68900;
 }
 
-/* Logout (đỏ) */
 .btn-logout {
   background: #f44336;
   color: #fff;
 }
+
 .btn-logout:hover {
   background: #d32f2f;
 }
 
-/* Suggestions dropdown */
-.suggestions {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  right: 0;
-  background: #fff;
-  border: 1px solid #ddd;
-  z-index: 50;
-  max-height: 240px;
-  overflow: auto;
-  list-style: none;
-  padding: 0;
-  margin: 4px 0 0 0;
-}
-.suggestion-item {
-  padding: 8px 12px;
-  cursor: pointer;
-}
-.suggestion-item:hover {
-  background: #f2f2f2;
-}
-
-/* Weather chính */
+/* 🌦️ Weather chính */
 .weather-main {
   margin-top: 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .city {
   font-size: 2rem;
   font-weight: bold;
 }
+
 .temperature {
   font-size: 3rem;
-  margin: 15px 0;
+  margin: 8px 0 0 0;
   color: #ff5722;
-  text-align: center;
-}
-.weather-icon img {
- width: 136px; /* tăng từ 80 lên 100 */
-  height: 136px;
-}
-.rain {
-  font-size: 1.2rem;
-  color: #666;
+  text-align: left;
 }
 
-/* Card */
+.weather-icon img {
+  width: 136px;
+  height: 136px;
+}
+
+/* Chance of rain màu xanh dương để dễ thấy */
+.rain {
+  font-size: 1.2rem;
+  color: #2196f3;
+  font-weight: 600;
+}
+
+/* 🌡️ Card (forecast, air condition, ...) */
 .card {
   margin-top: 25px;
-  background: white;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   border-radius: 20px;
   padding: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-.section-title {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  font-weight: bold;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 /* Forecast hôm nay */
@@ -219,15 +268,19 @@
   justify-content: space-around;
   margin-top: 15px;
 }
+
 .forecast-item {
   text-align: center;
   font-size: 1rem;
 }
+
+/* đặt size icon forecast nhỏ hơn một chút nếu cần */
 .forecast-icon {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   margin: 5px 0;
 }
+
 .pop-text {
   font-size: 0.85rem;
   color: #2196f3;
@@ -242,7 +295,7 @@
   font-size: 1.1rem;
 }
 
-/* Nav buttons */
+/* Sidebar buttons */
 .nav-btn {
   background: #f4f4f4;
   border: none;
@@ -254,14 +307,13 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
+
 .nav-btn:hover {
   background: #2196f3;
   color: #fff;
   transform: translateX(4px);
 }
 
-/* Giữ màu xanh khi đang active (giống Settings) */
-/* Giữ màu xanh khi đang active */
 .sidebar-left .nav-btn.router-link-active,
 .sidebar-left .nav-btn.router-link-exact-active {
   background: #2196f3;
@@ -269,8 +321,7 @@
   font-weight: bold;
 }
 
-
-/* Remove underline */
+/* 🔗 Remove underline */
 a,
 .router-link,
 .router-link-active,
@@ -279,9 +330,25 @@ a,
   color: inherit;
 }
 
-.temperature {
-  font-size: 3rem;
-  margin: 8px 0 0 0; /* giảm margin để sát phần rain */
-  color: #ff5722;
-  text-align: left; /* đổi từ center -> left */
+/* ⚙️ Cuộn nội dung trung tâm */
+.main-content {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
 }
