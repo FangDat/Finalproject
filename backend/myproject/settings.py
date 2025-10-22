@@ -193,7 +193,13 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
+        'backend.api.views.map_views': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,}        
         },
+        
+    
         'django': {  # để log thêm info Django
             'handlers': ['console'],
             'level': 'INFO',

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
-
+from backend.api.views.map_views import get_weather_map, proxy_tile
 # import các view đã tách
 from backend.api.views.auth_views import (
     signup, login, logout, refresh_token,
@@ -44,4 +44,7 @@ urlpatterns = [
 
     # Feedback
     path('api/send-feedback/', send_feedback, name="send_feedback"),
+    path("api/map/", get_weather_map, name="get_weather_map"),
+    path("api/map/tile/", proxy_tile, name="proxy_tile"), 
+    # path("api/map/preload/", preload_map_frames, name="preload_map_frames"),
 ]
