@@ -2,7 +2,7 @@
   <div class="weather-bg" ref="vantaContainer">
     <!-- Night video background -->
     <video
-      v-if="mode === 'night' && videoSrc"
+      v-if="(mode === 'night' || mode === 'mist') && videoSrc"
       class="bg-video"
       autoplay
       muted

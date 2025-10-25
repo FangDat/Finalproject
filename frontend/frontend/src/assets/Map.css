@@ -295,3 +295,91 @@ button:hover {
   background: #2563eb;
 }
 
+/* ✅ Overlay panel (Weather Layers) */
+.overlay-panel {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 999;
+  font-size: 14px;
+  width: 220px;
+}
+
+.overlay-panel h4 {
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Radio buttons */
+.overlay-panel label {
+  display: block;
+  margin-bottom: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.overlay-panel input[type="radio"] {
+  accent-color: #2196f3;
+  width: 16px;
+  height: 16px;
+}
+
+/* ✅ “24-hour forecast” căn giữa + nút play */
+.overlay-panel h5 {
+  text-align: center;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ✅ Container chứa slider + nút play */
+.timelapse-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.timelapse-slider {
+  width: 100%;
+}
+
+.timelapse-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ✅ Nút Play căn giữa, kích thước đẹp */
+.timelapse-btn {
+  background: #74a4f3;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.timelapse-btn:hover {
+  background: #2563eb;
+}
+
+/* ✅ Legend box căn giữa đẹp hơn */
+.legend-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.legend-box img {
+  width: 136px;
+  margin-top: 4px;
+}

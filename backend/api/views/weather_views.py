@@ -303,6 +303,10 @@ def get_weather(request):
         if current_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu thời tiết", "details": current_data}, status=400)
         
+        rainfall = None
+        if "rain" in current_data and isinstance(current_data["rain"], dict):
+            rainfall = current_data["rain"].get("1h")
+        
         # --- lấy UV index ---
         uv_url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,daily,alerts&appid={api_key}"
         uv_resp = requests.get(uv_url, timeout=8)
@@ -376,6 +380,7 @@ def get_weather(request):
             "daily_forecast": daily_forecast_list,
             "visibility": visibility,
             "uv_index": uv_index,  
+            "rainfall": rainfall,
             "source": "OpenWeather"
         }
 

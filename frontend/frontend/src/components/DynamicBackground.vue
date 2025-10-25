@@ -7,6 +7,7 @@
 <script>
 import WeatherBackground from "@/components/WeatherBackground.vue";
 import nightSky from "@/assets/night_sky.mp4";
+import mistVideo from "@/assets/mist.mp4";
 
 export default {
   name: "DynamicBackground",
@@ -33,10 +34,13 @@ export default {
         "11n": "thunderstorm",
         "13d": "snowDay",
         "13n": "snowDay",
+        "50d": "mist",   
+        "50n": "cloudNight"
       };
       return map[this.iconCode] || "default"; // fallback cuối cùng
     },
     videoSrc() {
+      if (this.resolvedMode === "mist") return mistVideo;
       return this.resolvedMode === "night" ? nightSky : "";
     },
   },

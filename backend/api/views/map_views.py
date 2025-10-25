@@ -24,7 +24,8 @@ def get_weather_map(request):
     """
     Trả metadata cho frontend — xác định endpoint tile proxy và timestamps cho timelapse.
     """
-    layer = (request.GET.get("layer") or "wind").lower()
+    # ❗ mặc định layer là precipitation thay vì clouds
+    layer = (request.GET.get("layer") or "precipitation").lower()
     hours = int(request.GET.get("hours") or 24)
     interval_h = int(request.GET.get("interval_h") or 3)
 
@@ -35,19 +36,17 @@ def get_weather_map(request):
     if interval_h < 1:
         interval_h = 1
 
-    # Map giữa tên frontend và OpenWeather 2.0 layer ID
     layer_map = {
         "clouds": "CL",
         "temp": "TA2",
         "wind": "WND",
-        "precipitation": "PR0",
+        "precipitation": "PA0",  # Accumulated precipitation
     }
 
     if layer not in layer_map:
         logger.debug("get_weather_map: invalid layer requested: %s", layer)
         return Response({"error": "Invalid layer name"}, status=400)
 
-    # Tạo timestamps (hiện tại + 24h tới, mỗi 3h)
     now = int(datetime.datetime.utcnow().timestamp())
     timestamps = []
     steps = max(1, int(hours / interval_h))
@@ -63,8 +62,9 @@ def get_weather_map(request):
 
     proxy_tile_endpoint = "/api/map/tile/?{qs}"
 
+    # ✅ custom legend tĩnh (tự host)
     legend_map = {
-        "temp": "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/temp_c_scale.png",
+        "temp": "/static/legend/temp_custom.png",
         "wind": "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/wind_speed_scale.png",
         "clouds": "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/clouds_scale.png",
         "precipitation": "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/precipitation_scale.png",
@@ -90,7 +90,7 @@ def proxy_tile(request):
       /api/map/tile/?layer=temp&z=...&x=...&y=...&timestamp=...
     Backend sẽ gọi OpenWeatherMap 2.0 và trả ảnh tile PNG.
     """
-    layer = (request.GET.get("layer") or "wind").lower()
+    layer = (request.GET.get("layer") or "precipitation").lower()
     z = request.GET.get("z")
     x = request.GET.get("x")
     y = request.GET.get("y")
@@ -100,10 +100,9 @@ def proxy_tile(request):
         return Response({"error": "Missing tile coordinates (z,x,y)."}, status=400)
 
     layer_map = {
-        "clouds": "CL",
         "temp": "TA2",
         "wind": "WND",
-        "precipitation": "PR0"
+        "precipitation": "PA0"
     }
 
     if layer not in layer_map:
@@ -124,17 +123,29 @@ def proxy_tile(request):
         except Exception:
             logger.exception("proxy_tile: failed to return cached tile, refetching")
 
-    # 🔹 Dùng API 2.0: https://maps.openweathermap.org/maps/2.0/weather/{layer}/{z}/{x}/{y}
+    # base parameters
     params = {
         "date": timestamp,
-        "opacity": "0.9",
-        "fill_bound": "true",
-        "appid": OPENWEATHER_API_KEY
+        "appid": OPENWEATHER_API_KEY,
     }
+
+    # 🎨 custom palette riêng cho Temperature (TA2)
+    if layer == "temp":
+        params.update({
+            "opacity": "0.6",
+            "fill_bound": "true",
+            "palette": "-65:821692;-55:821692;-45:821692;-40:821692;-30:8257DB;"
+                       "-20:208CEC;-10:20C4E8;0:23DDDD;10:C2FF28;20:FFF028;"
+                       "25:FFC228;30:FC8014"
+        })
+    else:
+        params.update({
+            "opacity": "0.9",
+            "fill_bound": "true"
+        })
 
     layer_code = layer_map[layer]
     tile_url = f"https://maps.openweathermap.org/maps/2.0/weather/{layer_code}/{z}/{x}/{y}?{urlencode(params)}"
-
     logger.info("proxy_tile: fetching from OpenWeather v2.0 => %s", tile_url)
 
     try:

@@ -2,7 +2,7 @@
   <div class="weather-error">
     <div class="error-box">
       <p class="error-message">{{ message }}</p>
-      <button class="close-btn" @click="$emit('close')">Return to VietCloud</button>
+      <button class="close-btn" @click="handleReturn">Return to VietCloud</button>
     </div>
     <div class="gif-container">
       <!-- nếu có prop gif thì hiển thị gif đó -->
@@ -33,7 +33,12 @@ export default {
       type: String,
       default: "" // nếu không truyền thì dùng umbrella + sad
     }
-  }
+  },
+   methods: {
+    handleReturn() {
+      window.location.reload();
+    },
+  },
 };
 </script>
 

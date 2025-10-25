@@ -52,7 +52,8 @@
             <p class="time">{{ city.time }}</p>
           </div>
           <div class="temp">
-            {{ city.temp !== null ? Math.round(city.temp) + '°C' : '—' }}
+            <!-- dùng formatTemp và tempUnitSymbol để đổi đơn vị -->
+            {{ city.temp !== null ? Math.round(formatTemp(city.temp_origin ?? city.temp)) + tempUnitSymbol : '—' }}
           </div>
         </div>
       </section>
@@ -64,23 +65,43 @@
         <!-- ⚙️ Control Panel -->
         <div class="overlay-panel">
           <h4>Weather Layers</h4>
-          <label><input type="radio" name="weatherLayer" value="clouds" v-model="activeLayer" @change="toggleLayer" /> ☁️ Clouds</label>
+          <label><input type="radio" name="weatherLayer" value="precipitation" v-model="activeLayer" @change="toggleLayer" /> 🌧️ Rainfall</label>
           <label><input type="radio" name="weatherLayer" value="temp" v-model="activeLayer" @change="toggleLayer" /> 🌡️ Temperature</label>
           <label><input type="radio" name="weatherLayer" value="wind" v-model="activeLayer" @change="toggleLayer" /> 💨 Wind Speed</label>
+          <h5>24-hour forecast</h5>
 
-          <!-- 🕒 Time-lapse toggle -->
-          <div class="timelapse-toggle">
-            <button @click="toggleTimelapse">
-              {{ isPlaying ? "⏸️ Stop Time-lapse" : "▶️ Play Time-lapse" }}
-            </button>
+          <!-- 🕒 Time-lapse control -->
+          <div class="timelapse-control">
+            <input
+              type="range"
+              min="0"
+              :max="timelapseTimestamps.length - 1"
+              step="1"
+              v-model="currentIndex"
+              @input="onSliderChange"
+              class="timelapse-slider"
+            />
+            <div class="timelapse-info">
+              <button @click="toggleTimelapse" class="timelapse-btn">
+                {{ isPlaying ? "⏸️" : "▶️" }}
+              </button>
+            </div>
           </div>
 
           <!-- 🧭 Legend -->
           <div v-if="activeLayer" class="legend-box">
-            <h5>Color Legend</h5>
-            <img v-if="activeLayer === 'temp'" src="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/temp_c_scale.png" alt="Temp legend"/>
-            <img v-if="activeLayer === 'wind'" src="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/wind_speed_scale.png" alt="Wind legend"/>
-            <img v-if="activeLayer === 'clouds'" src="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/clouds_scale.png" alt="Cloud legend"/>
+            <img
+              v-if="activeLayer === 'temp'"
+              :src="require('@/assets/legend_temperature.png')"
+              alt="Temperature legend"
+              class="legend-img"
+            />
+            <img
+              v-if="activeLayer === 'precipitation'"
+              :src="require('@/assets/legend_rainfall.png')"
+              alt="Rainfall legend"
+              class="legend-img"
+            />
           </div>
         </div>
       </section>
@@ -99,6 +120,13 @@
 <script>
 import WeatherError from "@/components/WeatherError.vue";
 import L from "leaflet";
+import {
+  cToF,
+  msToKmh,
+  msToMph,
+  mToKm,
+  mToMiles
+} from "@/utils.js";
 
 export default {
   name: "Map",
@@ -111,23 +139,53 @@ export default {
       showSuggestions: false,
       map: null,
       baseLayer: null,
-      activeLayer: null,
-      layerRefs: { clouds: null, temp: null, wind: null },
+      activeLayer: "precipitation",
+      prevLayer: null,
+      layerRefs: { clouds: null, temp: null, wind: null, precipitation: null },
       errorMessage: "",
       errorGif: "",
       isPlaying: false,
-      timelapseTimer: null,
+      animationFrame: null,
       timelapseTimestamps: [],
       currentIndex: 0,
+      sliderProgress: 0,
+      lastFrameTime: null,
       cities: [
-        { name: "—", temp: null, icon: null, time: "--:--" },
-        { name: "—", temp: null, icon: null, time: "--:--" },
-        { name: "—", temp: null, icon: null, time: "--:--" },
+        // city objects will have:
+        // { name, temp (converted for display), temp_origin (raw C), icon, time }
+        { name: "—", temp: null, temp_origin: null, icon: null, time: "--:--" },
+        { name: "—", temp: null, temp_origin: null, icon: null, time: "--:--" },
+        { name: "—", temp: null, temp_origin: null, icon: null, time: "--:--" },
       ],
+
+      // ✅ Thêm các biến lưu lại city cuối cùng
+      lastCity: "",
+      lastLat: null,
+      lastLon: null,
+
+      // settings (load from localStorage)
+      settings: {
+        temperature: "Celsius",
+        windSpeed: "Km/h",
+        Visibility: "Kilometers"
+      },
     };
   },
 
   async mounted() {
+    // load settings early so fetchCityWeather shows converted values
+    const saved = localStorage.getItem("vietcloud_settings");
+    if (saved) {
+      try {
+        this.settings = JSON.parse(saved);
+      } catch (e) {
+        // ignore parse error
+      }
+    }
+
+    // listen for setting changes from other tabs / settings page
+    window.addEventListener("storage", this.onStorageChange);
+
     this.cookieCheckInterval = setInterval(() => {
       const cookieUsername = this.getCookie("username") || "";
       if (cookieUsername !== this.username) this.username = cookieUsername;
@@ -135,22 +193,73 @@ export default {
 
     const randomCities = this.getRandomCities();
     for (let i = 0; i < 3; i++) this.cities[i].name = randomCities[i];
+    // fetch city weather AFTER we set settings
     for (const city of randomCities) await this.fetchCityWeather(city);
 
-    this.initLeafletMap();
+    await this.initLeafletMap();
     this.prepareTimestamps();
+    this.toggleLayer();
   },
 
   beforeUnmount() {
+    window.removeEventListener("storage", this.onStorageChange);
     clearInterval(this.cookieCheckInterval);
-    if (this.timelapseTimer) clearInterval(this.timelapseTimer);
+    cancelAnimationFrame(this.animationFrame);
     if (this.map) {
       this.map.off();
       this.map.remove();
     }
   },
 
+  computed: {
+    tempUnitSymbol() {
+      return this.settings.temperature === "Fahrenheit" ? "°F" : "°C";
+    },
+    windUnitSymbol() {
+      return this.settings.windSpeed === "Mph" ? " mph" : " km/h";
+    },
+    distanceUnitSymbol() {
+      return this.settings.Visibility === "Miles" ? " miles" : " km";
+    }
+  },
+
   methods: {
+    // storage event handler -> update settings when changed elsewhere
+    onStorageChange(e) {
+      if (!e) return;
+      if (e.key === "vietcloud_settings") {
+        try {
+          const parsed = JSON.parse(e.newValue || "{}");
+          this.settings = parsed;
+        } catch (err) {
+          // ignore
+        }
+      }
+    },
+
+    // formatting helpers using utils.js
+    formatTemp(tempC) {
+      // tempC could be a number (Celsius) OR string in forecast e.g. "25"
+      if (tempC === null || tempC === undefined || tempC === "") return tempC;
+      const raw = Number(tempC);
+      if (Number.isNaN(raw)) return tempC;
+      return this.settings.temperature === "Fahrenheit" ? cToF(raw) : raw;
+    },
+    formatSpeed(speedMs) {
+      if (speedMs === null || speedMs === undefined || speedMs === "") return speedMs;
+      const raw = Number(speedMs);
+      if (Number.isNaN(raw)) return speedMs;
+      return this.settings.windSpeed === "Mph" ? msToMph(raw) : msToKmh(raw);
+    },
+    formatDistance(meters) {
+      if (meters == null) return "—";
+      const raw = Number(meters);
+      if (Number.isNaN(raw)) return "—";
+      return this.settings.Visibility === "Miles"
+        ? Math.round(mToMiles(raw))
+        : Math.round(mToKm(raw));
+    },
+
     getCookie(name) {
       const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
       return match ? decodeURIComponent(match[2]) : null;
@@ -164,6 +273,7 @@ export default {
       }
     },
 
+    // fetch weather used to pre-fill the three suggested cities (converted)
     async fetchCityWeather(city) {
       if (!city) return;
       try {
@@ -175,7 +285,10 @@ export default {
           const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
           const idx = this.cities.findIndex((c) => c.name === "—" || c.name === city);
           if (idx !== -1) {
-            this.cities[idx] = { name: data.location, temp: Math.round(data.temperature), icon, time: timeStr };
+            // store original temperature in temp_origin (Celsius) so conversions consistent
+            const tempOrigin = data.temperature != null ? Number(data.temperature) : null;
+            // city.temp we keep the raw original Celsius so that display uses formatTemp(...)
+            this.cities[idx] = { name: data.location, temp: tempOrigin, temp_origin: tempOrigin, icon, time: timeStr };
           }
         }
       } catch (err) {
@@ -189,43 +302,53 @@ export default {
     },
 
     async initLeafletMap() {
-      this.map = L.map("leaflet-map").setView([21.0285, 105.8542], 8);
-      this.baseLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(this.map);
+      this.map = L.map("leaflet-map").setView([21.0285, 105.8542], 5);
+      this.baseLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 6 }).addTo(this.map);
 
-      // ✅ Giữ lại popup mặc định
-      L.popup({ closeButton: false, autoClose: false, closeOnClick: false, className: "custom-popup" })
+      // ✅ Popup mặc định
+      this.popupRef = L.popup({
+        closeButton: false,
+        autoClose: false,
+        closeOnClick: false,
+        className: "custom-popup",
+      })
         .setLatLng([21.0285, 105.8542])
         .setContent("<b>Hà Nội</b><br>Default Center")
         .openOn(this.map);
     },
 
-    // 🕒 Frame skip: mỗi frame cách nhau 3 tiếng (10800s)
     prepareTimestamps() {
       const now = Math.floor(Date.now() / 1000);
       const arr = [];
       for (let i = 0; i < 8; i++) arr.push(now + i * 3 * 3600);
       this.timelapseTimestamps = arr;
       this.currentIndex = 0;
+      this.sliderProgress = 0;
     },
 
     async toggleLayer() {
-      if (!this.activeLayer || !this.map) return;
+      if (this.activeLayer !== this.prevLayer) {
+        this.currentIndex = 0;
+        this.sliderProgress = 0;
+        this.isPlaying = false;
+        cancelAnimationFrame(this.animationFrame);
+        this.prevLayer = this.activeLayer;
+      }
 
+      if (!this.activeLayer || !this.map) return;
       try {
         const timestamp = this.timelapseTimestamps[this.currentIndex] || Math.floor(Date.now() / 1000);
         const tileUrl = `http://localhost:8000/api/map/tile/?layer=${this.activeLayer}&z={z}&x={x}&y={y}&timestamp=${timestamp}`;
-
         Object.values(this.layerRefs).forEach((layer) => {
           if (layer && this.map.hasLayer(layer)) this.map.removeLayer(layer);
         });
-
-        const newLayer = L.tileLayer(tileUrl, {
-          opacity: 0.6,
-          tileSize: 256,
-          zIndex: 10,
-        }).addTo(this.map);
-
+        const newLayer = L.tileLayer(tileUrl, { opacity: 0.6, tileSize: 256, zIndex: 10 }).addTo(this.map);
         this.layerRefs[this.activeLayer] = newLayer;
+
+        // ✅ Sau khi đổi layer, nếu có city trước đó → tự cập nhật popup (với đơn vị đúng)
+        if (this.lastCity && this.lastLat !== null && this.lastLon !== null) {
+          await this.updatePopup(this.lastCity, this.lastLat, this.lastLon);
+        }
       } catch (err) {
         console.error("Error loading layer:", err);
       }
@@ -233,23 +356,40 @@ export default {
 
     toggleTimelapse() {
       if (this.isPlaying) {
-        clearInterval(this.timelapseTimer);
         this.isPlaying = false;
+        cancelAnimationFrame(this.animationFrame);
       } else {
         this.isPlaying = true;
-        this.currentIndex = 0;
-        this.toggleLayer();
-        // ⏱️ Frame interval 5s
-        this.timelapseTimer = setInterval(() => {
-          this.currentIndex++;
-          if (this.currentIndex >= this.timelapseTimestamps.length) {
-            clearInterval(this.timelapseTimer);
-            this.isPlaying = false;
-            return;
-          }
-          this.toggleLayer();
-        }, 5000);
+        this.lastFrameTime = performance.now();
+        this.runAnimation();
       }
+    },
+
+    runAnimation() {
+      if (!this.isPlaying) return;
+      const now = performance.now();
+      const delta = now - this.lastFrameTime;
+      this.lastFrameTime = now;
+      const durationPerFrame = 2000;
+      this.sliderProgress += delta / durationPerFrame;
+
+      if (this.sliderProgress >= 1) {
+        this.sliderProgress = 0;
+        this.currentIndex++;
+        if (this.currentIndex >= this.timelapseTimestamps.length) {
+          this.isPlaying = false;
+          cancelAnimationFrame(this.animationFrame);
+          this.currentIndex = this.timelapseTimestamps.length - 1;
+          return;
+        }
+        this.toggleLayer();
+      }
+      this.animationFrame = requestAnimationFrame(this.runAnimation);
+    },
+
+    onSliderChange() {
+      this.sliderProgress = 0;
+      if (!this.isPlaying) this.toggleLayer();
     },
 
     async onSearchInput() {
@@ -265,20 +405,167 @@ export default {
       this.showSuggestions = this.suggestions.length > 0;
     },
 
-    selectSuggestion(s) {
-      this.searchQuery = s.name;
-      this.showSuggestions = false;
-      if (this.map) this.map.setView([s.lat, s.lon], 8);
+    // ✅ Cập nhật popup tương tác (sử dụng formatTemp/formatSpeed để đổi đơn vị trong popup)
+    async updatePopup(cityName, lat, lon) {
+      try {
+        const res = await fetch(`http://localhost:8000/api/weather/?city=${encodeURIComponent(cityName)}`);
+        const data = await res.json();
+        if (!res.ok || !data) return;
+
+        let content = `<b>${data.location}</b><br>`;
+
+        if (this.activeLayer === "precipitation") {
+          // rainfall in mm (kept as-is)
+          content += `🌧️ Rainfall: ${data.rainfall !== null && data.rainfall !== undefined ? data.rainfall : 0} mm`;
+        } else if (this.activeLayer === "temp") {
+          const tempVal = (data.temperature !== undefined && data.temperature !== null) ? this.formatTemp(data.temperature) : "—";
+          content += `🌡️ Temperature: ${tempVal !== "—" ? Math.round(tempVal) + this.tempUnitSymbol : "—"}`;
+        } else if (this.activeLayer === "wind") {
+          const windVal = (data.wind_speed !== undefined && data.wind_speed !== null) ? this.formatSpeed(data.wind_speed) : "—";
+          content += `💨 Wind Speed: ${windVal !== "—" ? Math.round(windVal) + this.windUnitSymbol : "—"}`;
+        }
+
+        // // also add a small line with both temp & wind for convenience
+        // if (data.temperature !== undefined && data.temperature !== null) {
+        //   const t = Math.round(this.formatTemp(data.temperature));
+        //   content += `<br>🌡️ ${t}${this.tempUnitSymbol}`;
+        // }
+        // if (data.wind_speed !== undefined && data.wind_speed !== null) {
+        //   const w = Math.round(this.formatSpeed(data.wind_speed));
+        //   content += ` • 💨 ${w}${this.windUnitSymbol}`;
+        // }
+
+        if (this.popupRef) {
+          this.popupRef.setLatLng([lat, lon]).setContent(content).openOn(this.map);
+        } else {
+          this.popupRef = L.popup({
+            closeButton: false,
+            autoClose: false,
+            closeOnClick: false,
+            className: "custom-popup",
+          })
+            .setLatLng([lat, lon])
+            .setContent(content)
+            .openOn(this.map);
+        }
+      } catch (err) {
+        console.error("Error updating popup:", err);
+      }
     },
 
-    onEnterSearch() {
-      if (this.suggestions.length > 0) this.selectSuggestion(this.suggestions[0]);
+    async selectSuggestion(s) {
+      this.searchQuery = s.name;
+      this.showSuggestions = false;
+      this.lastCity = s.name;
+      this.lastLat = s.lat;
+      this.lastLon = s.lon;
+
+      // ✅ Cập nhật popup và zoom map
+      if (this.map) {
+        await this.updatePopup(s.name, s.lat, s.lon);
+        this.map.panTo([s.lat, s.lon]);
+      }
+
+      this.$nextTick(() => {
+        const mapElement = document.getElementById("leaflet-map");
+        if (mapElement) {
+          mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
+    },
+
+    // ✅ Sửa lại fetchWeather để hỗ trợ fallback khi không có autocomplete
+    async fetchWeather(city) {
+      if (!city) return;
+      try {
+        const res = await fetch(`http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`);
+        const data = await res.json();
+
+        if (res.ok && data) {
+          this.errorMessage = "";
+
+          // Ưu tiên lấy lat/lon từ API nếu có
+          const lat = data.lat ?? data.coord?.lat ?? 21.0285;
+          const lon = data.lon ?? data.coord?.lon ?? 105.8542;
+           
+          this.lastCity = city;
+          this.lastLat = lat;
+          this.lastLon = lon;
+
+          await this.updatePopup(city, lat, lon);
+
+          // ✅ di chuyển map đến vị trí
+          if (this.map) {
+            this.map.panTo([lat, lon] );
+          }
+        } else {
+          this.errorMessage = `Location '${city}' not found`;
+        }
+      } catch (err) {
+        console.error("Error fetching city manually:", err);
+        this.errorMessage = `Location '${city}' not found`;
+      }
+    },
+
+    // ✅ Sửa lại để gọi autocomplete trước rồi mới update popup
+    async onEnterSearch() {
+      const query = this.searchQuery.trim();
+      if (!query) return;
+
+      try {
+        // B1: gọi autocomplete để lấy lat/lon
+        const res = await fetch(`http://localhost:8000/api/autocomplete/?q=${encodeURIComponent(query)}`);
+        const arr = await res.json();
+
+        if (Array.isArray(arr) && arr.length > 0) {
+          const first = arr[0];
+          const cityName = first.name || query;
+          const lat = first.lat;
+          const lon = first.lon;
+
+          this.lastCity = cityName;
+          this.lastLat = lat;
+          this.lastLon = lon;
+
+          // B2: cập nhật popup & pan map
+          await this.updatePopup(cityName, lat, lon);
+
+          if (this.map) {
+            this.map.panTo([lat, lon]);
+          }
+
+          this.showSuggestions = false;
+        } else {
+          // fallback nếu không có autocomplete result
+          await this.fetchWeather(query);
+        }
+
+        // ✅ Dù autocomplete có hay không, đều cuộn xuống map
+        this.$nextTick(() => {
+          const mapElement = document.getElementById("leaflet-map");
+          if (mapElement) {
+            mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
+      } catch (err) {
+        console.error("Error on enter search:", err);
+        await this.fetchWeather(query);
+
+        // ✅ Cuộn xuống map dù lỗi
+        this.$nextTick(() => {
+          const mapElement = document.getElementById("leaflet-map");
+          if (mapElement) {
+            mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
+      }
     },
 
     onClickSearch() {
       this.onEnterSearch();
     },
   },
+
 };
 </script>
 
