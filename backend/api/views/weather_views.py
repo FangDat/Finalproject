@@ -3,6 +3,7 @@ import datetime
 from urllib.parse import quote
 import logging
 import re
+from pprint import pprint
 from collections import Counter
 from rest_framework import status
 from rest_framework.response import Response
@@ -21,6 +22,18 @@ from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+
+import os, json
+
+# --- Đọc file ISO codes một lần khi server start ---
+ISO_CODES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "iso_codes.json")
+try:
+    with open(ISO_CODES_PATH, "r", encoding="utf-8") as f:
+        ISO_CODES = json.load(f)
+        logger.info("✅ ISO_3166-2 loaded successfully (%d countries)", len(ISO_CODES))
+except Exception as e:
+    ISO_CODES = {}
+    logger.warning("⚠️ Không load được ISO_3166-2: %s", e)
 
 
 # ---------------------------
@@ -62,17 +75,62 @@ def build_display_name(comps, fallback):
         return f"{clean_city_name(city)}, {clean_city_name(state)}"
     return clean_city_name(fallback)
 
+def normalize_with_iso(comps, display):
+    """
+    Chuẩn hoá tên địa phương dựa trên mã ISO_3166-2 (ví dụ: 'VN-DN' → 'Đà Nẵng').
+    Cấu trúc file ISO_CODES:
+    {
+        "VN": {
+            "name": "Viet Nam",
+            "sub": {
+                "VN-DN": { "type": "Municipality", "name": "Đà Nẵng" },
+                ...
+            }
+        }
+    }
+    """
+    try:
+        iso_field = comps.get("ISO_3166-2") or comps.get("iso_3166_2")
+        if not iso_field:
+            return display
+
+        iso_codes = iso_field if isinstance(iso_field, list) else [iso_field]
+
+        for code in iso_codes:
+            code = code.strip().upper()
+            # ví dụ: 'VN-DN' → country_code='VN'
+            country_code = code.split("-")[0]
+
+            # Kiểm tra trong cấu trúc ISO_CODES["VN"]["sub"]
+            if country_code in ISO_CODES:
+                country_data = ISO_CODES[country_code]
+                sub = country_data.get("sub", {})
+                if code in sub:
+                    entry = sub[code]
+                    if isinstance(entry, dict) and "name" in entry:
+                        fixed_name = entry["name"]
+                        logger.info(f"[ISO FIX] {display} → {fixed_name}")
+                        return fixed_name
+
+        # fallback giữ nguyên nếu không tìm thấy
+        return display
+
+    except Exception as e:
+        logger.exception("normalize_with_iso failed: %s", e)
+        return display
+
 
 @api_view(['GET'])
 def autocomplete(request):
-    # geocode_key = "c173e9b1e4c14ee3845dfa894f82a9c7"
+    """
+    Autocomplete khi người dùng search → KHÔNG ÁP DỤNG ISO_3166-2.
+    """
     geocode_key = "f70417a9320a42c28e2f87398e996e6f"
     q = request.GET.get("q") or request.GET.get("query") or ""
     q = q.strip()
     if not q:
         return Response([], status=200)
 
-    # Cache key for autocomplete (geocoding suggestions)
     cache_key = f"geocode:autocomplete:{q.lower()}"
     cached = cache.get(cache_key)
     if cached:
@@ -118,8 +176,10 @@ def autocomplete(request):
     for r in results:
         geometry = r.get("geometry", {})
         comps = r.get("components", {})
+        # ✅ KHÔNG normalize_with_iso trong autocomplete
         display = build_display_name(comps, r.get("formatted"))
         display = strip_country_suffix(display)
+
         if display and display.lower() == q.lower():
             exact_matches.append({
                 "name": display,
@@ -159,7 +219,7 @@ def autocomplete(request):
         seen.add(key)
         suggestions.append(item)
 
-    # Lưu cache autocomplete 15 phút
+    # Cache 15 phút
     try:
         cache.set(cache_key, suggestions, timeout=900)
         logger.debug("🔁 Autocomplete: lưu vào Redis cache key=%s", cache_key)
@@ -170,32 +230,52 @@ def autocomplete(request):
 
 
 def get_city_from_coordinates(lat, lon, geocode_key):
-    # Nếu muốn, có thể cache kết quả reverse-geocode theo lat/lon ngắn hạn
+    """Reverse geocoding → Từ lat/lon trả về tên thành phố chuẩn hóa (ISO-3166-2)."""
     cache_key = f"geocode:reverse:{lat}:{lon}"
     cached = cache.get(cache_key)
     if cached:
+        logger.debug(f"[CACHE HIT] Reverse geocode {lat},{lon} -> {cached}")
         return cached
 
-    geocode_url = f"https://api.opencagedata.com/geocode/v1/json?q={lat}+{lon}&key={geocode_key}&language=vi"
-    geo_resp = requests.get(geocode_url).json()
+    try:
+        url = f"https://api.opencagedata.com/geocode/v1/json?q={lat}+{lon}&key={geocode_key}&language=vi"
+        geo_resp = requests.get(url, timeout=5).json()
+        
+        # ✅ In ra để kiểm tra cấu trúc components
+        if geo_resp.get("results"):
+            pprint(geo_resp["results"][0]["components"])
+            print("----------")    
+        
+    except Exception as e:
+        logger.exception(f"Lỗi khi gọi OpenCage reverse geocode: {e}")
+        return "Unknown"
+
     if geo_resp.get("results"):
         for r in geo_resp["results"]:
             comps = r.get("components", {})
             display = build_display_name(comps, r.get("formatted"))
+
             if display:
-                result = strip_country_suffix(display)
+                # ✅ Áp dụng chuẩn hóa ISO
+                normalized = normalize_with_iso(comps, display)
+                result = strip_country_suffix(normalized)
+
+                logger.debug(f"[ISO FIX] {display} → {result}")
+
                 try:
                     cache.set(cache_key, result, timeout=900)
                 except Exception:
                     logger.exception("Không lưu reverse geocode vào cache")
                 return result
-        result = strip_country_suffix(geo_resp["results"][0].get("formatted"))
-        try:
-            cache.set(cache_key, result, timeout=900)
-        except Exception:
-            logger.exception("Không lưu reverse geocode vào cache")
+
+        # fallback nếu không có kết quả nào phù hợp
+        raw_display = geo_resp["results"][0].get("formatted")
+        result = strip_country_suffix(raw_display)
+        cache.set(cache_key, result, timeout=900)
         return result
-    return None
+
+    return "Unknown"
+
 
 
 # ---------------------------

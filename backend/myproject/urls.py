@@ -47,4 +47,5 @@ urlpatterns = [
     path("api/map/", get_weather_map, name="get_weather_map"),
     path("api/map/tile/", proxy_tile, name="proxy_tile"), 
     # path("api/map/preload/", preload_map_frames, name="preload_map_frames"),
+    # path("api/map/current/", get_current_weather_for_map, name="get_current_weather_for_map"),
 ]

@@ -188,22 +188,22 @@ LOGGING = {
             'formatter': 'verbose',
         },
     },
-    'loggers': {
-        'backend.api.views.weather_views': {  # tên module của file weather_views.py
+        'loggers': {
+        'backend.api.views.weather_views': {  
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
+        },
         'backend.api.views.map_views': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
-            'propagate': False,}        
-        },
-        
-    
-        'django': {  # để log thêm info Django
+            'propagate': False,
+        },        
+        'django': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
         },
     },
+
 }

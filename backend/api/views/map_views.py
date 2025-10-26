@@ -7,6 +7,7 @@ from django.core.cache import cache
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+import math
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -14,7 +15,7 @@ logger.setLevel(logging.DEBUG)
 # CONFIG
 OPENWEATHER_API_KEY = "49d2545d1cdff8820a039e6e2f451ffc"  # lưu backend, không cho frontend thấy
 METADATA_CACHE_TIMEOUT = 300  # 5 phút
-TILE_CACHE_TIMEOUT = 300      # 5 phút (cache bytes)
+TILE_CACHE_TIMEOUT = 600      # 10 phút cache tile bytes
 MAX_TIMESTAMP_RANGE_HOURS = 48
 
 
@@ -111,21 +112,35 @@ def proxy_tile(request):
     if not timestamp:
         timestamp = str(int(datetime.datetime.utcnow().timestamp()))
 
-    cache_key = f"map:tile:{layer}:{timestamp}:{z}:{x}:{y}"
+    # ✅ Làm tròn timestamp theo 10 phút để tránh cache tràn
+    try:
+        rounded_ts = int(int(timestamp) / 1200) * 1200  # làm tròn về 10 phút
+    except Exception:
+        rounded_ts = int(datetime.datetime.utcnow().timestamp() / 1200) * 1200
+
+    # ✅ Thêm log kiểm tra cache key
+    cache_key = f"map:tile:{layer}:{rounded_ts}:{z}:{x}:{y}"
+    # logger.info(f"[CACHE-DEBUG] Checking Redis key = {cache_key}")
+
     cached = cache.get(cache_key)
     if cached:
         try:
+            ttl = cache.ttl(cache_key)
+            # logger.info(f"[CACHE-DEBUG] ✅ HIT cache! TTL = {ttl}s")
             content = cached.get("content")
             content_type = cached.get("content_type", "image/png")
+            logger.debug("✅ Trả tile từ Redis cache key=%s", cache_key)
             resp = HttpResponse(content, content_type=content_type)
             resp["X-Cache"] = "HIT"
             return resp
         except Exception:
             logger.exception("proxy_tile: failed to return cached tile, refetching")
+    # else:
+    #     logger.info("[CACHE-DEBUG] ❌ MISS cache! Creating new entry...")
 
     # base parameters
     params = {
-        "date": timestamp,
+        "date": timestamp,  # ⚠️ vẫn dùng timestamp thật để API đúng thời điểm
         "appid": OPENWEATHER_API_KEY,
     }
 
@@ -146,7 +161,7 @@ def proxy_tile(request):
 
     layer_code = layer_map[layer]
     tile_url = f"https://maps.openweathermap.org/maps/2.0/weather/{layer_code}/{z}/{x}/{y}?{urlencode(params)}"
-    logger.info("proxy_tile: fetching from OpenWeather v2.0 => %s", tile_url)
+    # logger.info("proxy_tile: fetching from OpenWeather v2.0 => %s", tile_url)
 
     try:
         r = requests.get(tile_url, timeout=10)
@@ -161,7 +176,12 @@ def proxy_tile(request):
     content = r.content
     content_type = r.headers.get("Content-Type", "image/png")
 
-    cache.set(cache_key, {"content": content, "content_type": content_type}, timeout=TILE_CACHE_TIMEOUT)
+    try:
+        cache.set(cache_key, {"content": content, "content_type": content_type}, timeout=TILE_CACHE_TIMEOUT)
+        logger.info(f"[CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = {cache_key}")
+    except Exception:
+        logger.exception("proxy_tile: Không lưu được tile vào cache")
+
     resp = HttpResponse(content, content_type=content_type)
     resp["X-Cache"] = "MISS"
     return resp

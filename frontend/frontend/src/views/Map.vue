@@ -223,7 +223,7 @@ export default {
     }
   },
 
-  methods: {
+    methods: {
     // storage event handler -> update settings when changed elsewhere
     onStorageChange(e) {
       if (!e) return;
@@ -239,7 +239,6 @@ export default {
 
     // formatting helpers using utils.js
     formatTemp(tempC) {
-      // tempC could be a number (Celsius) OR string in forecast e.g. "25"
       if (tempC === null || tempC === undefined || tempC === "") return tempC;
       const raw = Number(tempC);
       if (Number.isNaN(raw)) return tempC;
@@ -273,7 +272,6 @@ export default {
       }
     },
 
-    // fetch weather used to pre-fill the three suggested cities (converted)
     async fetchCityWeather(city) {
       if (!city) return;
       try {
@@ -285,9 +283,7 @@ export default {
           const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
           const idx = this.cities.findIndex((c) => c.name === "—" || c.name === city);
           if (idx !== -1) {
-            // store original temperature in temp_origin (Celsius) so conversions consistent
             const tempOrigin = data.temperature != null ? Number(data.temperature) : null;
-            // city.temp we keep the raw original Celsius so that display uses formatTemp(...)
             this.cities[idx] = { name: data.location, temp: tempOrigin, temp_origin: tempOrigin, icon, time: timeStr };
           }
         }
@@ -302,8 +298,25 @@ export default {
     },
 
     async initLeafletMap() {
-      this.map = L.map("leaflet-map").setView([21.0285, 105.8542], 5);
-      this.baseLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 6 }).addTo(this.map);
+      this.map = L.map("leaflet-map").setView([21.0285, 105.8542], 6);
+
+      // ✅ Wrapper tileLayer để debug header
+      const TileLayerWrapper = (url, options = {}) => {
+        const layer = L.tileLayer(url, options);
+        layer.on('tileload', (event) => {
+          const xhr = event.tile._xhr;
+          if (xhr) {
+            const xcache = xhr.getResponseHeader('X-Cache');
+            if (xcache) console.debug(`Tile ${event.coords.z}/${event.coords.x}/${event.coords.y} ${xcache}`);
+          }
+        });
+        return layer;
+      };
+
+      this.baseLayer = TileLayerWrapper("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 6,
+      }).addTo(this.map);
 
       // ✅ Popup mặc định
       this.popupRef = L.popup({
@@ -315,6 +328,12 @@ export default {
         .setLatLng([21.0285, 105.8542])
         .setContent("<b>Hà Nội</b><br>Default Center")
         .openOn(this.map);
+
+      this.layerRefs = {
+        precipitation: null,
+        temp: null,
+        wind: null
+      };
     },
 
     prepareTimestamps() {
@@ -336,19 +355,41 @@ export default {
       }
 
       if (!this.activeLayer || !this.map) return;
+
       try {
         const timestamp = this.timelapseTimestamps[this.currentIndex] || Math.floor(Date.now() / 1000);
-        const tileUrl = `http://localhost:8000/api/map/tile/?layer=${this.activeLayer}&z={z}&x={x}&y={y}&timestamp=${timestamp}`;
+
+        // remove previous
         Object.values(this.layerRefs).forEach((layer) => {
           if (layer && this.map.hasLayer(layer)) this.map.removeLayer(layer);
         });
-        const newLayer = L.tileLayer(tileUrl, { opacity: 0.6, tileSize: 256, zIndex: 10 }).addTo(this.map);
-        this.layerRefs[this.activeLayer] = newLayer;
 
-        // ✅ Sau khi đổi layer, nếu có city trước đó → tự cập nhật popup (với đơn vị đúng)
+        const tileUrl = `http://localhost:8000/api/map/tile/?layer=${this.activeLayer}&z={z}&x={x}&y={y}&timestamp=${timestamp}`;
+        const tileLayer = L.tileLayer(tileUrl, { 
+          opacity: 0.6, 
+          tileSize: 256, 
+          zIndex: 10, 
+          updateWhenIdle: true, 
+          keepBuffer: 2, 
+          detectRetina: true 
+        });
+
+        tileLayer.on('tileload', (event) => {
+          const xhr = event.tile._xhr;
+          if (xhr) {
+            const xcache = xhr.getResponseHeader('X-Cache');
+            if (xcache) console.debug(`Tile ${event.coords.z}/${event.coords.x}/${event.coords.y} ${xcache}`);
+          }
+        });
+
+        this.layerRefs[this.activeLayer] = tileLayer;
+        tileLayer.addTo(this.map);
+
+        // update popup nếu đã có city
         if (this.lastCity && this.lastLat !== null && this.lastLon !== null) {
           await this.updatePopup(this.lastCity, this.lastLat, this.lastLon);
         }
+
       } catch (err) {
         console.error("Error loading layer:", err);
       }
@@ -405,7 +446,6 @@ export default {
       this.showSuggestions = this.suggestions.length > 0;
     },
 
-    // ✅ Cập nhật popup tương tác (sử dụng formatTemp/formatSpeed để đổi đơn vị trong popup)
     async updatePopup(cityName, lat, lon) {
       try {
         const res = await fetch(`http://localhost:8000/api/weather/?city=${encodeURIComponent(cityName)}`);
@@ -413,27 +453,15 @@ export default {
         if (!res.ok || !data) return;
 
         let content = `<b>${data.location}</b><br>`;
-
         if (this.activeLayer === "precipitation") {
-          // rainfall in mm (kept as-is)
-          content += `🌧️ Rainfall: ${data.rainfall !== null && data.rainfall !== undefined ? data.rainfall : 0} mm`;
+          content += `🌧️ Rainfall: ${data.rainfall != null ? data.rainfall : 0} mm`;
         } else if (this.activeLayer === "temp") {
-          const tempVal = (data.temperature !== undefined && data.temperature !== null) ? this.formatTemp(data.temperature) : "—";
+          const tempVal = data.temperature != null ? this.formatTemp(data.temperature) : "—";
           content += `🌡️ Temperature: ${tempVal !== "—" ? Math.round(tempVal) + this.tempUnitSymbol : "—"}`;
         } else if (this.activeLayer === "wind") {
-          const windVal = (data.wind_speed !== undefined && data.wind_speed !== null) ? this.formatSpeed(data.wind_speed) : "—";
+          const windVal = data.wind_speed != null ? this.formatSpeed(data.wind_speed) : "—";
           content += `💨 Wind Speed: ${windVal !== "—" ? Math.round(windVal) + this.windUnitSymbol : "—"}`;
         }
-
-        // // also add a small line with both temp & wind for convenience
-        // if (data.temperature !== undefined && data.temperature !== null) {
-        //   const t = Math.round(this.formatTemp(data.temperature));
-        //   content += `<br>🌡️ ${t}${this.tempUnitSymbol}`;
-        // }
-        // if (data.wind_speed !== undefined && data.wind_speed !== null) {
-        //   const w = Math.round(this.formatSpeed(data.wind_speed));
-        //   content += ` • 💨 ${w}${this.windUnitSymbol}`;
-        // }
 
         if (this.popupRef) {
           this.popupRef.setLatLng([lat, lon]).setContent(content).openOn(this.map);
@@ -460,7 +488,6 @@ export default {
       this.lastLat = s.lat;
       this.lastLon = s.lon;
 
-      // ✅ Cập nhật popup và zoom map
       if (this.map) {
         await this.updatePopup(s.name, s.lat, s.lon);
         this.map.panTo([s.lat, s.lon]);
@@ -468,13 +495,10 @@ export default {
 
       this.$nextTick(() => {
         const mapElement = document.getElementById("leaflet-map");
-        if (mapElement) {
-          mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+        if (mapElement) mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
       });
     },
 
-    // ✅ Sửa lại fetchWeather để hỗ trợ fallback khi không có autocomplete
     async fetchWeather(city) {
       if (!city) return;
       try {
@@ -483,21 +507,16 @@ export default {
 
         if (res.ok && data) {
           this.errorMessage = "";
-
-          // Ưu tiên lấy lat/lon từ API nếu có
           const lat = data.lat ?? data.coord?.lat ?? 21.0285;
           const lon = data.lon ?? data.coord?.lon ?? 105.8542;
-           
+
           this.lastCity = city;
           this.lastLat = lat;
           this.lastLon = lon;
 
           await this.updatePopup(city, lat, lon);
 
-          // ✅ di chuyển map đến vị trí
-          if (this.map) {
-            this.map.panTo([lat, lon] );
-          }
+          if (this.map) this.map.panTo([lat, lon]);
         } else {
           this.errorMessage = `Location '${city}' not found`;
         }
@@ -507,13 +526,11 @@ export default {
       }
     },
 
-    // ✅ Sửa lại để gọi autocomplete trước rồi mới update popup
     async onEnterSearch() {
       const query = this.searchQuery.trim();
       if (!query) return;
 
       try {
-        // B1: gọi autocomplete để lấy lat/lon
         const res = await fetch(`http://localhost:8000/api/autocomplete/?q=${encodeURIComponent(query)}`);
         const arr = await res.json();
 
@@ -527,36 +544,25 @@ export default {
           this.lastLat = lat;
           this.lastLon = lon;
 
-          // B2: cập nhật popup & pan map
           await this.updatePopup(cityName, lat, lon);
 
-          if (this.map) {
-            this.map.panTo([lat, lon]);
-          }
-
+          if (this.map) this.map.panTo([lat, lon]);
           this.showSuggestions = false;
         } else {
-          // fallback nếu không có autocomplete result
           await this.fetchWeather(query);
         }
 
-        // ✅ Dù autocomplete có hay không, đều cuộn xuống map
         this.$nextTick(() => {
           const mapElement = document.getElementById("leaflet-map");
-          if (mapElement) {
-            mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
+          if (mapElement) mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
         });
       } catch (err) {
         console.error("Error on enter search:", err);
         await this.fetchWeather(query);
 
-        // ✅ Cuộn xuống map dù lỗi
         this.$nextTick(() => {
           const mapElement = document.getElementById("leaflet-map");
-          if (mapElement) {
-            mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
+          if (mapElement) mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
         });
       }
     },
@@ -565,6 +571,7 @@ export default {
       this.onEnterSearch();
     },
   },
+
 
 };
 </script>
