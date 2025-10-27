@@ -199,6 +199,7 @@ export default {
     await this.initLeafletMap();
     this.prepareTimestamps();
     this.toggleLayer();
+    await this.restoreFromLocalStorage();
   },
 
   beforeUnmount() {
@@ -444,6 +445,38 @@ export default {
       const arr = await res.json();
       this.suggestions = Array.isArray(arr) ? arr : [];
       this.showSuggestions = this.suggestions.length > 0;
+    },
+
+    async restoreFromLocalStorage() {
+      try {
+        const stored = localStorage.getItem("vietcloud_device_location");
+        if (!stored) return;
+
+        const parsed = JSON.parse(stored);
+        const { fixed_name, lat, lon, timestamp } = parsed;
+        const now = Date.now();
+
+        // Cache 5 phút (300000 ms)
+        if (now - timestamp > 300000) {
+          console.log("🕒 Cached location expired.");
+          return;
+        }
+
+        console.log("📍 Restoring from localStorage:", parsed);
+
+        this.lastCity = fixed_name;
+        this.lastLat = lat;
+        this.lastLon = lon;
+
+        // ✅ Gọi updatePopup mà không zoom (giống khi người dùng click suggestion)
+        await this.updatePopup(fixed_name, lat, lon);
+
+        // Nếu bạn muốn map pan nhẹ tới vị trí đó thì bật dòng dưới:
+        // this.map.panTo([lat, lon]);
+
+      } catch (err) {
+        console.error("Error restoring from localStorage:", err);
+      }
     },
 
     async updatePopup(cityName, lat, lon) {

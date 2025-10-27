@@ -352,6 +352,14 @@ def get_weather(request):
             comps = chosen.get("components", {})
             city_name = build_display_name(comps, chosen.get("formatted"))
             city_name = strip_country_suffix(city_name)
+        
+        if lat and lon:
+        # Chuẩn hóa tên theo ISO
+            comps = chosen.get("components", {}) if 'chosen' in locals() else {}
+            fixed_name = normalize_with_iso(comps, city_name)
+            fixed_name = strip_country_suffix(fixed_name)
+        else:
+            fixed_name = city_name
 
         if not lat or not lon:
             return Response({"error": "Không lấy được tọa độ cho địa điểm"}, status=400)
@@ -449,7 +457,7 @@ def get_weather(request):
             })
 
         result = {
-            "location": city_name,
+            "location": fixed_name,
             "temperature": current_data['main']['temp'],
             "humidity": current_data['main']['humidity'],
             "condition": current_data['weather'][0]['main'].lower(),
@@ -463,6 +471,10 @@ def get_weather(request):
             "rainfall": rainfall,
             "source": "OpenWeather"
         }
+        if request.GET.get("lat") and request.GET.get("lon"):
+            result["lat"] = float(lat)
+            result["lon"] = float(lon)
+            result["fixed_name"] = fixed_name
 
         # Lưu kết quả weather vào cache 15 phút
         try:

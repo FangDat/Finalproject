@@ -338,8 +338,33 @@ export default {
         temp: item.temp,
         icon: item.icon
       }));
-    },
+  //       if (data.location && data.lat != null && data.lon != null) {
+  //       const cache = {
+  //         fixed_name: data.location,
+  //         lat: data.lat,
+  //         lon: data.lon,
+  //         timestamp: Date.now()
+  //       };
+  //       localStorage.setItem("vietcloud_location", JSON.stringify(cache));
+  //     }
+  //   },
+  //     getCachedLocation() {
+  //     const saved = localStorage.getItem("vietcloud_location");
+  //     if (!saved) return null;
+
+  //     const cache = JSON.parse(saved);
+  //     const now = Date.now();
+  //     // 5 phút = 300000 ms
+  //     if (now - cache.timestamp < 300000) {
+  //       return { name: cache.fixed_name, lat: cache.lat, lon: cache.lon };
+  //     } else {
+  //       localStorage.removeItem("vietcloud_location");
+  //       return null;
+  //     }
+    }
   },
+  
+
   mounted() {
     const saved = localStorage.getItem("vietcloud_settings");
     if (saved) {
@@ -351,10 +376,47 @@ export default {
         this.username = cookieUsername;
       }
     }, 1000);
-    if (navigator.geolocation) {
+       // ✅ Kiểm tra cache vị trí thiết bị (chỉ tồn tại 5 phút)
+  const cachedLoc = localStorage.getItem("vietcloud_device_location");
+  if (cachedLoc) {
+    const cache = JSON.parse(cachedLoc);
+    const now = Date.now();
+
+    // Nếu cache còn hạn (dưới 5 phút)
+      if (now - cache.timestamp < 300000) { // 5 phút = 300 000 ms
+        const { lat, lon, fixed_name } = cache;
+        this.getWeatherByLocation(lat, lon, fixed_name);
+        return;
+      } else {
+        // Hết hạn → xóa cache để lấy vị trí mới
+        localStorage.removeItem("vietcloud_device_location");
+      }
+    }
+      if (navigator.geolocation) {
+  
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          this.getWeatherByLocation(pos.coords.latitude, pos.coords.longitude);
+        async (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+
+          // gọi API để lấy fixed_name
+          const res = await fetch(
+            `http://localhost:8000/api/weather/?lat=${lat}&lon=${lon}`
+          );
+          const data = await res.json();
+          if (res.ok) {
+            // lưu duy nhất 1 vị trí thiết bị
+            const cache = {
+              fixed_name: data.location,
+              lat,
+              lon,
+              timestamp: Date.now()
+            };
+            localStorage.setItem("vietcloud_device_location", JSON.stringify(cache));
+            this.applyWeatherData(data);
+          } else {
+            this.errorMessage = "Cannot fetch weather from your location.";
+          }
         },
         () => {
           this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:\n- Refresh your browser.\n- Allow your browser to access your location and try again.`;

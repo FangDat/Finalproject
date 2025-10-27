@@ -11,14 +11,14 @@ import math
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
+         
 # CONFIG
 OPENWEATHER_API_KEY = "49d2545d1cdff8820a039e6e2f451ffc"  # lưu backend, không cho frontend thấy
 METADATA_CACHE_TIMEOUT = 300  # 5 phút
 TILE_CACHE_TIMEOUT = 600      # 10 phút cache tile bytes
 MAX_TIMESTAMP_RANGE_HOURS = 48
 
-
+   
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_weather_map(request):
