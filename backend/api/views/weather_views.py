@@ -16,7 +16,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.hashers import check_password
 from django.core.mail import send_mail
 from django.conf import settings
-
+import unicodedata
+from rapidfuzz import fuzz, process
 # Thêm import cache
 from django.core.cache import cache
 
@@ -35,10 +36,102 @@ except Exception as e:
     ISO_CODES = {}
     logger.warning("⚠️ Không load được ISO_3166-2: %s", e)
 
+# --- Đọc dữ liệu worldcities.json khi server start ---
+CITIES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "worldcities.json")
+try:
+    with open(CITIES_PATH, "r", encoding="utf-8") as f:
+        WORLD_CITIES = json.load(f)
+        logger.info("✅ WorldCities loaded successfully (%d cities)", len(WORLD_CITIES))
+except Exception as e:
+    WORLD_CITIES = []
+    logger.warning("⚠️ Không load được worldcities.json: %s", e)
 
 # ---------------------------
 # Helpers / Weather / Autocomplete
 # ---------------------------
+def normalize_text(text):
+    """Bỏ dấu và chuẩn hóa chữ thường"""
+    if not text:
+        return ""
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
+    return text.lower()
+
+
+def fuzzy_search_cities(query, limit=8):
+    """Fuzzy search có fallback admin_name + cache, loại bỏ trùng city/admin_name."""
+    query_norm = normalize_text(query)
+    if not query_norm:
+        return []
+    
+    if len(query_norm) > 15 and sum(ch in "aeiou" for ch in query_norm) < 2:
+        return []
+
+    cache_key = f"fuzzy_local:{query_norm}"
+    cached = cache.get(cache_key)
+    if cached:
+        logger.debug(f"✅ [CACHE HIT] fuzzy search: {query}")
+        return cached
+
+    matches = []
+    seen = set()  # tránh trùng lặp cùng cặp city|admin
+
+    for city in WORLD_CITIES:
+        city_name = city.get("city", "") or ""
+        city_ascii = city.get("city_ascii", "") or ""
+        admin_name = city.get("admin_name", "") or ""
+
+        # Nếu city và admin giống nhau => coi như không có admin (để tránh "Quảng Nam, Quảng Nam")
+        if normalize_text(city_name) == normalize_text(admin_name):
+            admin_name_to_use = ""
+        else:
+            admin_name_to_use = admin_name
+
+        city_norm = normalize_text(city_ascii)
+        admin_norm = normalize_text(admin_name_to_use)
+        name_norm = normalize_text(city_name)
+
+        # Score: ưu tiên so với city_ascii, nhưng cũng so với admin
+        score_city = fuzz.token_set_ratio(query_norm, city_norm)
+        score_admin = fuzz.token_set_ratio(query_norm, admin_norm)
+
+        # Nếu query trùng 100% với city_ascii hoặc với city có dấu, cho điểm cực lớn để đứng đầu
+        if query_norm == city_norm or query_norm == name_norm:
+            score_city = 1000
+
+        best_score = max(score_city, score_admin)
+        if best_score > 60:  # ngưỡng có thể điều chỉnh
+            key = f"{normalize_text(city_name)}|{normalize_text(admin_name_to_use)}"
+            if key not in seen:
+                seen.add(key)
+                matches.append({
+                    "city": city_name,
+                    "admin_name": admin_name_to_use,
+                    "lat": city.get("lat"),
+                    "lon": city.get("lng"),   # dùng 'lon' cho nhất quán
+                    "score": best_score,
+                })
+    if not matches:
+        logger.debug(f"❌ No fuzzy matches for '{query}'")
+        return []
+    
+    # Sort theo score giảm dần, sau đó lấy limit
+    matches.sort(key=lambda x: -x["score"])
+    results = matches[:limit]
+    
+    max_score = results[0]["score"]
+    SCORE_THRESHOLD = 80  # bạn có thể chỉnh lên/xuống tùy độ khắt khe
+    if max_score < SCORE_THRESHOLD:
+        logger.debug(f"⚠️ Fuzzy top score {max_score} < {SCORE_THRESHOLD} → coi như không hợp lệ")
+        return []
+
+    try:
+        cache.set(cache_key, results, timeout=900)
+        logger.debug(f"🔁 [CACHE SET] fuzzy search saved key={cache_key}")
+    except Exception:
+        logger.exception("⚠️ Không lưu được fuzzy search cache")
+
+    return results
 
 
 def strip_country_suffix(formatted):
@@ -121,113 +214,51 @@ def normalize_with_iso(comps, display):
 
 
 @api_view(['GET'])
-def autocomplete(request):
+def autocomplete_local(request):
     """
-    Autocomplete khi người dùng search → KHÔNG ÁP DỤNG ISO_3166-2.
+    Autocomplete nội bộ dựa vào worldcities.json (fuzzy search)
+    Trả về: name (display), lat, lon, score.
     """
-    geocode_key = "f70417a9320a42c28e2f87398e996e6f"
     q = request.GET.get("q") or request.GET.get("query") or ""
     q = q.strip()
     if not q:
         return Response([], status=200)
 
-    cache_key = f"geocode:autocomplete:{q.lower()}"
-    cached = cache.get(cache_key)
-    if cached:
-        logger.debug("✅ Autocomplete: trả về từ Redis cache cho query=%s", q)
-        return Response(cached, status=200)
+    logger.debug(f"🔍 Fuzzy search local query='{q}'")
 
     try:
-        url = f"https://api.opencagedata.com/geocode/v1/json?q={quote(q)}&key={geocode_key}&language=vi&limit=10"
-        resp = requests.get(url, timeout=8)
-        geo = resp.json()
-    except Exception as e:
-        return Response({"error": "Geocode failed", "details": str(e)}, status=500)
+        results = fuzzy_search_cities(q)
 
-    results = geo.get("results", [])
-    suggestions = []
+        formatted = []
+        seen_names = set()  # tránh hiển thị trùng
 
-    def score_result(r):
-        comps = r.get("components", {})
-        score = 0
-        if comps.get("country_code", "").lower() == "vn":
-            score += 10
-        main_keys = ["city", "town", "village", "municipality",
-                     "county", "state", "province", "region"]
-        lower_q = q.lower()
-        for k in main_keys:
-            v = comps.get(k)
-            if v and lower_q in str(v).lower():
-                score += 5
-        return score
+        for r in results:
+            city = r.get("city", "")
+            admin = r.get("admin_name", "")
 
-    def get_place_rank(comps):
-        if comps.get("city") or comps.get("town"):
-            return 2
-        if comps.get("county") or comps.get("city_district") or comps.get("district"):
-            return 3
-        if comps.get("suburb") or comps.get("village") or comps.get("ward"):
-            return 4
-        return 5
+            # Nếu có admin khác city -> hiển thị "City, Admin"
+            if admin and normalize_text(admin) != normalize_text(city):
+                display_name = f"{city}, {admin}"
+            else:
+                display_name = city
 
-    exact_matches = []
-    scored = []
+            # tránh lặp hiển thị (vd: nhiều bản ghi khác nhau cùng display_name)
+            key = display_name.strip().lower()
+            if key in seen_names:
+                continue
+            seen_names.add(key)
 
-    for r in results:
-        geometry = r.get("geometry", {})
-        comps = r.get("components", {})
-        # ✅ KHÔNG normalize_with_iso trong autocomplete
-        display = build_display_name(comps, r.get("formatted"))
-        display = strip_country_suffix(display)
-
-        if display and display.lower() == q.lower():
-            exact_matches.append({
-                "name": display,
-                "lat": geometry.get("lat"),
-                "lon": geometry.get("lng"),
-                "is_vn": (comps.get("country_code", "").lower() == "vn"),
-                "raw": r.get("formatted", "")
+            formatted.append({
+                "name": display_name,
+                "lat": r.get("lat"),
+                "lon": r.get("lon"),
+                "score": r.get("score")
             })
-        else:
-            rank = get_place_rank(comps)
-            scored.append((rank, score_result(r), {
-                "name": display,
-                "lat": geometry.get("lat"),
-                "lon": geometry.get("lng"),
-                "is_vn": (comps.get("country_code", "").lower() == "vn"),
-                "raw": r.get("formatted", "")
-            }))
 
-    scored.sort(key=lambda x: (x[0], -x[1]))
-    suggestions = []
-    seen = set()
-
-    for item in exact_matches:
-        key = item["name"].lower()
-        if key not in seen:
-            seen.add(key)
-            suggestions.append(item)
-        if len(suggestions) >= 8:
-            break
-
-    for _, _, item in scored:
-        if len(suggestions) >= 8:
-            break
-        key = (item.get("name") or "").lower()
-        if key in seen:
-            continue
-        seen.add(key)
-        suggestions.append(item)
-
-    # Cache 15 phút
-    try:
-        cache.set(cache_key, suggestions, timeout=900)
-        logger.debug("🔁 Autocomplete: lưu vào Redis cache key=%s", cache_key)
-    except Exception:
-        logger.exception("Không lưu được autocomplete vào cache")
-
-    return Response(suggestions)
-
+        return Response(formatted, status=200)
+    except Exception as e:
+        logger.exception("autocomplete_local failed")
+        return Response({"error": str(e)}, status=500)
 
 def get_city_from_coordinates(lat, lon, geocode_key):
     """Reverse geocoding → Từ lat/lon trả về tên thành phố chuẩn hóa (ISO-3166-2)."""
@@ -276,8 +307,6 @@ def get_city_from_coordinates(lat, lon, geocode_key):
 
     return "Unknown"
 
-
-
 # ---------------------------
 # Helper chọn icon ban ngày
 # ---------------------------
@@ -316,97 +345,89 @@ def get_weather(request):
 
     try:
         city_name = None
-        # Nếu client gửi lat/lon -> dùng lat/lon trực tiếp (cache key dựa trên lat:lon)
+
+        # --- TRƯỜNG HỢP 1: Người dùng F5 / cho phép định vị ---
         if lat and lon:
             if name:
                 city_name = name
+                logger.debug("📍 Lấy city_name từ query param name='%s'", name)
             else:
                 city_name = get_city_from_coordinates(lat, lon, geocode_key)
-            city_name = strip_country_suffix(city_name)
-        else:
-            if not city_input:
-                return Response({"error": "Cần city hoặc lat/lon"}, status=400)
+                logger.debug("📍 Lấy city_name từ OpenCage reverse geocode: %s", city_name)
 
-            # Trước khi gọi geocode, check cache geocode query (city_input)
-            geocode_cache_key = f"geocode:query:{city_input.strip().lower()}"
-            geo_resp_cached = cache.get(geocode_cache_key)
-            if geo_resp_cached:
-                chosen = geo_resp_cached
-                logger.debug("✅ Geocode query trả về từ cache cho '%s'", city_input)
+            city_name = strip_country_suffix(city_name)
+
+        # --- TRƯỜNG HỢP 2: Người dùng nhập tên thành phố và nhấn Enter ---
+        elif city_input:
+            logger.debug("🔍 Dùng fuzzy search nội bộ cho city_input='%s'", city_input)
+            matches = fuzzy_search_cities(city_input)
+            if not matches:
+                return Response({"error": f"Không tìm thấy địa điểm '{city_input}'"}, status=404)
+
+            top = matches[0]
+            lat = top.get("lat")
+            lon = top.get("lon")
+
+            # --- XÂY display_name giống dropdown: nếu có admin khác city -> "City, Admin" ---
+            if top.get("admin_name") and normalize_text(top.get("admin_name")) != normalize_text(top.get("city")):
+                city_name = f"{top.get('city')}, {top.get('admin_name')}"
             else:
-                geocode_url = f"https://api.opencagedata.com/geocode/v1/json?q={quote(city_input.strip())}&key={geocode_key}&language=vi&limit=10"
-                geocode_resp = requests.get(geocode_url, timeout=8)
-                geocode_json = geocode_resp.json()
-                if not geocode_json.get("results"):
-                    return Response({"error": f"Không tìm thấy địa điểm '{city_input}'"}, status=404)
-                chosen = geocode_json["results"][0]
-                # Lưu kết quả geocode (chọn kết quả đầu) vào cache 15 phút
-                try:
-                    cache.set(geocode_cache_key, chosen, timeout=900)
-                    logger.debug("🔁 Lưu geocode query vào cache key=%s", geocode_cache_key)
-                except Exception:
-                    logger.exception("Không lưu geocode query vào cache")
+                city_name = top.get("city") or city_input
 
-            geometry = chosen.get("geometry", {})
-            lat, lon = geometry.get("lat"), geometry.get("lng")
-            comps = chosen.get("components", {})
-            city_name = build_display_name(comps, chosen.get("formatted"))
-            city_name = strip_country_suffix(city_name)
-        
-        if lat and lon:
-        # Chuẩn hóa tên theo ISO
-            comps = chosen.get("components", {}) if 'chosen' in locals() else {}
-            fixed_name = normalize_with_iso(comps, city_name)
-            fixed_name = strip_country_suffix(fixed_name)
+            logger.debug("✅ Fuzzy top result: %s (%s,%s) score=%s", city_name, lat, lon, top.get("score"))
+
         else:
-            fixed_name = city_name
+            return Response({"error": "Thiếu tham số city hoặc lat/lon"}, status=400)
 
+        # Chuẩn hoá hiển thị
+        fixed_name = strip_country_suffix(city_name)
+
+        # Kiểm tra tọa độ
         if not lat or not lon:
-            return Response({"error": "Không lấy được tọa độ cho địa điểm"}, status=400)
+            return Response({"error": "Không lấy được tọa độ"}, status=400)
 
-        # Tạo cache key cho weather dựa trên lat:lon (chuẩn hóa string)
-        # Dùng 6 chữ số thập phân để tránh khác biệt float không đáng có
+
+        # --- TẠO CACHE KEY ---
         try:
             lat_s = f"{float(lat):.6f}"
             lon_s = f"{float(lon):.6f}"
         except Exception:
             lat_s = str(lat)
             lon_s = str(lon)
+
         weather_cache_key = f"weather:{lat_s}:{lon_s}"
 
-        # Nếu có trong cache -> trả luôn
+        # --- CACHE HIT ---
         cached_weather = cache.get(weather_cache_key)
         if cached_weather:
-            logger.info(f"💾 [CACHE HIT] Trả dữ liệu từ Redis cho key={weather_cache_key}")
-            logger.debug("✅ Trả weather từ Redis cache cho key=%s", weather_cache_key)
+            logger.info(f"💾 [CACHE HIT] Trả dữ liệu từ Redis cho {weather_cache_key}")
             return Response(cached_weather)
         else:
-            logger.info(f"🌍 [API CALL] Gọi OpenWeather cho key={weather_cache_key}")
+            logger.info(f"🌍 [API CALL] Gọi OpenWeather cho {weather_cache_key}")
 
-        # --- gọi API OpenWeather ---
+        # --- GỌI OPENWEATHER ---
         current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"
         current_resp = requests.get(current_url, timeout=8)
         current_data = current_resp.json()
-        visibility = current_data.get('visibility', None)
         if current_resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu thời tiết", "details": current_data}, status=400)
-        
-        rainfall = None
-        if "rain" in current_data and isinstance(current_data["rain"], dict):
-            rainfall = current_data["rain"].get("1h")
-        
-        # --- lấy UV index ---
+
+        visibility = current_data.get('visibility', None)
+        rainfall = current_data.get("rain", {}).get("1h") if isinstance(current_data.get("rain"), dict) else None
+
+        # --- UV INDEX ---
         uv_url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,daily,alerts&appid={api_key}"
         uv_resp = requests.get(uv_url, timeout=8)
         uv_data = uv_resp.json()
         uv_index = uv_data.get("current", {}).get("uvi", None)
 
+        # --- TIMEZONE ---
         timezone_offset = current_data.get("timezone", 0)
         offset = datetime.timedelta(seconds=timezone_offset)
         tz = datetime.timezone(offset)
         now = datetime.datetime.now(tz)
 
-        # Forecast
+        # --- FORECAST ---
         forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&appid={api_key}"
         forecast_resp = requests.get(forecast_url, timeout=8)
         forecast_data = forecast_resp.json()
@@ -415,10 +436,8 @@ def get_weather(request):
 
         upcoming_hours, daily_forecast = [], {}
         for item in forecast_data.get('list', []):
-            dt_utc = datetime.datetime.strptime(
-                item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt_local = dt_utc.replace(
-                tzinfo=datetime.timezone.utc).astimezone(tz)
+            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
 
             if dt_local > now and len(upcoming_hours) < 5:
                 upcoming_hours.append({
@@ -434,22 +453,19 @@ def get_weather(request):
             daily_forecast[day_str]["temps"].append(item['main']['temp'])
             daily_forecast[day_str]["icons"].append(item['weather'][0]['icon'])
 
+        # --- CHANCE OF RAIN ---
         chance_of_rain = 0
         for item in forecast_data.get('list', []):
-            dt_utc = datetime.datetime.strptime(
-                item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt_local = dt_utc.replace(
-                tzinfo=datetime.timezone.utc).astimezone(tz)
+            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
+            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
             if dt_local > now:
                 chance_of_rain = item.get("pop", 0) * 100
                 break
-            
-        # Tạo danh sách forecast theo ngày
+
+        # --- DAILY FORECAST LIST ---
         daily_forecast_list = []
         for day, info in list(daily_forecast.items())[:3]:
-            # Chọn icon xuất hiện nhiều nhất trong ngày, với fallback ban ngày
             most_common_icon = choose_daytime_icon(info.get("icons", []))
-            
             daily_forecast_list.append({
                 "day": day,
                 "temp": f"{int(max(info['temps']))}/{int(min(info['temps']))}",
@@ -461,22 +477,24 @@ def get_weather(request):
             "temperature": current_data['main']['temp'],
             "humidity": current_data['main']['humidity'],
             "condition": current_data['weather'][0]['main'].lower(),
-            "icon": current_data['weather'][0]['icon'],  # ví dụ 01d
+            "icon": current_data['weather'][0]['icon'],
             "wind_speed": current_data['wind']['speed'],
             "chance_of_rain": round(chance_of_rain),
             "upcoming_hours": upcoming_hours,
             "daily_forecast": daily_forecast_list,
             "visibility": visibility,
-            "uv_index": uv_index,  
+            "uv_index": uv_index,
             "rainfall": rainfall,
             "source": "OpenWeather"
         }
-        if request.GET.get("lat") and request.GET.get("lon"):
+
+        # Thêm toạ độ nếu có
+        if lat and lon:
             result["lat"] = float(lat)
             result["lon"] = float(lon)
             result["fixed_name"] = fixed_name
 
-        # Lưu kết quả weather vào cache 15 phút
+        # --- LƯU CACHE ---
         try:
             cache.set(weather_cache_key, result, timeout=900)
             logger.debug("🔁 Lưu weather vào Redis cache key=%s", weather_cache_key)
@@ -484,6 +502,7 @@ def get_weather(request):
             logger.exception("Không lưu được weather vào cache")
 
         return Response(result)
+
     except Exception as e:
         logger.exception("get_weather failed")
         return Response({"error": str(e)}, status=500)

@@ -441,7 +441,7 @@ export default {
         this.showSuggestions = false;
         return;
       }
-      const res = await fetch(`http://localhost:8000/api/autocomplete/?q=${encodeURIComponent(q)}`);
+      const res = await fetch(`http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(q)}`);
       const arr = await res.json();
       this.suggestions = Array.isArray(arr) ? arr : [];
       this.showSuggestions = this.suggestions.length > 0;
@@ -564,7 +564,7 @@ export default {
       if (!query) return;
 
       try {
-        const res = await fetch(`http://localhost:8000/api/autocomplete/?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(query)}`);
         const arr = await res.json();
 
         if (Array.isArray(arr) && arr.length > 0) {

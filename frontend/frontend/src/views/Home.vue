@@ -26,7 +26,7 @@
                 @keyup.enter="onEnterSearch"
                 placeholder="Search city..."
                 class="search-bar"
-                autocomplete="off"
+                autocomplete_local="off"
               />
               <span class="search-icon" @click="onClickSearch">🔍</span>
 
@@ -229,7 +229,7 @@ export default {
     },
     async fetchSuggestions(q) {
       try {
-        const res = await fetch(`http://localhost:8000/api/autocomplete/?q=${encodeURIComponent(q)}`);
+        const res = await fetch(`http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(q)}`);
         const arr = await res.json();
         if (Array.isArray(arr)) {
           this.suggestions = arr;
@@ -239,7 +239,7 @@ export default {
           this.showSuggestions = false;
         }
       } catch (err) {
-        console.error("Autocomplete error", err);
+        console.error("autocomplete_local error", err);
         this.suggestions = [];
         this.showSuggestions = false;
       }

@@ -11,7 +11,7 @@ from backend.api.views.auth_views import (
 )
 
 from backend.api.views.weather_views import (
-    get_weather, autocomplete,
+    get_weather, autocomplete_local,
 )
 
 from backend.api.views.feedback_views import (
@@ -29,7 +29,7 @@ urlpatterns = [
 
     # Weather & autocomplete
     path('api/weather/', get_weather, name="get_weather"),
-    path('api/autocomplete/', autocomplete, name="autocomplete"),
+    path('api/autocomplete_local/', autocomplete_local, name="autocomplete_local"),
 
     # JWT (optional, mostly for debugging)
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
