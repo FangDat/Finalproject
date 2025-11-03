@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
+from backend.api.views.verifyotp_views import send_otp, verify_otp, resend_otp
 
 from backend.api.views.map_views import get_weather_map, proxy_tile
 # import các view đã tách
@@ -48,4 +49,8 @@ urlpatterns = [
     path("api/map/tile/", proxy_tile, name="proxy_tile"), 
     # path("api/map/preload/", preload_map_frames, name="preload_map_frames"),
     # path("api/map/current/", get_current_weather_for_map, name="get_current_weather_for_map"),
+    
+    path('api/send-otp/', send_otp, name="send_otp"),
+    path('api/verify-otp/', verify_otp, name="verify_otp"),
+    path('api/resend-otp/', resend_otp, name="resend_otp"),
 ]

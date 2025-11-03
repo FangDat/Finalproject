@@ -70,82 +70,18 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 # ---------------------------
-# SIGNUP
+# SIGNUP → gọi hàm logic OTP
 # ---------------------------
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def signup(request):
-    """
-    Signup tạo user → tự động sinh access & refresh token và set cookie.
-    Trả về username/email để frontend lưu cookie non-HttpOnly cho UI.
-    """
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        # Lưu user và lấy instance
-        user = serializer.save()
+    from .verifyotp_views import send_otp_logic, normalize_email
+    username = request.data.get("username")
+    raw_email = request.data.get("email")
+    password = request.data.get("password")
+    email = normalize_email(raw_email)
+    return send_otp_logic(username, email, password)
 
-        # Tạo tokens giống login
-        refresh = RefreshToken.for_user(user)
-        refresh['user_id'] = str(user._id)
-        access = refresh.access_token
-        access['user_id'] = str(user._id)
-
-        # Chuẩn bị response
-        resp = Response({
-            "message": "User created successfully",
-            "username": getattr(user, "username", ""),
-            "email": getattr(user, "email", ""),
-            "user_id": str(getattr(user, "_id", "")),
-        }, status=201)
-
-        # Set cookies HttpOnly cho token (frontend không thể đọc)
-        # Lưu ý domain/path phải khớp với domain frontend/backend của bạn (ở dev dùng localhost)
-        resp.set_cookie(
-            key="access_token",
-            value=str(access),
-            httponly=True,
-            secure=False,   # True khi deploy HTTPS
-            samesite="Lax",
-            path="/",
-            domain="localhost",
-            max_age=60 * 30
-        )
-        resp.set_cookie(
-            key="refresh_token",
-            value=str(refresh),
-            httponly=True,
-            secure=False,
-            samesite="Lax",
-            path="/",
-            domain="localhost",
-            max_age=60 * 60 * 24 * 7
-        )
-
-        # Set cookie non-HttpOnly cho username/email (frontend dùng UI)
-        resp.set_cookie(
-            key="username",
-            value=str(getattr(user, "username", "")),
-            httponly=False,
-            secure=False,
-            samesite="Lax",
-            path="/",
-            domain="localhost",
-            max_age=60 * 60 * 24 * 7
-        )
-        resp.set_cookie(
-            key="email",
-            value=str(getattr(user, "email", "")),
-            httponly=False,
-            secure=False,
-            samesite="Lax",
-            path="/",
-            domain="localhost",
-            max_age=60 * 60 * 24 * 7
-        )
-
-        return resp
-
-    return Response(serializer.errors, status=400)
 
 
 # ---------------------------

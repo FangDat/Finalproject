@@ -198,7 +198,12 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
-        },        
+        },
+        'backend.api.views.verifyotp_views': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },           
         'django': {
             'handlers': ['console'],
             'level': 'INFO',

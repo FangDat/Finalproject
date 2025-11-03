@@ -70,9 +70,40 @@
 
       <!-- Terms -->
       <p class="agreement-text">
-        By clicking the "Sign up" button, you are creating an account, and you agree to the
+        By clicking the "Sign up" button, you agree to the
         <router-link to="/terms" class="terms-link">Terms of Use</router-link>.
       </p>
+    </div>
+
+    <!-- OTP Modal -->
+    <div v-if="showOtpModal" class="otp-modal-overlay">
+      <div class="otp-modal">
+        <h2>Please enter the verification code sent to your email</h2>
+        <div class="otp-inputs">
+          <input
+            v-for="(digit, index) in otpDigits"
+            :key="index"
+            v-model="otpDigits[index]"
+            maxlength="1"
+            @input="focusNext(index)"
+            @keydown.backspace="focusPrev(index, $event)"
+          />
+        </div>
+        <button class="btn-verify" @click="verifyOtp" :disabled="verifying">
+          <span v-if="!verifying">Verify</span>
+          <span v-else>Verifying...</span>
+        </button>
+        <p class="resend-text">
+          Didn’t receive code?
+          <span v-if="resendTimer > 0">
+            Resend in {{ resendTimer }}s
+          </span>
+          <span v-else class="resend-link" @click="resendOtp">
+            Resend code
+          </span>
+        </p>
+        <p class="otp-error" v-if="otpError">{{ otpError }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -80,6 +111,16 @@
 <script>
 import axios from "axios";
 import Cookies from "js-cookie";
+function cleanCookieValue(value) {
+  if (!value) return "";
+  try {
+    // Nếu giá trị dạng JSON chuỗi, parse thử
+    const parsed = JSON.parse(value);
+    if (typeof parsed === "string") return parsed;
+  } catch (_) {}
+  // Xoá ngoặc kép/thừa khoảng trắng
+  return value.replace(/^["']+|["']+$/g, "").trim();
+}
 
 export default {
   name: "SignUp",
@@ -90,20 +131,34 @@ export default {
       password: "",
       confirmPassword: "",
       submitting: false,
+      verifying: false,
 
-      // alert UI
       alertMessage: "",
       alertType: "info",
 
-      // field errors
       errors: {
         username: "",
         email: "",
         password: "",
         confirmPassword: "",
       },
+
+      // OTP modal states
+      showOtpModal: false,
+      otpDigits: ["", "", "", "", "", ""],
+      resendTimer: 600,
+      otpError: null,
+      otpInterval: null,
     };
   },
+  mounted() {
+    const rawEmail = Cookies.get("email");
+    const cleanEmail = cleanCookieValue(rawEmail);
+    if (cleanEmail && cleanEmail !== rawEmail) {
+      Cookies.set("email", cleanEmail, { path: "/" });
+    }
+  },
+
   methods: {
     resetErrors() {
       this.errors = { username: "", email: "", password: "", confirmPassword: "" };
@@ -114,7 +169,6 @@ export default {
     async handleSignup() {
       this.resetErrors();
 
-      // Client-side validation
       if (!this.username || !this.email || !this.password || !this.confirmPassword) {
         if (!this.username) this.errors.username = "Please enter your username.";
         if (!this.email) this.errors.email = "Please enter your email.";
@@ -132,209 +186,125 @@ export default {
         return;
       }
 
+      if (this.password.length < 8) {
+        this.errors.password = "Password must be at least 8 characters long.";
+        this.alertMessage = "Password must be at least 8 characters long.";
+        this.alertType = "warning";
+        return;
+      }
+
+
       this.submitting = true;
       try {
-        const payload = {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-        };
-
-        // withCredentials cần true để browser lưu cookie HttpOnly từ server (access/refresh)
+        const payload = { username: this.username, email: this.email, password: this.password };
         const res = await axios.post("http://localhost:8000/api/signup/", payload, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
 
-        // Server trả về username/email trong body; server cũng set cookie token HttpOnly.
-        const returnedUsername = res.data?.username || this.username;
-        const returnedEmail = res.data?.email || this.email;
-
-        // Lưu username/email (non-HttpOnly) để UI có thể đọc
-        Cookies.set("username", returnedUsername, { expires: 7 });
-        Cookies.set("email", returnedEmail, { expires: 7 });
-
-        this.alertMessage = "Signup successful! Redirecting to Payment Page..";
-        this.alertType = "success";
-
-        setTimeout(() => {
-          this.$router.push("/credit-card");
-        }, 1500);
-      } catch (err) {
-        if (err.response && err.response.status === 400 && err.response.data) {
-          const data = err.response.data;
-          if (data.email?.[0]?.toLowerCase().includes("already exists")) {
-            this.errors.email = "This email is already in use!";
-            this.alertMessage = "This email is already in use!";
-            this.alertType = "warning";
-          } else if (data.username?.[0]?.toLowerCase().includes("already exists")) {
-            this.errors.username = "Username already exists!";
-            this.alertMessage = "Username already exists!";
-            this.alertType = "warning";
-          } else {
-            // Generic messages from serializer
-            this.alertMessage = "Signup failed. Please check your inputs.";
-            this.alertType = "error";
-          }
-        } else {
-          this.alertMessage = "Signup failed. Please try again.";
-          this.alertType = "error";
+        if (res.status === 200 || res.status === 201) {
+          this.showOtpModal = true;
+          this.startResendCountdown();
         }
+      } catch (err) {
+        this.handleSignupError(err);
       } finally {
         this.submitting = false;
       }
     },
+
+    handleSignupError(err) {
+      if (err.response && err.response.status === 400 && err.response.data) {
+        const data = err.response.data;
+        if (data.email?.[0]?.toLowerCase().includes("already in use")) {
+          this.errors.email = "This email is already in use!";
+          this.alertMessage = "This email is already in use!";
+          this.alertType = "warning";
+        } else if (data.username?.[0]?.toLowerCase().includes("already exists")) {
+          this.errors.username = "Username already exists!";
+          this.alertMessage = "Username already exists!";
+          this.alertType = "warning";
+
+        } else {
+          this.alertMessage = "Signup failed. Please check your inputs.";
+          this.alertType = "error";
+        }
+      } else {
+        this.alertMessage = "Signup failed. Please try again.";
+        this.alertType = "error";
+      }
+    },
+
+    async verifyOtp() {
+      this.verifying = true;
+      this.otpError = null;
+      const otpCode = this.otpDigits.join("");
+
+      if (otpCode.length !== 6) {
+        this.otpError = "Please enter all 6 digits.";
+        this.verifying = false;
+        return;
+      }
+
+      try {
+        const res = await axios.post(
+          "http://localhost:8000/api/verify-otp/",
+          { email: this.email, otp: otpCode },
+          { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        );
+
+        if (res.status === 200 || res.status === 201) {
+          this.showOtpModal = false;
+          this.alertMessage = "Verification successful! Redirecting...";
+          this.alertType = "success";
+          setTimeout(() => this.$router.push("/credit-card"), 1000);
+        }
+      } catch (err) {
+        this.otpError =
+          err.response?.data?.message || "Invalid or expired OTP. Please try again.";
+      } finally {
+        this.verifying = false;
+      }
+    },
+
+    focusNext(index) {
+      if (this.otpDigits[index].length === 1 && index < 5) {
+        this.$el.querySelectorAll(".otp-inputs input")[index + 1].focus();
+      }
+    },
+
+    focusPrev(index, event) {
+      if (!this.otpDigits[index] && index > 0 && event.key === "Backspace") {
+        this.$el.querySelectorAll(".otp-inputs input")[index - 1].focus();
+      }
+    },
+
+    startResendCountdown() {
+      this.resendTimer = 600;
+      if (this.otpInterval) clearInterval(this.otpInterval);
+      this.otpInterval = setInterval(() => {
+        if (this.resendTimer > 0) this.resendTimer--;
+        else clearInterval(this.otpInterval);
+      }, 1000);
+    },
+
+    async resendOtp() {
+      try {
+        await axios.post(
+          "http://localhost:8000/api/resend-otp/",
+          { email: this.email },
+          { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        );
+        this.resendTimer = 600;
+        this.startResendCountdown();
+      } catch (err) {
+        this.otpError = "Failed to resend OTP. Please try again.";
+      }
+    },
+  },
+  beforeUnmount() {
+    if (this.otpInterval) clearInterval(this.otpInterval);
   },
 };
 </script>
-
-<style scoped>
-/* Layout tổng thể */
-.signup-container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f4f0ff;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Card đăng ký */
-.signup-card {
-  background: #fff;
-  padding: 40px;
-  border-radius: 20px;
-  width: 420px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  text-align: center;
-}
-
-/* Logo */
-.logo-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-.logo {
-  width: 40px;
-  height: 40px;
-}
-
-/* Title */
-.signup-title {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-/* Sign in text */
-.signin-text {
-  margin-bottom: 20px;
-  font-size: 1rem;
-}
-.signin-link {
-  color: #2196f3;
-  font-weight: bold;
-  text-decoration: none;
-}
-.signin-link:hover {
-  text-decoration: underline;
-}
-
-/* Form */
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: left;
-}
-.signup-form label {
-  font-size: 1rem;
-  font-weight: 500;
-}
-.signup-form input {
-  padding: 12px 15px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  outline: none;
-}
-.signup-form input:focus {
-  border-color: #2196f3;
-  box-shadow: 0 0 4px rgba(33, 150, 243, 0.3);
-}
-
-/* Input error */
-.input-error {
-  border-color: #e53935 !important;
-  box-shadow: 0 0 4px rgba(229, 57, 53, 0.2) !important;
-}
-.error-msg {
-  color: #e53935;
-  font-size: 0.9rem;
-  margin: -6px 0 8px 2px;
-}
-
-/* Alert box */
-.alert-box {
-  padding: 12px 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  font-size: 0.95rem;
-  text-align: center;
-}
-.alert-box.success {
-  background: #e8f5e9;
-  color: #2e7d32;
-  border: 1px solid #c8e6c9;
-}
-.alert-box.error {
-  background: #ffebee;
-  color: #c62828;
-  border: 1px solid #ffcdd2;
-}
-.alert-box.warning {
-  background: #fff8e1;
-  color: #f57f17;
-  border: 1px solid #ffe082;
-}
-
-/* Button */
-.btn-signup {
-  margin-top: 10px;
-  padding: 12px 30px;
-  background: #2196f3;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  align-self: center;
-}
-.btn-signup[disabled] {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-.btn-signup:hover {
-  background: #1976d2;
-}
-.lock-icon {
-  font-size: 1.2rem;
-}
-
-.terms-link {
-  color: #1976d2;
-  text-decoration: none;
-  font-weight: 500;
-}
-.terms-link:hover {
-  text-decoration: underline;
-}
-</style>
+<style scoped src="@/assets/Signup.css"></style>
