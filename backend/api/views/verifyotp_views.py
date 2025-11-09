@@ -18,8 +18,8 @@ redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_respo
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-OTP_EXPIRE_SECONDS = 600  # 10 phút
-
+OTP_EXPIRE_SECONDS = 60  
+PENDING_EXPIRE_SECONDS = 300 
 
 # ---------------------------
 # HÀM PHỤ TRỢ
@@ -79,11 +79,12 @@ def send_otp_logic(username, email, password):
     pending_key = f"pending_user:{email}"
     redis_client.setex(otp_key, OTP_EXPIRE_SECONDS, otp)
     email = normalize_email(email)
-    redis_client.setex(pending_key, OTP_EXPIRE_SECONDS, json.dumps({
+    redis_client.setex(pending_key, PENDING_EXPIRE_SECONDS, json.dumps({
         "username": username,
         "email": email,
         "password": password
     }))
+
 
     logger.debug(f"💾 Redis saved OTP={otp} & pending user for {email}")
 
@@ -230,6 +231,7 @@ def resend_otp(request):
 
     otp = generate_otp()
     redis_client.setex(otp_key, OTP_EXPIRE_SECONDS, otp)
+    logger.debug(f"💾 Redis resend saved OTP={otp} & pending user for {email}")
 
     subject = "VietCloud Email Verification Code (Resent)"
     message = f"Hello,\n\nYour new VietCloud OTP code is: {otp}\n\nExpires in 10 minutes.\n\n— VietCloud Team"

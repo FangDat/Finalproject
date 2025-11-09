@@ -257,7 +257,7 @@ export default {
           this.showOtpModal = false;
           this.alertMessage = "Verification successful! Redirecting...";
           this.alertType = "success";
-          setTimeout(() => this.$router.push("/credit-card"), 1000);
+          setTimeout(() => this.$router.push("/credit-card"), 3500);
         }
       } catch (err) {
         this.otpError =
@@ -280,7 +280,7 @@ export default {
     },
 
     startResendCountdown() {
-      this.resendTimer = 600;
+      this.resendTimer = 60;
       if (this.otpInterval) clearInterval(this.otpInterval);
       this.otpInterval = setInterval(() => {
         if (this.resendTimer > 0) this.resendTimer--;
