@@ -265,13 +265,18 @@
 /* Forecast hôm nay */
 .forecast-today {
   display: flex;
-  justify-content: space-around;
+  overflow-x: auto;
+  gap: 20px;
+  /* justify-content: space-around; */
   margin-top: 15px;
+  padding-bottom: 5px;
 }
 
 .forecast-item {
   text-align: center;
   font-size: 1rem;
+  min-width: 80px;
+
 }
 
 /* đặt size icon forecast nhỏ hơn một chút nếu cần */
@@ -351,4 +356,27 @@ a,
 
 .main-content::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Cuộn ngang cho forecast hôm nay */
+.scroll-x {
+  display: flex;
+  overflow-x: auto;
+  gap: 18px;
+  padding-bottom: 5px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.3) transparent;
+}
+
+.scroll-x::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scroll-x::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 3px;
+}
+
+.scroll-x::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0,0,0,0.5);
 }

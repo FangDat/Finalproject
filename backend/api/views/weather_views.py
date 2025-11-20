@@ -405,89 +405,87 @@ def get_weather(request):
         else:
             logger.info(f"🌍 [API CALL] Gọi OpenWeather cho {weather_cache_key}")
 
-        # --- GỌI OPENWEATHER ---
-        current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"
-        current_resp = requests.get(current_url, timeout=8)
-        current_data = current_resp.json()
-        if current_resp.status_code != 200:
-            return Response({"error": "Không lấy được dữ liệu thời tiết", "details": current_data}, status=400)
+         # --- CALL OpenWeather 3.0 ---
+        url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&units=metric&exclude=minutely,alerts&appid={api_key}"
+        resp = requests.get(url, timeout=8)
+        if resp.status_code != 200:
+            return Response({"error": "Không lấy được dữ liệu thời tiết", "details": resp.json()}, status=400)
+        data = resp.json()
 
-        visibility = current_data.get('visibility', None)
-        rainfall = current_data.get("rain", {}).get("1h") if isinstance(current_data.get("rain"), dict) else None
-
-        # --- UV INDEX ---
-        uv_url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,daily,alerts&appid={api_key}"
-        uv_resp = requests.get(uv_url, timeout=8)
-        uv_data = uv_resp.json()
-        uv_index = uv_data.get("current", {}).get("uvi", None)
-
-        # --- TIMEZONE ---
-        timezone_offset = current_data.get("timezone", 0)
-        offset = datetime.timedelta(seconds=timezone_offset)
-        tz = datetime.timezone(offset)
+        current = data.get("current", {})
+        hourly = data.get("hourly", [])
+        daily = data.get("daily", [])
+        
+             # --- TIMEZONE OFFSET ---
+        timezone_offset_seconds = data.get("timezone_offset", 0)
+        tz = datetime.timezone(datetime.timedelta(seconds=timezone_offset_seconds))
         now = datetime.datetime.now(tz)
 
-        # --- FORECAST ---
-        forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&appid={api_key}"
-        forecast_resp = requests.get(forecast_url, timeout=8)
-        forecast_data = forecast_resp.json()
-        if forecast_resp.status_code != 200:
-            return Response({"error": "Không lấy được dữ liệu forecast", "details": forecast_data}, status=400)
+        # --- CURRENT WEATHER ---
+        temperature = current.get("temp")
+        humidity = current.get("humidity")
+        condition = current.get("weather", [{}])[0].get("main", "").lower()
+        icon = current.get("weather", [{}])[0].get("icon")
+        wind_speed = current.get("wind_speed")
+        visibility = current.get("visibility")
+        rainfall = current.get("rain", {}).get("1h")
+        uv_index = current.get("uvi")
 
-        upcoming_hours, daily_forecast = [], {}
-        for item in forecast_data.get('list', []):
-            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
+        # now = datetime.datetime.now(datetime.timezone.utc)
 
-            if dt_local > now and len(upcoming_hours) < 5:
+        # --- UPCOMING HOURS (5 hours) ---
+        upcoming_hours = []
+        for h in hourly:
+            dt_local = datetime.datetime.fromtimestamp(h.get("dt"), datetime.timezone.utc).astimezone(tz)
+            if dt_local > now and len(upcoming_hours) < 12:
                 upcoming_hours.append({
                     "time": dt_local.strftime("%Y-%m-%d %H:%M"),
-                    "temp": item['main']['temp'],
-                    "condition": item['weather'][0]['main'].lower(),
-                    "icon": item['weather'][0]['icon']
+                    "temp": h.get("temp"),
+                    "condition": h.get("weather", [{}])[0].get("main", "").lower(),
+                    "icon": h.get("weather", [{}])[0].get("icon"),
                 })
-
-            day_str = dt_local.date().isoformat()
-            if day_str not in daily_forecast:
-                daily_forecast[day_str] = {"temps": [], "icons": []}
-            daily_forecast[day_str]["temps"].append(item['main']['temp'])
-            daily_forecast[day_str]["icons"].append(item['weather'][0]['icon'])
 
         # --- CHANCE OF RAIN ---
         chance_of_rain = 0
-        for item in forecast_data.get('list', []):
-            dt_utc = datetime.datetime.strptime(item['dt_txt'], "%Y-%m-%d %H:%M:%S")
-            dt_local = dt_utc.replace(tzinfo=datetime.timezone.utc).astimezone(tz)
+        for h in hourly:
+            dt_local = datetime.datetime.fromtimestamp(h.get("dt"), datetime.timezone.utc).astimezone(tz)
             if dt_local > now:
-                chance_of_rain = item.get("pop", 0) * 100
+                chance_of_rain = round(h.get("pop", 0) * 100)
                 break
 
-        # --- DAILY FORECAST LIST ---
+        # --- DAILY FORECAST ---
         daily_forecast_list = []
-        for day, info in list(daily_forecast.items())[:3]:
-            most_common_icon = choose_daytime_icon(info.get("icons", []))
+        for day_info in daily[:3]:
+            dt_local = datetime.datetime.fromtimestamp(day_info.get("dt"), datetime.timezone.utc).astimezone(tz)
+            temps = [day_info.get("temp", {}).get("max"), day_info.get("temp", {}).get("min")]
+            icons = [day_info.get("weather", [{}])[0].get("icon")]
+            most_common_icon = choose_daytime_icon(icons)
             daily_forecast_list.append({
-                "day": day,
-                "temp": f"{int(max(info['temps']))}/{int(min(info['temps']))}",
+                "day": dt_local.date().isoformat(),
+                "temp": f"{int(max(temps))}/{int(min(temps))}",
                 "icon": most_common_icon
             })
 
+
         result = {
             "location": fixed_name,
-            "temperature": current_data['main']['temp'],
-            "humidity": current_data['main']['humidity'],
-            "condition": current_data['weather'][0]['main'].lower(),
-            "icon": current_data['weather'][0]['icon'],
-            "wind_speed": current_data['wind']['speed'],
-            "chance_of_rain": round(chance_of_rain),
+            "temperature": temperature,
+            "humidity": humidity,
+            "condition": condition,
+            "icon": icon,
+            "wind_speed": wind_speed,
+            "chance_of_rain": chance_of_rain,
             "upcoming_hours": upcoming_hours,
             "daily_forecast": daily_forecast_list,
             "visibility": visibility,
             "uv_index": uv_index,
             "rainfall": rainfall,
-            "source": "OpenWeather"
+            "lat": float(lat),
+            "lon": float(lon),
+            "fixed_name": fixed_name,
+            "source": "OpenWeather 3.0"
         }
-
+        
         # Thêm toạ độ nếu có
         if lat and lon:
             result["lat"] = float(lat)

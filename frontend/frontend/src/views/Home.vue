@@ -70,7 +70,7 @@
         <!-- Forecast trong ngày -->
         <section class="card" v-if="!errorMessage">
           <h3 class="section-title">Today's Forecast</h3>
-          <div class="forecast-today">
+          <div class="forecast-today scroll-x">
             <div
               v-for="(item, index) in forecastToday"
               :key="index"
