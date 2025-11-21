@@ -342,6 +342,17 @@ def get_weather(request):
     lat = request.GET.get("lat")
     lon = request.GET.get("lon")
     name = request.GET.get("name")
+    
+    
+    # 1️⃣ Kiểm tra trạng thái login tạm thời dựa trên frontend cookie
+    #    Nếu cookie 'username' tồn tại → login, else → chưa login
+    username_cookie = request.COOKIES.get("username")
+    is_logged_in = bool(username_cookie)
+    logger.debug("📄 request.COOKIES.keys(): %s", list(request.COOKIES.keys()))
+    
+        # --- LOG DEBUG ---
+    logger.debug("🍪 username_cookie: %s", username_cookie)
+    logger.debug("🔑 is_logged_in: %s", is_logged_in)
 
     try:
         city_name = None
@@ -395,7 +406,7 @@ def get_weather(request):
             lat_s = str(lat)
             lon_s = str(lon)
 
-        weather_cache_key = f"weather:{lat_s}:{lon_s}"
+        weather_cache_key = f"weather:{lat_s}:{lon_s}:{'loggedin' if is_logged_in else 'guest'}"
 
         # --- CACHE HIT ---
         cached_weather = cache.get(weather_cache_key)
@@ -434,10 +445,11 @@ def get_weather(request):
         # now = datetime.datetime.now(datetime.timezone.utc)
 
         # --- UPCOMING HOURS (5 hours) ---
+        max_hour_count = 12 if is_logged_in else 5
         upcoming_hours = []
         for h in hourly:
             dt_local = datetime.datetime.fromtimestamp(h.get("dt"), datetime.timezone.utc).astimezone(tz)
-            if dt_local > now and len(upcoming_hours) < 12:
+            if dt_local > now and len(upcoming_hours) <  max_hour_count:
                 upcoming_hours.append({
                     "time": dt_local.strftime("%Y-%m-%d %H:%M"),
                     "temp": h.get("temp"),
@@ -454,8 +466,9 @@ def get_weather(request):
                 break
 
         # --- DAILY FORECAST ---
+        max_days = 7 if is_logged_in else 3
         daily_forecast_list = []
-        for day_info in daily[:3]:
+        for day_info in daily[: max_days]:
             dt_local = datetime.datetime.fromtimestamp(day_info.get("dt"), datetime.timezone.utc).astimezone(tz)
             temps = [day_info.get("temp", {}).get("max"), day_info.get("temp", {}).get("min")]
             icons = [day_info.get("weather", [{}])[0].get("icon")]

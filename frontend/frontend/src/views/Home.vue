@@ -273,7 +273,7 @@ export default {
         let url = city
           ? `http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`
           : "http://localhost:8000/api/weather/";
-        const response = await fetch(url);
+        const response = await fetch(url, { credentials: 'include' });
         const data = await response.json();
         if (response.ok) {
           this.errorMessage = "";
@@ -293,7 +293,7 @@ export default {
     getWeatherByLocation(lat, lon, name = null) {
       let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
       if (name) url += `&name=${encodeURIComponent(name)}`;
-      fetch(url)
+      fetch(url, { credentials: 'include' })
         .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
         .then(({ ok, data }) => {
           if (!ok || data.error) {
@@ -338,29 +338,6 @@ export default {
         temp: item.temp,
         icon: item.icon
       }));
-  //       if (data.location && data.lat != null && data.lon != null) {
-  //       const cache = {
-  //         fixed_name: data.location,
-  //         lat: data.lat,
-  //         lon: data.lon,
-  //         timestamp: Date.now()
-  //       };
-  //       localStorage.setItem("vietcloud_location", JSON.stringify(cache));
-  //     }
-  //   },
-  //     getCachedLocation() {
-  //     const saved = localStorage.getItem("vietcloud_location");
-  //     if (!saved) return null;
-
-  //     const cache = JSON.parse(saved);
-  //     const now = Date.now();
-  //     // 5 phút = 300000 ms
-  //     if (now - cache.timestamp < 300000) {
-  //       return { name: cache.fixed_name, lat: cache.lat, lon: cache.lon };
-  //     } else {
-  //       localStorage.removeItem("vietcloud_location");
-  //       return null;
-  //     }
     }
   },
   
