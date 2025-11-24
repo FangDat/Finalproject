@@ -161,29 +161,36 @@ def logout(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def refresh_token(request):
-    refresh_token = request.COOKIES.get("refresh_token")
-    if not refresh_token:
+    refresh_token_cookie = request.COOKIES.get("refresh_token")
+    if not refresh_token_cookie:
         return Response({"error": "Refresh token missing"}, status=401)
 
     try:
-        refresh = RefreshToken(refresh_token)
-        access = refresh.access_token
-        access['user_id'] = refresh.get("user_id")
-
+        refresh = RefreshToken(refresh_token_cookie)
+        # Tạo access token mới từ refresh
+        new_access = refresh.access_token
+        new_access['user_id'] = refresh.get("user_id")
+        logger.debug(f"New access token generated: {str(new_access)}")
         resp = Response({"message": "Access token refreshed"})
+
+        # Trước tiên xóa cookie access_token cũ
+        resp.delete_cookie("access_token", domain="localhost", path="/")
+
+        # Set cookie mới giống login: samesite="Lax"
         resp.set_cookie(
             key="access_token",
-            value=str(access),
+            value=str(new_access),
             httponly=True,
             secure=False,
-            samesite="None",
+            samesite="Lax",
             domain="localhost",
             path="/",
-            max_age=60 * 30
+            max_age=60 * 30  # 30 phút
         )
         return resp
     except TokenError:
         return Response({"error": "Invalid or expired refresh token"}, status=401)
+
 
 
 # ---------------------------
@@ -272,4 +279,14 @@ def check_premium(request):
     return Response({
         "username": user.username,
         "is_premium": bool(getattr(user, 'is_premium', False))
+    })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_info(request):
+    return Response({
+        "username": request.user.username,
+        "email": request.user.email,
+        "is_premium": bool(getattr(request.user, 'is_premium', False)),
+        "user_id": str(request.user.id)
     })

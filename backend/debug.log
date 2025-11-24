@@ -1,0 +1,9 @@
+[2025-11-24 11:59:09,124] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['access_token', 'refresh_token', 'username', 'email']
+[2025-11-24 11:59:09,124] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: vulgbt
+[2025-11-24 11:59:09,124] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-11-24 11:59:09,124] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-11-24 11:59:09,127] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.067715:108.241753:loggedin
+[2025-11-24 11:59:35,339] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-11-24 11:59:35,418] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-11-24 11:59:36,852] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-11-24 11:59:37,039] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)

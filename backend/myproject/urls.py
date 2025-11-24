@@ -8,7 +8,7 @@ from backend.api.views.map_views import get_weather_map, proxy_tile
 from backend.api.views.auth_views import (
     signup, login, logout, refresh_token,
     change_password, delete_account,
-    check_premium, CustomTokenObtainPairView,
+    check_premium, CustomTokenObtainPairView, user_info
 )
 
 from backend.api.views.weather_views import (
@@ -53,4 +53,7 @@ urlpatterns = [
     path('api/send-otp/', send_otp, name="send_otp"),
     path('api/verify-otp/', verify_otp, name="verify_otp"),
     path('api/resend-otp/', resend_otp, name="resend_otp"),
+    
+    path('api/user-info/', user_info, name="user_info"),
+
 ]

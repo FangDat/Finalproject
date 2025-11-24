@@ -96,7 +96,8 @@
     </main>
 
     <!-- Sidebar phải -->
-    <aside class="settings-sidebar-right">
+    <!-- <aside class="settings-sidebar-right" v-if="!username"> -->
+    <aside class="settings-sidebar-right" v-if="!username || (username && !is_premium)">
       <h3 class="settings-section-title">Advanced</h3>
       <h4><strong>Try now to experience exclusive features</strong></h4>
       <p>* Chat bot<br />* 7 days Forecast<br />* Search History</p>
@@ -121,6 +122,7 @@ export default {
   data() {
     return {
       username: this.getCookie("username") || "",
+      is_premium: false,
       temperature: "Celsius",
       windSpeed: "m/s", 
       Visibility: "Kilometers",
@@ -133,6 +135,24 @@ export default {
     getCookie(name) {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
+    },
+        fetchUserInfo() {
+      // ⚡ Gọi backend API để lấy username + is_premium
+      fetch("http://localhost:8000/api/user-info/", {
+        credentials: "include", // quan trọng để gửi cookie
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Not logged in");
+          return res.json();
+        })
+        .then(data => {
+          this.username = data.username || "";
+          this.is_premium = data.is_premium || false;
+        })
+        .catch(() => {
+          this.username = "";
+          this.is_premium = false;
+        });
     },
     saveSettings() {
       // lưu settings
@@ -168,10 +188,12 @@ export default {
   },
   mounted() {
     this.loadSettings();
+    this.fetchUserInfo(); // ⚡ lấy thông tin user khi mount
     this.cookieCheckInterval = setInterval(() => {
       const cookieUsername = this.getCookie("username") || "";
       if (cookieUsername !== this.username) {
         this.username = cookieUsername;
+        this.fetchUserInfo(); // cập nhật is_premium
       }
     }, 1000);
   },

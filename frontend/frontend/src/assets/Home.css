@@ -380,3 +380,43 @@ a,
 .scroll-x::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0,0,0,0.5);
 }
+
+/* Media queries responsive */
+@media (max-width: 1024px) {
+  .sidebar-left,
+  .sidebar-right {
+    display: none; /* ẩn sidebar trên tablet/mobile */
+  }
+  .main-content {
+    padding: 15px;
+  }
+  .search-container {
+    max-width: 70%;
+  }
+}
+
+@media (max-width: 768px) {
+  .temperature {
+    font-size: 2.2rem;
+  }
+  .city {
+    font-size: 1.5rem;
+  }
+  .weather-icon img {
+    width: 80px;
+    height: 80px;
+  }
+  .search-container {
+    max-width: 88%;
+  }
+}
+
+@media (max-width: 480px) {
+  .forecast-item {
+    min-width: 60px;
+    font-size: 0.8rem;
+  }
+  .air-grid {
+    grid-template-columns: 1fr; /* stack items trên mobile */
+  }
+}

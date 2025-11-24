@@ -20,13 +20,13 @@
     <router-view />
   </div>
 </template>
-
 <script>
 export default {
   name: "App",
   data() {
     return {
       username: this.getCookie("username") || "",
+      refreshInterval: null, // interval refresh token
     };
   },
   computed: {
@@ -43,42 +43,48 @@ export default {
 
     async logout() {
       try {
-        // Gọi backend để backend xóa cookie HttpOnly (server-side)
         const res = await fetch("http://localhost:8000/api/logout/", {
           method: "POST",
-          credentials: "include", // rất quan trọng: gửi cookie kèm request
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({}), // body optional
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
         });
 
-        // Nếu backend trả OK thì client sẽ xóa cookie non-Httponly (username,email) và reload
-        if (res.ok) {
-          // xoá cookie client-visible
-          document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-          document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-
-          this.username = "";
-          this.$router.push("/");
-          // reload để UI cập nhật cookie phía server (HttpOnly cookies) đã bị xóa
-          window.location.reload();
-        } else {
-          // fallback: vẫn xóa client cookies để tránh "dangling UI"
-          document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-          document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-          this.username = "";
-          this.$router.push("/");
-          window.location.reload();
-        }
-      } catch (err) {
-        console.error("Logout failed", err);
-        // dù lỗi, xóa client visible cookies để tránh UI vẫn hiển thị logged in
         document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         this.username = "";
         this.$router.push("/");
         window.location.reload();
+      } catch (err) {
+        console.error("Logout failed", err);
+        document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        this.username = "";
+        this.$router.push("/");
+        window.location.reload();
+      }
+    },
+
+    // -------------------------------
+    // 🔄 Refresh token tự động
+    // -------------------------------
+    async refreshToken() {
+      try {
+        const res = await fetch("http://localhost:8000/api/refresh/", {
+          method: "POST",
+          credentials: "include", // quan trọng: gửi cookie HttpOnly
+        });
+
+        if (!res.ok) {
+          console.warn("Refresh token failed:", res.status);
+          // nếu refresh thất bại → logout user
+          this.logout();
+        } else {
+          console.log("Access token refreshed successfully");
+        }
+      } catch (err) {
+        console.error("Error refreshing token:", err);
+        this.logout();
       }
     },
   },
@@ -91,6 +97,11 @@ export default {
       }
     }, 1000);
 
+    // Refresh token tự động 25 phút 1 lần
+    this.refreshInterval = setInterval(() => {
+      this.refreshToken();
+    }, 25 * 60 * 1000); // 25 phút
+
     // Watch route thay đổi
     this.$watch(
       () => this.$route.path,
@@ -101,9 +112,11 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.cookieCheckInterval);
+    clearInterval(this.refreshInterval);
   },
 };
 </script>
+
 
 <style scoped>
 #app {

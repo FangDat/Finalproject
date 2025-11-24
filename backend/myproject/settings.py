@@ -203,7 +203,12 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
-        },           
+        },
+        'backend.api.views.auth_views': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },                 
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
