@@ -97,10 +97,10 @@ export default {
       }
     }, 1000);
 
-    // Refresh token tự động 25 phút 1 lần
+    // Refresh token tự động 20 phút 1 lần
     this.refreshInterval = setInterval(() => {
       this.refreshToken();
-    }, 25 * 60 * 1000); // 25 phút
+    }, 20 * 60 * 1000); // 20 mins
 
     // Watch route thay đổi
     this.$watch(

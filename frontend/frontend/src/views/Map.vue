@@ -17,7 +17,7 @@
       <!-- Thanh tìm kiếm -->
       <header class="top-bar">
         <div class="left-header">
-          <div class="search-container" style="position:relative;">
+          <div class="search-container" ref="searchContainer" style="position:relative;">
             <input
               type="text"
               v-model="searchQuery"
@@ -174,6 +174,7 @@ export default {
 
   async mounted() {
     // load settings early so fetchCityWeather shows converted values
+    document.addEventListener("click", this.handleClickOutside);
     const saved = localStorage.getItem("vietcloud_settings");
     if (saved) {
       try {
@@ -203,6 +204,7 @@ export default {
   },
 
   beforeUnmount() {
+    document.removeEventListener("click", this.handleClickOutside);
     window.removeEventListener("storage", this.onStorageChange);
     clearInterval(this.cookieCheckInterval);
     cancelAnimationFrame(this.animationFrame);
@@ -237,6 +239,13 @@ export default {
         }
       }
     },
+
+    handleClickOutside(event) {
+  const container = this.$refs.searchContainer;
+  if (container && !container.contains(event.target)) {
+    this.showSuggestions = false;
+  }
+  },
 
     // formatting helpers using utils.js
     formatTemp(tempC) {
@@ -604,6 +613,7 @@ export default {
       this.onEnterSearch();
     },
   },
+
 
 
 };

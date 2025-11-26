@@ -268,6 +268,12 @@ export default {
     onClickSearch() {
       this.onEnterSearch();
     },
+     handleClickOutside(event) {
+      const container = this.$el.querySelector(".search-container");
+      if (container && !container.contains(event.target)) {
+        this.showSuggestions = false;
+      }
+    },
     async fetchWeather(city = "") {
       try {
         let url = city
@@ -343,6 +349,8 @@ export default {
   
 
   mounted() {
+    
+    document.addEventListener("click", this.handleClickOutside);
     const saved = localStorage.getItem("vietcloud_settings");
     if (saved) {
       this.settings = JSON.parse(saved);
@@ -406,6 +414,7 @@ export default {
     }
   },
   beforeUnmount() {
+    document.removeEventListener("click", this.handleClickOutside);
     clearInterval(this.cookieCheckInterval);
   },
 };

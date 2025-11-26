@@ -12,7 +12,7 @@ from backend.api.views.auth_views import (
 )
 
 from backend.api.views.weather_views import (
-    get_weather, autocomplete_local,
+    get_weather, autocomplete_local, add_search_history, list_search_history, clear_search_history
 )
 
 from backend.api.views.feedback_views import (
@@ -31,6 +31,9 @@ urlpatterns = [
     # Weather & autocomplete
     path('api/weather/', get_weather, name="get_weather"),
     path('api/autocomplete_local/', autocomplete_local, name="autocomplete_local"),
+    path('api/search-history/add/', add_search_history, name="add_search_history"),
+    path('api/search-history/list/', list_search_history, name="list_search_history"),
+    path('api/search-history/clear/', clear_search_history, name="clear_search_history"),
 
     # JWT (optional, mostly for debugging)
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
