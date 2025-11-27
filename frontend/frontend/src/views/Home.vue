@@ -24,6 +24,7 @@
                 v-model="searchQuery"
                 @input="onSearchInput"
                 @keyup.enter="onEnterSearch"
+                @focus="onFocusInput"
                 placeholder="Search city..."
                 class="search-bar"
                 autocomplete_local="off"
@@ -39,6 +40,29 @@
                   class="suggestion-item"
                 >
                   {{ s.name }} <small v-if="!s.is_vn">· {{ s.raw }}</small>
+                </li>
+              </ul>
+                            <!-- Search History dropdown (chỉ cho premium) -->
+              <ul v-if="is_premium && showHistory && searchHistory.length" class="search-dropdown">
+                <li
+                  v-for="(h, idx) in searchHistory"
+                  :key="h.id || idx"
+                  class="dropdown-item"
+                >
+                  <div @click="selectHistory(h)" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    {{ h.name }}
+                  </div>
+
+                  <!-- nút X: dùng class đã có trong Home.css (.dropdown-delete-icon) -->
+                  <button
+                    class="dropdown-delete-icon"
+                    :title="'Delete ' + h.name"
+                    @click.stop="deleteHistory(h)"
+                    aria-label="Delete history item"
+                    style="background:none; border:none;"
+                  >
+                    x
+                  </button>
                 </li>
               </ul>
             </div>
@@ -138,6 +162,9 @@ export default {
   data() {
     return {
       username: this.getCookie("username") || "",
+      is_premium: false,
+      searchHistory: [], 
+      showHistory: false,
       searchQuery: "",
       suggestions: [],
       showSuggestions: false,
@@ -218,15 +245,139 @@ export default {
     onSearchInput() {
       if (this.suggestTimer) clearTimeout(this.suggestTimer);
       const q = this.searchQuery.trim();
+
       if (!q) {
-        this.suggestions = [];
+        // ❌ KHÔNG ĐƯỢC GÁN searchHistory → suggestions nữa
+        // ✔ Khi input rỗng → show History (nếu premium)
         this.showSuggestions = false;
+        if (this.is_premium) {
+          this.showHistory = true;
+        }
         return;
       }
+
+      // Khi có query → show autocomplete
+      this.showHistory = false;
       this.suggestTimer = setTimeout(() => {
         this.fetchSuggestions(q);
-      }, 100);
+      }, 120);
     },
+    async fetchUserInfo() {
+      try {
+        const res = await fetch("http://localhost:8000/api/user-info/", {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Not logged in");
+        const data = await res.json();
+        this.username = data.username || "";
+        this.is_premium = data.is_premium || false;
+
+        // ✅ nếu là premium, fetch search history
+        if (this.is_premium) {
+          this.fetchSearchHistory();
+        }
+      } catch (err) {
+        this.username = "";
+        this.is_premium = false;
+        this.searchHistory = [];
+      }
+    },
+    async fetchSearchHistory() {
+    if (!this.is_premium) return; // chỉ fetch nếu user premium
+    try {
+      const res = await fetch("http://localhost:8000/api/search-history/list/", {
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        this.searchHistory = data;
+      } else {
+        this.searchHistory = [];
+      }
+    } catch (err) {
+      console.error("fetchSearchHistory error", err);
+      this.searchHistory = [];
+    }
+  },
+   // --- ADD SEARCH HISTORY REALTIME ---
+  async addSearchHistory(cityObj) {
+    if (!this.is_premium || !cityObj || !cityObj.name) return;
+    try {
+      const payload = {
+        city_name: cityObj.name,
+        lat: cityObj.lat,
+        lon: cityObj.lon
+      };
+      const res = await fetch("http://localhost:8000/api/search-history/add/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        // Realtime update local searchHistory: nếu đã tồn tại thì remove cũ + thêm mới lên đầu
+        this.searchHistory = this.searchHistory.filter(h => h.city_name !== cityObj.name);
+        this.searchHistory.unshift({
+          id: cityObj.id || null,
+          name: cityObj.name,
+          city_name: cityObj.name,
+          lat: cityObj.lat,
+          lon: cityObj.lon
+        });
+      }
+    } catch (err) {
+      console.error("addSearchHistory error", err);
+    }
+  },
+
+  // --- DELETE HISTORY ITEM (UI + backend) ---
+  async deleteHistory(historyItem) {
+    if (!historyItem) return;
+
+    // Nếu chưa có id (chỉ UI item tạm) → chỉ xóa local
+    const id = historyItem.id;
+    if (!id) {
+      this.searchHistory = this.searchHistory.filter(h => h !== historyItem);
+      return;
+    }
+
+    // optimistic update: remove ngay khỏi UI để trải nghiệm mượt
+    const prev = [...this.searchHistory];
+    this.searchHistory = this.searchHistory.filter(h => h.id !== id);
+
+    try {
+      const res = await fetch(`http://localhost:8000/api/search-history/clear/${encodeURIComponent(id)}/`, {
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (!res.ok) {
+        // nếu server báo lỗi → rollback UI và log lỗi
+        this.searchHistory = prev;
+        const errBody = await res.text().catch(()=>null);
+        console.warn("deleteHistory failed:", res.status, errBody);
+      } else {
+        // success → cũng clear cache showHistory nếu list rỗng
+        if (!this.searchHistory.length) this.showHistory = false;
+      }
+    } catch (err) {
+      // network error -> rollback UI
+      this.searchHistory = prev;
+      console.error("deleteHistory error", err);
+    }
+  },
+
+
+  // --- Khi chọn từ history dropdown ---
+    selectHistory(h) {
+      this.searchQuery = h.name;
+      this.showHistory = false;
+      if (h.lat && h.lon) {
+        this.getWeatherByLocation(h.lat, h.lon, h.name);
+      } else {
+        this.fetchWeather(h.name);
+      }
+    },
+  
     async fetchSuggestions(q) {
       try {
         const res = await fetch(`http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(q)}`);
@@ -244,6 +395,7 @@ export default {
         this.showSuggestions = false;
       }
     },
+      // --- Override onEnterSearch / selectSuggestion để add history realtime ---
     selectSuggestion(s) {
       this.searchQuery = s.name;
       this.showSuggestions = false;
@@ -252,27 +404,39 @@ export default {
       } else {
         this.fetchWeather(s.name);
       }
+      // ✅ thêm vào history realtime
+      this.addSearchHistory(s);
     },
     onEnterSearch() {
-      if (
-        this.suggestions.length > 0 &&
-        this.suggestions[0].name.toLowerCase() ===
-          this.searchQuery.trim().toLowerCase()
-      ) {
-        this.selectSuggestion(this.suggestions[0]);
-        return;
-      }
-      this.fetchWeather(this.searchQuery.trim());
-      this.showSuggestions = false;
+    if (
+      this.suggestions.length > 0 &&
+      this.suggestions[0].name.toLowerCase() === this.searchQuery.trim().toLowerCase()
+    ) {
+      this.selectSuggestion(this.suggestions[0]);
+      return;
+    }
+    this.fetchWeather(this.searchQuery.trim());
+    this.showSuggestions = false;
+
+    // Add to search history realtime
+    this.addSearchHistory({ name: this.searchQuery.trim() });
     },
     onClickSearch() {
       this.onEnterSearch();
     },
-     handleClickOutside(event) {
-      const container = this.$el.querySelector(".search-container");
-      if (container && !container.contains(event.target)) {
-        this.showSuggestions = false;
-      }
+     handleClickOutside(e) {
+      const box = this.$el.querySelector(".search-container");
+      if (!box || box.contains(e.target)) return;
+
+      this.showSuggestions = false;
+      this.showHistory = false;
+    },
+    onFocusInput() {
+    const q = this.searchQuery.trim();
+
+    if (!q && this.is_premium) {
+      this.showHistory = true;
+    }
     },
     async fetchWeather(city = "") {
       try {
@@ -349,7 +513,7 @@ export default {
   
 
   mounted() {
-    
+    this.fetchUserInfo(); // ⚡ lấy thông tin user khi mount
     document.addEventListener("click", this.handleClickOutside);
     const saved = localStorage.getItem("vietcloud_settings");
     if (saved) {
@@ -359,6 +523,7 @@ export default {
       const cookieUsername = this.getCookie("username") || "";
       if (cookieUsername !== this.username) {
         this.username = cookieUsername;
+        this.fetchUserInfo();
       }
     }, 1000);
        // ✅ Kiểm tra cache vị trí thiết bị (chỉ tồn tại 5 phút)
@@ -416,6 +581,7 @@ export default {
   beforeUnmount() {
     document.removeEventListener("click", this.handleClickOutside);
     clearInterval(this.cookieCheckInterval);
+    clearInterval(this.userCheckInterval);
   },
 };
 </script>

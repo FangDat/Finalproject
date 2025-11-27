@@ -33,8 +33,9 @@ urlpatterns = [
     path('api/autocomplete_local/', autocomplete_local, name="autocomplete_local"),
     path('api/search-history/add/', add_search_history, name="add_search_history"),
     path('api/search-history/list/', list_search_history, name="list_search_history"),
-    path('api/search-history/clear/', clear_search_history, name="clear_search_history"),
-
+    path('api/search-history/clear/', clear_search_history, name="clear_search_history_all"),
+    path('api/search-history/clear/<str:history_id>/', clear_search_history, name="clear_search_history_item"),
+    
     # JWT (optional, mostly for debugging)
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

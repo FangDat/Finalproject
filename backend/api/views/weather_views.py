@@ -3,6 +3,12 @@ import datetime
 from urllib.parse import quote
 import logging
 import re
+from bson import ObjectId
+from django.utils import timezone
+from ..models import SearchHistory, User
+from rest_framework.permissions import IsAuthenticated
+from backend.api.permissions import IsPremiumUser
+from django.core.cache import cache
 from pprint import pprint
 from collections import Counter
 from rest_framework import status
@@ -306,6 +312,124 @@ def get_city_from_coordinates(lat, lon, geocode_key):
         return result
 
     return "Unknown"
+
+# ---------------------------
+# SEARCH HISTORY (CACHE & DEBUG IMPROVED)
+# ---------------------------
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_search_history(request):
+    """
+    Thêm entry search history cho user. Chống duplicate (cùng user + city_name).
+    Đồng thời xóa cache cũ để tránh stale data.
+    """
+    user = request.user
+    city_name = request.data.get("city_name")
+    lat = request.data.get("lat")
+    lon = request.data.get("lon")
+
+    logger.debug(f"➕ add_search_history called: user={user.username}, city_name={city_name}, lat={lat}, lon={lon}")
+
+    if not city_name:
+        logger.warning("❌ add_search_history failed: city_name missing")
+        return Response({"error": "city_name is required"}, status=400)
+
+    # Chống duplicate: nếu đã tồn tại gần đây thì update created_at
+    existing = SearchHistory.objects.filter(user_id=str(user._id), city_name=city_name).first()
+    if existing:
+        existing.lat = lat or existing.lat
+        existing.lon = lon or existing.lon
+        existing.created_at = timezone.now()
+        existing.save()
+        logger.debug(f"♻️ Updated existing search history for user={user.username}, city_name={city_name}")
+
+        # Xóa cache để cập nhật list mới
+        cache_key = f"search_history:{str(user._id)}"
+        cache.delete(cache_key)
+        logger.debug(f"🗑 [CACHE DELETE] search history cache cleared for key={cache_key}")
+
+        return Response({"message": "Updated existing search history"}, status=200)
+
+    # Tạo mới
+    sh = SearchHistory(user_id=str(user._id), city_name=city_name, lat=lat, lon=lon)
+    sh.save()
+    logger.debug(f"✅ Search history added for user={user.username}, city_name={city_name}")
+
+    # Xóa cache để list mới reflect ngay
+    cache_key = f"search_history:{str(user._id)}"
+    cache.delete(cache_key)
+    logger.debug(f"🗑 [CACHE DELETE] search history cache cleared for key={cache_key}")
+
+    return Response({"message": "Search history added"}, status=201)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_search_history(request):
+    """
+    Trả về search history dạng dropdown.
+    Cache riêng theo user_id, tối đa 20 item gần đây.
+    """
+    user = request.user
+    cache_key = f"search_history:{str(user._id)}"
+    cached = cache.get(cache_key)
+    if cached:
+        logger.debug(f"💾 [CACHE HIT] list_search_history for user={user.username}")
+        return Response(cached)
+
+    histories = SearchHistory.objects.filter(user_id=str(user._id)).order_by('-created_at')[:20]
+    dropdown = [{"id": str(h._id), "name": h.city_name, "city_name": h.city_name, "lat": h.lat, "lon": h.lon} for h in histories]
+
+    try:
+        cache.set(cache_key, dropdown, timeout=600)  # cache 10 phút
+        logger.debug(f"🔁 [CACHE SET] list_search_history for user={user.username}, key={cache_key}")
+    except Exception:
+        logger.exception("⚠️ list_search_history: không lưu được cache")
+
+    logger.debug(f"📄 list_search_history returned {len(dropdown)} items for user={user.username}")
+    return Response(dropdown)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def clear_search_history(request, history_id=None):
+    """
+    Xóa item search history theo id.
+    Nếu history_id không có, xóa tất cả history của user.
+    Đồng thời xóa cache để tránh stale data.
+    """
+    user = request.user
+    logger.debug(f"🗑 clear_search_history called for user={user.username}, history_id={history_id}")
+
+    try:
+        if history_id:
+            # Convert string -> ObjectId
+            try:
+                obj_id = ObjectId(history_id)
+            except Exception:
+                logger.warning(f"❌ clear_search_history failed: invalid history_id={history_id}")
+                return Response({"error": "Invalid history_id"}, status=400)
+
+            sh = SearchHistory.objects.filter(user_id=str(user._id), _id=obj_id).first()
+            if sh:
+                sh.delete()
+                logger.debug(f"✅ Deleted search history id={history_id} for user={user.username}")
+        else:
+            # Xóa toàn bộ history
+            deleted_count, _ = SearchHistory.objects.filter(user_id=str(user._id)).delete()
+            logger.debug(f"✅ Cleared all ({deleted_count}) search history items for user={user.username}")
+
+        # Xóa cache liên quan
+        cache_key = f"search_history:{str(user._id)}"
+        cache.delete(cache_key)
+        logger.debug(f"🗑 [CACHE DELETE] search history cache cleared for key={cache_key}")
+
+        return Response({"message": "Search history cleared"}, status=200)
+
+    except Exception as e:
+        logger.exception("⚠️ clear_search_history failed")
+        return Response({"error": str(e)}, status=500)
 
 # ---------------------------
 # Helper chọn icon ban ngày

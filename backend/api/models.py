@@ -40,15 +40,16 @@ class RevokedToken(models.Model):
     def __str__(self):
         return f"RevokedToken(jti={self.jti}, user={self.user_id})"
 
-
 # -----------------------------
-# SearchHistory Model
+# SearchHistory Model (update)
 # -----------------------------
 class SearchHistory(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     user_id = models.CharField(max_length=200)
     city_name = models.CharField(max_length=200)
+    lat = models.FloatField(null=True, blank=True)   # thêm field lat
+    lon = models.FloatField(null=True, blank=True)   # thêm field lon
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.city_name} ({self.user_id})"
+        return f"{self.city_name} ({self.lat},{self.lon}) for {self.user_id}"
