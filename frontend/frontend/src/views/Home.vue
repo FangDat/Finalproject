@@ -265,6 +265,7 @@ export default {
     async fetchUserInfo() {
       try {
         const res = await fetch("http://localhost:8000/api/user-info/", {
+           method: "GET",
           credentials: "include",
         });
         if (!res.ok) throw new Error("Not logged in");
@@ -551,7 +552,8 @@ export default {
 
           // gọi API để lấy fixed_name
           const res = await fetch(
-            `http://localhost:8000/api/weather/?lat=${lat}&lon=${lon}`
+            `http://localhost:8000/api/weather/?lat=${lat}&lon=${lon}`, 
+              { credentials: 'include' }
           );
           const data = await res.json();
           if (res.ok) {
@@ -577,11 +579,18 @@ export default {
       this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:\n- Refresh your browser.\n- Allow your browser to access your location and try again.`;
       this.errorGif = "location-pin.gif";
     }
+    // --- AUTO REFRESH EVERY 15 MINUTES ---
+    this.autoRefreshInterval = setInterval(() => {
+      console.log("🔄 Auto refreshing page due to 20-minute timer...");
+      window.location.reload();
+    }, 20 * 60 * 1000); // 20 phút
+
   },
   beforeUnmount() {
     document.removeEventListener("click", this.handleClickOutside);
     clearInterval(this.cookieCheckInterval);
     clearInterval(this.userCheckInterval);
+    clearInterval(this.autoRefreshInterval);
   },
 };
 </script>

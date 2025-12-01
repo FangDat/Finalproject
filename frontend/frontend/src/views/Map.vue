@@ -285,7 +285,7 @@ export default {
     async fetchCityWeather(city) {
       if (!city) return;
       try {
-        const res = await fetch(`http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`);
+        const res = await fetch(`http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`, { credentials: 'include' });
         const data = await res.json();
         if (res.ok && data) {
           const now = new Date();

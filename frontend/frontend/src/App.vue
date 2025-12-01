@@ -89,6 +89,7 @@ export default {
     },
   },
   mounted() {
+    if (this.username) this.refreshToken();
     // Đồng bộ cookie username mỗi giây để update UI
     this.cookieCheckInterval = setInterval(() => {
       const cookieUsername = this.getCookie("username") || "";
@@ -100,7 +101,7 @@ export default {
     // Refresh token tự động 20 phút 1 lần
     this.refreshInterval = setInterval(() => {
       this.refreshToken();
-    }, 20 * 60 * 1000); // 20 mins
+    }, 29 * 60 * 1000); // 20 mins
 
     // Watch route thay đổi
     this.$watch(
@@ -113,6 +114,7 @@ export default {
   beforeUnmount() {
     clearInterval(this.cookieCheckInterval);
     clearInterval(this.refreshInterval);
+    // window.removeEventListener("focus", this.refreshToken);
   },
 };
 </script>
