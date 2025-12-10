@@ -22,6 +22,7 @@
               type="text"
               v-model="searchQuery"
               @input="onSearchInput"
+              @focus="onFocusInput"
               @keyup.enter="onEnterSearch"
               placeholder="Search city..."
               class="search-bar"
@@ -38,6 +39,29 @@
                 {{ s.name }} <small v-if="!s.is_vn">· {{ s.raw }}</small>
               </li>
             </ul>
+                           <!-- Search History dropdown (chỉ cho premium) -->
+              <ul v-if="is_premium && showHistory && searchHistory.length" class="search-dropdown">
+                <li
+                  v-for="(h, idx) in searchHistory"
+                  :key="h.id || idx"
+                  class="dropdown-item"
+                >
+                  <div @click="selectHistory(h)" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    {{ h.name }}
+                  </div>
+
+                  <!-- nút X: dùng class đã có trong Home.css (.dropdown-delete-icon) -->
+                  <button
+                    class="dropdown-delete-icon"
+                    :title="'Delete ' + h.name"
+                    @click.stop="deleteHistory(h)"
+                    aria-label="Delete history item"
+                    style="background:none; border:none;"
+                  >
+                    x
+                  </button>
+                </li>
+              </ul>
           </div>
         </div>
       </header>
@@ -134,6 +158,9 @@ export default {
   data() {
     return {
       username: this.getCookie("username") || "",
+      is_premium: false,
+      searchHistory: [], 
+      showHistory: false,
       searchQuery: "",
       suggestions: [],
       showSuggestions: false,
@@ -201,6 +228,7 @@ export default {
     this.prepareTimestamps();
     this.toggleLayer();
     await this.restoreFromLocalStorage();
+    await this.fetchUserInfo();
   },
 
   beforeUnmount() {
@@ -240,12 +268,29 @@ export default {
       }
     },
 
+    /* ======================================================
+        ⭐⭐ CLICK OUTSIDE 
+       ====================================================== */
     handleClickOutside(event) {
-  const container = this.$refs.searchContainer;
-  if (container && !container.contains(event.target)) {
-    this.showSuggestions = false;
-  }
-  },
+      const container = this.$refs.searchContainer;
+      if (!container) return;
+
+      if (!container.contains(event.target)) {
+        this.showSuggestions = false;
+        this.showHistory = false;
+      }
+    },
+        /* ======================================================
+        ⭐⭐ FOCUS INPUT — show history nếu input rỗng
+       ====================================================== */
+    onFocusInput() {
+      if (this.searchQuery.trim() === "" && this.is_premium) {
+        this.showSuggestions = false;
+        this.showHistory = true;
+      }
+    },
+
+
 
     // formatting helpers using utils.js
     formatTemp(tempC) {
@@ -443,18 +488,187 @@ export default {
       if (!this.isPlaying) this.toggleLayer();
     },
 
-    async onSearchInput() {
+/* ======================================================
+        ⭐⭐ INPUT SEARCH — toggle giữa suggestions / history
+       ====================================================== */
+    onSearchInput() {
+      if (this.suggestTimer) clearTimeout(this.suggestTimer);
+
       const q = this.searchQuery.trim();
       if (!q) {
-        this.suggestions = [];
         this.showSuggestions = false;
+        if (this.is_premium) this.showHistory = true;
         return;
       }
-      const res = await fetch(`http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(q)}`);
-      const arr = await res.json();
-      this.suggestions = Array.isArray(arr) ? arr : [];
-      this.showSuggestions = this.suggestions.length > 0;
+
+      this.showHistory = false;
+
+      this.suggestTimer = setTimeout(() => {
+        this.fetchSuggestions(q);
+      }, 120);
     },
+
+    
+    /* ======================================================
+        ⭐⭐ FETCH USER INFO + HISTORY
+       ====================================================== */
+    async fetchUserInfo() {
+      try {
+        const res = await fetch("http://localhost:8000/api/user-info/", {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error();
+
+        const data = await res.json();
+        this.username = data.username || "";
+        this.is_premium = data.is_premium || false;
+
+        if (this.is_premium) {
+          await this.fetchSearchHistory();
+        }
+      } catch {
+        this.username = "";
+        this.is_premium = false;
+        this.searchHistory = [];
+      }
+    },
+
+    async fetchSearchHistory() {
+      if (!this.is_premium) return;
+      try {
+        const res = await fetch("http://localhost:8000/api/search-history/list/", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        this.searchHistory = Array.isArray(data) ? data : [];
+      } catch (err) {
+        console.error("fetchSearchHistory error:", err);
+        this.searchHistory = [];
+      }
+    },
+
+    /* ======================================================
+        ⭐⭐ ADD SEARCH HISTORY (Home.vue logic)
+       ====================================================== */
+    async addSearchHistory(cityObj) {
+      if (!this.is_premium || !cityObj || !cityObj.name) return;
+
+      try {
+        const payload = {
+          city_name: cityObj.name,
+          lat: cityObj.lat,
+          lon: cityObj.lon,
+        };
+
+        const res = await fetch("http://localhost:8000/api/search-history/add/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          // realtime UI update
+          this.searchHistory = this.searchHistory.filter(
+            h => h.city_name !== cityObj.name
+          );
+
+          this.searchHistory.unshift({
+            id: cityObj.id || null,
+            name: cityObj.name,
+            city_name: cityObj.name,
+            lat: cityObj.lat,
+            lon: cityObj.lon
+          });
+        }
+      } catch (err) {
+        console.error("addSearchHistory error:", err);
+      }
+    },
+
+    /* ======================================================
+        ⭐⭐ DELETE HISTORY — Home.vue logic
+       ====================================================== */
+    async deleteHistory(item) {
+      if (!item) return;
+
+      const id = item.id;
+      if (!id) {
+        this.searchHistory = this.searchHistory.filter(h => h !== item);
+        return;
+      }
+
+      const prev = [...this.searchHistory];
+      this.searchHistory = this.searchHistory.filter(h => h.id !== id);
+
+      try {
+        const res = await fetch(
+          `http://localhost:8000/api/search-history/clear/${encodeURIComponent(id)}/`,
+          { method: "DELETE", credentials: "include" }
+        );
+
+        if (!res.ok) this.searchHistory = prev;
+      } catch {
+        this.searchHistory = prev;
+      }
+    },
+
+     /* ======================================================
+        ⭐⭐ SELECT HISTORY
+       ====================================================== */
+    selectHistory(h) {
+      this.searchQuery = h.name;
+      this.showHistory = false;
+
+      if (h.lat && h.lon) {
+        this.lastCity = h.name;
+        this.lastLat = h.lat;
+        this.lastLon = h.lon;
+
+        this.updatePopup(h.name, h.lat, h.lon);
+        if (this.map) this.map.panTo([h.lat, h.lon]);
+
+        this.addSearchHistory(h);
+      } else {
+        this.fetchWeather(h.name);
+      }
+    },
+
+        /* ======================================================
+        ⭐⭐ SUGGESTIONS
+       ====================================================== */
+    async fetchSuggestions(q) {
+      try {
+        const res = await fetch(
+          `http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(q)}`
+        );
+        const arr = await res.json();
+
+        this.suggestions = Array.isArray(arr) ? arr : [];
+        this.showSuggestions = this.suggestions.length > 0;
+      } catch (err) {
+        this.suggestions = [];
+      }
+    },
+     /* ======================================================
+       ⭐⭐ SELECT SUGGESTION (add history)
+       ====================================================== */
+    async selectSuggestion(s) {
+      this.searchQuery = s.name;
+      this.showSuggestions = false;
+
+      this.lastCity = s.name;
+      this.lastLat = s.lat;
+      this.lastLon = s.lon;
+
+      if (this.map) {
+        await this.updatePopup(s.name, s.lat, s.lon);
+        this.map.panTo([s.lat, s.lon]);
+      }
+
+      this.addSearchHistory(s);
+    },
+
 
     async restoreFromLocalStorage() {
       try {
@@ -523,89 +737,74 @@ export default {
       }
     },
 
-    async selectSuggestion(s) {
-      this.searchQuery = s.name;
-      this.showSuggestions = false;
-      this.lastCity = s.name;
-      this.lastLat = s.lat;
-      this.lastLon = s.lon;
 
-      if (this.map) {
-        await this.updatePopup(s.name, s.lat, s.lon);
-        this.map.panTo([s.lat, s.lon]);
-      }
 
-      this.$nextTick(() => {
-        const mapElement = document.getElementById("leaflet-map");
-        if (mapElement) mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
-      });
-    },
-
+ /* ======================================================
+        ⭐⭐ FETCH WEATHER (add history)
+       ====================================================== */
     async fetchWeather(city) {
       if (!city) return;
+
       try {
-        const res = await fetch(`http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`);
+        const res = await fetch(
+          `http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`
+        );
         const data = await res.json();
 
-        if (res.ok && data) {
-          this.errorMessage = "";
-          const lat = data.lat ?? data.coord?.lat ?? 21.0285;
-          const lon = data.lon ?? data.coord?.lon ?? 105.8542;
-
-          this.lastCity = city;
-          this.lastLat = lat;
-          this.lastLon = lon;
-
-          await this.updatePopup(city, lat, lon);
-
-          if (this.map) this.map.panTo([lat, lon]);
-        } else {
+        if (!res.ok || !data) {
           this.errorMessage = `Location '${city}' not found`;
+          return;
         }
-      } catch (err) {
-        console.error("Error fetching city manually:", err);
+
+        this.errorMessage = "";
+        const lat = data.lat ?? data.coord?.lat ?? null;
+        const lon = data.lon ?? data.coord?.lon ?? null;
+
+        this.lastCity = city;
+        this.lastLat = lat;
+        this.lastLon = lon;
+
+        await this.updatePopup(city, lat, lon);
+        if (this.map) this.map.panTo([lat, lon]);
+
+        // this.addSearchHistory({ name: city, lat, lon });
+      } catch {
         this.errorMessage = `Location '${city}' not found`;
       }
     },
 
+    
+ /* ======================================================
+        ⭐⭐ ENTER SEARCH (add history)
+       ====================================================== */
     async onEnterSearch() {
-      const query = this.searchQuery.trim();
-      if (!query) return;
+      const q = this.searchQuery.trim();
+      if (!q) return;
 
       try {
-        const res = await fetch(`http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(query)}`);
+        const res = await fetch(
+          `http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(q)}`
+        );
         const arr = await res.json();
 
         if (Array.isArray(arr) && arr.length > 0) {
-          const first = arr[0];
-          const cityName = first.name || query;
-          const lat = first.lat;
-          const lon = first.lon;
+          const s = arr[0];
 
-          this.lastCity = cityName;
-          this.lastLat = lat;
-          this.lastLon = lon;
+          this.lastCity = s.name;
+          this.lastLat = s.lat;
+          this.lastLon = s.lon;
 
-          await this.updatePopup(cityName, lat, lon);
+          await this.updatePopup(s.name, s.lat, s.lon);
+          if (this.map) this.map.panTo([s.lat, s.lon]);
 
-          if (this.map) this.map.panTo([lat, lon]);
-          this.showSuggestions = false;
+          this.addSearchHistory(s);
         } else {
-          await this.fetchWeather(query);
+          await this.fetchWeather(q);
         }
 
-        this.$nextTick(() => {
-          const mapElement = document.getElementById("leaflet-map");
-          if (mapElement) mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        });
-      } catch (err) {
-        console.error("Error on enter search:", err);
-        await this.fetchWeather(query);
-
-        this.$nextTick(() => {
-          const mapElement = document.getElementById("leaflet-map");
-          if (mapElement) mapElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        });
+        this.showSuggestions = false;
+      } catch {
+        await this.fetchWeather(q);
       }
     },
 
