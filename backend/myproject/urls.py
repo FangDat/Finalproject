@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from backend.api.views.verifyotp_views import send_otp, verify_otp, resend_otp
-
+from backend.api.views.chatbot_views import analyze_intent
 from backend.api.views.map_views import get_weather_map, proxy_tile
 # import các view đã tách
 from backend.api.views.auth_views import (
@@ -59,5 +59,7 @@ urlpatterns = [
     path('api/resend-otp/', resend_otp, name="resend_otp"),
     
     path('api/user-info/', user_info, name="user_info"),
+    
+    path('api/chatbot/intent/', analyze_intent, name="chatbot_intent"),
 
 ]

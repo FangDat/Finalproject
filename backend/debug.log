@@ -1,0 +1,1860 @@
+[2025-12-11 10:28:15,206] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:28:15,310] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:28:17,365] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:28:17,464] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:43:18,126] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:43:18,235] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:43:20,950] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:43:21,046] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:43:35,840] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:43:35,936] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:48:20,911] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:48:21,016] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:54:08,114] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:54:08,219] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:54:10,917] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:54:11,017] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:54:54,367] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:54:54,477] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:55:02,413] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:55:02,526] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:55:22,076] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:55:22,180] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:55:27,992] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:55:28,087] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:55:36,950] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:55:37,045] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:55:39,734] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:55:39,864] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:55:45,574] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:55:45,714] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:57:14,404] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:57:14,506] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:57:18,263] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:57:18,363] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:57:31,381] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:57:31,484] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:57:38,341] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:57:38,446] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:57:43,221] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:57:43,320] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:57:46,107] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:57:46,204] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:57:50,989] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:57:51,085] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:58:17,082] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: thời tiết tối mai ở Hồ Chí Minh có mưa không
+[2025-12-11 10:58:19,648] DEBUG [backend.api.views.chatbot_views] [Gemini Response Raw] ```json
+{
+ "intent": "weather_forecast",
+ "location": "Hồ Chí Minh",
+ "time": "(tối mai)"
+}
+```
+[2025-12-11 10:58:19,649] DEBUG [backend.api.views.chatbot_views] [Intent Parsed] {'intent': 'weather_forecast', 'location': 'Hồ Chí Minh', 'time': '(tối mai)'}
+[2025-12-11 10:58:44,888] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:58:44,991] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:58:49,747] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:58:49,849] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:58:53,626] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:58:53,723] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:59:01,653] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 10:59:01,758] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 10:59:26,350] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: thời tiết tối mai ở Hồ Chí Minh có mưa không?
+[2025-12-11 10:59:31,591] DEBUG [backend.api.views.chatbot_views] [Gemini Response Raw] ```json
+{
+ "intent": "weather_forecast",
+ "location": "Hồ Chí Minh",
+ "time": "khoảng giờ timestamp và ngày cụ thể nếu"
+}
+```
+[2025-12-11 10:59:31,592] DEBUG [backend.api.views.chatbot_views] [Intent Parsed] {'intent': 'weather_forecast', 'location': 'Hồ Chí Minh', 'time': 'khoảng giờ timestamp và ngày cụ thể nếu'}
+[2025-12-11 11:00:01,776] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 11:00:01,907] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 11:00:24,610] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 11:00:24,718] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 11:00:56,851] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: 23/12 ở Hải Phòng có mưa không?
+[2025-12-11 11:00:59,045] DEBUG [backend.api.views.chatbot_views] [Gemini Response Raw] ```json
+{
+ "intent": "weather_forecast",
+ "location": "Hải Phòng",
+ "time": "23/12"
+}
+```
+[2025-12-11 11:00:59,045] DEBUG [backend.api.views.chatbot_views] [Intent Parsed] {'intent': 'weather_forecast', 'location': 'Hải Phòng', 'time': '23/12'}
+[2025-12-11 11:03:41,710] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Chiều 23/12 ở Hải Phòng có phù hợp đi du lịch không?
+[2025-12-11 11:03:44,526] DEBUG [backend.api.views.chatbot_views] [Gemini Response Raw] ```json
+{
+ "intent": "weather_forecast",
+ "location": "Hải Phòng",
+ "time": "chiều 23/12"
+}
+```
+[2025-12-11 11:03:44,526] DEBUG [backend.api.views.chatbot_views] [Intent Parsed] {'intent': 'weather_forecast', 'location': 'Hải Phòng', 'time': 'chiều 23/12'}
+[2025-12-11 11:58:37,512] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 11:58:37,615] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 12:01:34,083] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-11 12:01:35,519] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] {"intent": ["weather_forecast"], "location": "Da Nang", "location_ascii": "Da Nang", "day": null, "time_of_day": null}
+[2025-12-11 12:01:35,520] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_forecast'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-11 12:02:53,591] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: What will the weather be like on December 16th?
+[2025-12-11 12:02:57,497] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_forecast",
+    "daily_aggregation"
+  ],
+  "location": null,
+  "location_ascii": null,
+  "day": "2024-12-16",
+  "time_of_day": null
+}
+```
+[2025-12-11 12:04:31,423] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: What will the weather in Ho Chi Minh be like on December 16th?
+[2025-12-11 12:04:33,856] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["daily_aggregation", "weather_forecast"],
+  "location": "Ho Chi Minh",
+  "location_ascii": "Ho Chi Minh",
+  "day": "2024-12-16",
+  "time_of_day": null
+}
+```
+[2025-12-11 12:04:33,856] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['daily_aggregation', 'weather_forecast'], 'location': 'Ho Chi Minh', 'location_ascii': 'Ho Chi Minh', 'day': '2024-12-16', 'time_of_day': None}
+[2025-12-11 12:17:25,284] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 12:17:25,390] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 12:18:11,019] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: thời tiết ngày mai ở Đà Nẵng
+[2025-12-11 12:18:12,674] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] Your question must be in English and related to weather, which is the domain I can work with!
+[2025-12-11 12:18:52,453] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Will be have rain tonight in Da Nang?
+[2025-12-11 12:18:56,133] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] {"intent": ["daily_aggregation", "weather_overview", "weather_forecast"], "location": "Da Nang", "location_ascii": "Da Nang", "day": "2025-12-11", "time_of_day": "night"}
+[2025-12-11 12:18:56,142] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['daily_aggregation', 'weather_overview', 'weather_forecast'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': '2025-12-11', 'time_of_day': 'night'}
+[2025-12-11 12:21:21,894] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: will be have rain tomorow in Da nang?
+[2025-12-11 12:21:24,577] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] {
+  "intent": ["daily_aggregation", "weather_overview", "weather_forecast"],
+  "location": "Da nang",
+  "location_ascii": "Da nang",
+  "day": "2025-12-12",
+  "time_of_day": null
+}
+[2025-12-11 12:21:24,578] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['daily_aggregation', 'weather_overview', 'weather_forecast'], 'location': 'Da nang', 'location_ascii': 'Da nang', 'day': '2025-12-12', 'time_of_day': None}
+[2025-12-11 12:22:49,029] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Will it rain on December 20th in Da Nang?
+[2025-12-11 12:22:53,973] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] {
+  "intent": ["daily_aggregation", "weather_forecast"],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": "2025-12-20",
+  "time_of_day": null
+}
+[2025-12-11 12:22:53,974] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['daily_aggregation', 'weather_forecast'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': '2025-12-20', 'time_of_day': None}
+[2025-12-11 12:23:51,947] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 12:23:52,049] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 12:23:54,213] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Will it rain on December 20th in Da Nang?
+[2025-12-11 12:23:58,364] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] {"intent": ["daily_aggregation"], "location": "Da Nang", "location_ascii": "Da Nang", "day": "2025-12-20", "time_of_day": null}
+[2025-12-11 12:23:58,368] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['daily_aggregation'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': '2025-12-20', 'time_of_day': None}
+[2025-12-11 12:24:08,714] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 12:24:08,816] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 12:24:43,608] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 12:24:43,712] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 12:24:47,421] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 12:24:47,518] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 12:26:22,312] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: What will the weather be like in Hanoi next week?
+[2025-12-11 12:26:24,900] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] {"intent": ["weather_forecast", "weather_overview"], "location": "Hanoi", "location_ascii": "Hanoi", "day": null, "time_of_day": null}
+[2025-12-11 12:26:24,900] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_forecast', 'weather_overview'], 'location': 'Hanoi', 'location_ascii': 'Hanoi', 'day': None, 'time_of_day': None}
+[2025-12-11 13:22:35,719] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 13:22:35,828] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 13:23:46,380] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-11 13:23:46,705] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 13.21071275s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '13s'}]}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 105, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 13.21071275s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '13s'}]}}
+[2025-12-11 13:24:29,363] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 13:24:29,468] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 13:24:53,909] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-11 13:24:54,115] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 5.799925503s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '5s'}]}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 105, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 5.799925503s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '5s'}]}}
+[2025-12-11 13:25:07,347] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-11 13:25:07,585] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 52.330190551s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '52s'}]}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 105, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 52.330190551s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '52s'}]}}
+[2025-12-11 13:26:00,516] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 13:26:00,615] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 13:26:03,985] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-11 13:26:06,507] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] {"intent": ["weather_overview"], "location": "Da Nang", "location_ascii": "Da Nang", "day": null, "time_of_day": null}
+[2025-12-11 13:26:06,508] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-11 13:34:26,693] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 13:34:26,797] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 13:34:29,572] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 13:34:29,671] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 13:34:36,800] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-11 13:34:37,056] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-3.0-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 105, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-3.0-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+[2025-12-11 13:34:50,334] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 13:34:50,439] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 13:34:55,162] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 13:34:55,261] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 13:34:57,237] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-11 13:34:57,443] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 2.469152525s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '2s'}]}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 105, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 2.469152525s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '2s'}]}}
+[2025-12-11 13:53:59,700] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 13:53:59,813] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 14:18:23,281] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 14:18:23,382] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 14:20:07,220] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could you tell me about the weather in Bangkok next week?
+[2025-12-11 14:20:12,498] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] {"intent": ["weather_overview", "weather_forecast"], "location": "Bangkok", "location_ascii": "Bangkok", "day": null, "time_of_day": null}
+[2025-12-11 14:20:12,500] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview', 'weather_forecast'], 'location': 'Bangkok', 'location_ascii': 'Bangkok', 'day': None, 'time_of_day': None}
+[2025-12-11 14:21:53,025] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 14:21:53,126] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 14:22:02,170] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 14:22:02,272] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 14:22:07,062] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 14:22:07,160] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 14:22:19,315] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 14:22:19,447] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 14:22:22,156] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 14:22:22,253] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 14:22:29,010] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 14:22:29,111] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 15:28:01,137] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 15:28:01,244] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 15:29:12,181] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could you tell me about the weather in Bangkok next week?
+[2025-12-11 15:29:17,286] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_forecast"
+  ],
+  "location": "Bangkok",
+  "location_ascii": "Bangkok",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-11 15:29:17,294] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_forecast'], 'location': 'Bangkok', 'location_ascii': 'Bangkok', 'day': '2025-12-11', 'time_of_day': None}
+[2025-12-11 18:28:09,123] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 18:28:09,271] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 18:28:12,869] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 18:28:12,969] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 18:28:28,671] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token']
+[2025-12-11 18:28:28,673] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-11 18:28:28,673] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-11 18:28:28,674] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Hai Phong'
+[2025-12-11 18:28:30,183] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:hai phong
+[2025-12-11 18:28:30,184] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Hải Phòng (20.8651,106.6838) score=1000
+[2025-12-11 18:28:30,186] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:20.865100:106.683800:guest
+[2025-12-11 18:28:30,547] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:20.865100:106.683800:guest
+[2025-12-11 18:28:30,632] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token']
+[2025-12-11 18:28:30,632] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-11 18:28:30,632] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-11 18:28:30,632] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Can Tho'
+[2025-12-11 18:28:31,269] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:can tho
+[2025-12-11 18:28:31,269] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Cần Thơ (10.0333,105.7833) score=1000
+[2025-12-11 18:28:31,269] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:10.033300:105.783300:guest
+[2025-12-11 18:28:31,480] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:10.033300:105.783300:guest
+[2025-12-11 18:28:31,495] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token']
+[2025-12-11 18:28:31,496] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-11 18:28:31,496] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-11 18:28:31,496] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Phu Quoc'
+[2025-12-11 18:28:32,067] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:phu quoc
+[2025-12-11 18:28:32,067] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Phú Quốc, Kiên Giang (10.2289,103.9669) score=1000
+[2025-12-11 18:28:32,068] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:10.228900:103.966900:guest
+[2025-12-11 18:28:32,316] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:10.228900:103.966900:guest
+[2025-12-11 18:28:33,477] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:56
+[2025-12-11 18:28:33,520] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:56
+[2025-12-11 18:28:33,526] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:55
+[2025-12-11 18:28:34,189] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:56
+[2025-12-11 18:28:34,442] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:55
+[2025-12-11 18:28:34,487] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:57
+[2025-12-11 18:28:35,147] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:55
+[2025-12-11 18:28:35,368] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:57
+[2025-12-11 18:28:35,405] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:57
+[2025-12-11 18:28:35,864] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:54
+[2025-12-11 18:28:36,096] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:56
+[2025-12-11 18:28:36,278] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:56
+[2025-12-11 18:28:36,791] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:54
+[2025-12-11 18:28:36,813] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:58
+[2025-12-11 18:28:37,232] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:54
+[2025-12-11 18:28:37,535] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:55
+[2025-12-11 18:28:37,809] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:55
+[2025-12-11 18:28:38,212] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:57
+[2025-12-11 18:28:38,351] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:57
+[2025-12-11 18:28:38,751] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:58
+[2025-12-11 18:28:39,089] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:54
+[2025-12-11 18:28:39,174] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:58
+[2025-12-11 18:28:39,509] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:54
+[2025-12-11 18:28:39,983] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:58
+[2025-12-11 18:28:40,112] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:58
+[2025-12-11 18:28:40,471] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:53
+[2025-12-11 18:28:40,656] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:56
+[2025-12-11 18:28:40,758] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:56
+[2025-12-11 18:28:41,345] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:59
+[2025-12-11 18:28:41,573] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:53
+[2025-12-11 18:28:41,719] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:53
+[2025-12-11 18:28:42,078] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:55
+[2025-12-11 18:28:42,266] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:55
+[2025-12-11 18:28:42,697] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:57
+[2025-12-11 18:28:42,782] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:57
+[2025-12-11 18:28:43,062] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:59
+[2025-12-11 18:28:43,468] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:53
+[2025-12-11 18:28:43,665] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:59
+[2025-12-11 18:28:43,778] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:53
+[2025-12-11 18:28:44,166] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:54
+[2025-12-11 18:28:44,337] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:54
+[2025-12-11 18:28:44,471] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:58
+[2025-12-11 18:28:44,849] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:58
+[2025-12-11 18:28:45,112] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:59
+[2025-12-11 18:28:45,441] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:59
+[2025-12-11 18:28:45,756] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:97:56
+[2025-12-11 18:28:45,769] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:56
+[2025-12-11 18:28:46,215] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:97:55
+[2025-12-11 18:28:46,514] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:97:57
+[2025-12-11 18:28:46,514] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:55
+[2025-12-11 18:28:46,974] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:57
+[2025-12-11 18:28:47,304] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:53
+[2025-12-11 18:28:47,368] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:53
+[2025-12-11 18:28:47,699] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:59
+[2025-12-11 18:28:48,103] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:97:54
+[2025-12-11 18:28:48,314] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:59
+[2025-12-11 18:28:48,383] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:54
+[2025-12-11 18:28:48,882] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:97:58
+[2025-12-11 18:28:48,999] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:58
+[2025-12-11 18:28:49,004] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:97:53
+[2025-12-11 18:28:49,549] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:53
+[2025-12-11 18:28:49,784] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:59
+[2025-12-11 18:28:49,945] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:97:59
+[2025-12-11 18:28:52,745] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token']
+[2025-12-11 18:28:52,751] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-11 18:28:52,752] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-11 18:28:53,673] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-11 18:28:53,674] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-11 18:28:53,674] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-11 18:28:53,675] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050201:108.149310:guest
+[2025-12-11 18:28:53,939] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050201:108.149310:guest
+[2025-12-11 18:28:59,763] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:28:59,764] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:28:59,764] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:28:59,764] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-11 18:28:59,766] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050201:108.149310:loggedin
+[2025-12-11 18:29:00,038] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050201:108.149310:loggedin
+[2025-12-11 18:29:00,304] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:29:00,304] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 9 items for user=d
+[2025-12-11 18:29:11,777] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:11,777] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:11,777] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:11,777] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Phu Quoc'
+[2025-12-11 18:29:11,779] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Phu Quoc
+[2025-12-11 18:29:11,779] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Phú Quốc, Kiên Giang (10.2289,103.9669) score=1000
+[2025-12-11 18:29:11,779] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:10.228900:103.966900:loggedin
+[2025-12-11 18:29:12,028] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:10.228900:103.966900:loggedin
+[2025-12-11 18:29:12,281] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:12,281] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:12,281] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:12,281] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Nha Trang'
+[2025-12-11 18:29:12,816] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:nha trang
+[2025-12-11 18:29:12,817] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Nha Trang, Khánh Hòa (12.245,109.1917) score=1000
+[2025-12-11 18:29:12,817] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:12.245000:109.191700:loggedin
+[2025-12-11 18:29:13,065] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:12.245000:109.191700:loggedin
+[2025-12-11 18:29:13,292] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:13,292] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:13,292] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:13,292] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Ho Chi Minh'
+[2025-12-11 18:29:13,833] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:ho chi minh
+[2025-12-11 18:29:13,833] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Hồ Chí Minh (10.7756,106.7019) score=1000
+[2025-12-11 18:29:13,834] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:10.775600:106.701900:loggedin
+[2025-12-11 18:29:14,074] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:10.775600:106.701900:loggedin
+[2025-12-11 18:29:14,127] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): []
+[2025-12-11 18:29:14,127] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-11 18:29:14,127] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-11 18:29:14,127] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Đà Nẵng'
+[2025-12-11 18:29:14,519] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:55
+[2025-12-11 18:29:14,519] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:56
+[2025-12-11 18:29:14,530] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:56
+[2025-12-11 18:29:14,557] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:56
+[2025-12-11 18:29:14,581] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:55
+[2025-12-11 18:29:14,594] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:57
+[2025-12-11 18:29:14,693] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:đa nang
+[2025-12-11 18:29:14,697] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Đà Nẵng (16.0748,108.224) score=1000
+[2025-12-11 18:29:14,697] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.074800:108.224000:guest
+[2025-12-11 18:29:14,876] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:57
+[2025-12-11 18:29:14,876] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:56
+[2025-12-11 18:29:14,876] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:55
+[2025-12-11 18:29:14,877] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:56
+[2025-12-11 18:29:14,880] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:58
+[2025-12-11 18:29:14,946] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.074800:108.224000:guest
+[2025-12-11 18:29:15,381] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:54
+[2025-12-11 18:29:15,382] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:54
+[2025-12-11 18:29:15,383] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:55
+[2025-12-11 18:29:15,384] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:54
+[2025-12-11 18:29:15,384] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:55
+[2025-12-11 18:29:15,891] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:58
+[2025-12-11 18:29:15,893] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:58
+[2025-12-11 18:29:15,893] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:54
+[2025-12-11 18:29:15,898] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:58
+[2025-12-11 18:29:16,388] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:53
+[2025-12-11 18:29:16,391] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:57
+[2025-12-11 18:29:16,391] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:57
+[2025-12-11 18:29:16,392] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:56
+[2025-12-11 18:29:16,394] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:54
+[2025-12-11 18:29:16,901] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:55
+[2025-12-11 18:29:16,901] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:55
+[2025-12-11 18:29:16,901] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:57
+[2025-12-11 18:29:16,901] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:53
+[2025-12-11 18:29:17,400] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:56
+[2025-12-11 18:29:17,401] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:59
+[2025-12-11 18:29:17,402] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:59
+[2025-12-11 18:29:17,402] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:53
+[2025-12-11 18:29:17,404] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:58
+[2025-12-11 18:29:17,899] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:54
+[2025-12-11 18:29:17,900] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:59
+[2025-12-11 18:29:17,901] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:53
+[2025-12-11 18:29:17,903] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:54
+[2025-12-11 18:29:18,409] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:57
+[2025-12-11 18:29:18,409] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:56
+[2025-12-11 18:29:18,410] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:58
+[2025-12-11 18:29:18,410] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:57
+[2025-12-11 18:29:18,412] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:53
+[2025-12-11 18:29:18,912] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:55
+[2025-12-11 18:29:18,914] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:56
+[2025-12-11 18:29:18,915] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:57
+[2025-12-11 18:29:18,915] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:58
+[2025-12-11 18:29:18,916] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:59
+[2025-12-11 18:29:19,416] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:59
+[2025-12-11 18:29:19,416] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:53
+[2025-12-11 18:29:19,418] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:59
+[2025-12-11 18:29:19,419] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:53
+[2025-12-11 18:29:19,419] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:57
+[2025-12-11 18:29:19,915] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:54
+[2025-12-11 18:29:19,916] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:59
+[2025-12-11 18:29:19,916] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:55
+[2025-12-11 18:29:19,917] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:58
+[2025-12-11 18:29:19,917] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:58
+[2025-12-11 18:29:20,421] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:53
+[2025-12-11 18:29:20,422] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:59
+[2025-12-11 18:29:20,423] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:53
+[2025-12-11 18:29:20,423] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:59
+[2025-12-11 18:29:20,919] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:54
+[2025-12-11 18:29:20,919] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-11 18:29:23,213] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:23,213] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:23,214] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:23,214] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-11 18:29:23,214] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050201:108.149310:loggedin
+[2025-12-11 18:29:23,715] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-11 18:29:25,957] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Hà'
+[2025-12-11 18:29:26,641] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:ha
+[2025-12-11 18:29:26,644] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Hà'
+[2025-12-11 18:29:26,645] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hà
+[2025-12-11 18:29:26,646] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Hà'
+[2025-12-11 18:29:26,648] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hà
+[2025-12-11 18:29:26,650] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Hà'
+[2025-12-11 18:29:26,651] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hà
+[2025-12-11 18:29:26,834] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Hà'
+[2025-12-11 18:29:26,836] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hà
+[2025-12-11 18:29:27,020] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Hà'
+[2025-12-11 18:29:27,021] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hà
+[2025-12-11 18:29:28,450] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Hà Nội'
+[2025-12-11 18:29:29,003] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:ha noi
+[2025-12-11 18:29:30,240] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:30,241] DEBUG [backend.api.views.weather_views] ➕ add_search_history called: user=d, city_name=Hà Nội, lat=21, lon=105.85
+[2025-12-11 18:29:30,241] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:30,246] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:30,246] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Hà Nội'
+[2025-12-11 18:29:30,247] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:21.000000:105.850000:loggedin
+[2025-12-11 18:29:30,283] DEBUG [backend.api.views.weather_views] ✅ Search history added for user=d, city_name=Hà Nội
+[2025-12-11 18:29:30,284] DEBUG [backend.api.views.weather_views] 🗑 [CACHE DELETE] search history cache cleared for key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:29:30,526] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:21.000000:105.850000:loggedin
+[2025-12-11 18:29:36,702] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:36,703] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:36,703] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:36,703] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Bangkok, Krung Thep Maha Nakhon'
+[2025-12-11 18:29:36,704] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:13.752500:100.494200:loggedin
+[2025-12-11 18:29:36,958] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:13.752500:100.494200:loggedin
+[2025-12-11 18:29:42,204] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:42,204] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:42,205] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:42,205] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='london'
+[2025-12-11 18:29:42,749] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:london
+[2025-12-11 18:29:42,749] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: London, London, City of (51.5072,-0.1275) score=1000
+[2025-12-11 18:29:42,750] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:51.507200:-0.127500:loggedin
+[2025-12-11 18:29:43,004] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:51.507200:-0.127500:loggedin
+[2025-12-11 18:29:49,289] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:49,289] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:49,289] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:49,289] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Phan Thiết, Bình Thuận'
+[2025-12-11 18:29:49,290] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:10.933300:108.100000:loggedin
+[2025-12-11 18:29:49,543] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:10.933300:108.100000:loggedin
+[2025-12-11 18:29:56,626] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Tokyo'
+[2025-12-11 18:29:57,129] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:tokyo
+[2025-12-11 18:29:58,981] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:29:58,982] DEBUG [backend.api.views.weather_views] ➕ add_search_history called: user=d, city_name=Tokyo, lat=35.687, lon=139.7495
+[2025-12-11 18:29:58,982] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:29:58,987] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:29:58,987] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Tokyo'
+[2025-12-11 18:29:58,988] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:35.687000:139.749500:loggedin
+[2025-12-11 18:29:58,993] DEBUG [backend.api.views.weather_views] ✅ Search history added for user=d, city_name=Tokyo
+[2025-12-11 18:29:58,994] DEBUG [backend.api.views.weather_views] 🗑 [CACHE DELETE] search history cache cleared for key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:29:59,245] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:35.687000:139.749500:loggedin
+[2025-12-11 18:30:06,197] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:30:06,198] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:30:06,199] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:30:06,199] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Da Lat'
+[2025-12-11 18:30:06,743] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:da lat
+[2025-12-11 18:30:06,743] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Đà Lạt, Lâm Đồng (11.9417,108.4383) score=1000
+[2025-12-11 18:30:06,743] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:11.941700:108.438300:loggedin
+[2025-12-11 18:30:06,982] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:11.941700:108.438300:loggedin
+[2025-12-11 18:30:07,215] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:30:07,215] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:30:07,216] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:30:07,216] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Hai Phong'
+[2025-12-11 18:30:07,216] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hai Phong
+[2025-12-11 18:30:07,217] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Hải Phòng (20.8651,106.6838) score=1000
+[2025-12-11 18:30:07,217] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:20.865100:106.683800:loggedin
+[2025-12-11 18:30:07,490] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:20.865100:106.683800:loggedin
+[2025-12-11 18:30:07,721] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:30:07,721] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:30:07,721] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:30:07,722] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Hue'
+[2025-12-11 18:30:08,224] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:hue
+[2025-12-11 18:30:08,225] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Huế, Thừa Thiên-Huế (16.4619,107.5955) score=1000
+[2025-12-11 18:30:08,225] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.461900:107.595500:loggedin
+[2025-12-11 18:30:08,709] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.461900:107.595500:loggedin
+[2025-12-11 18:30:08,774] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): []
+[2025-12-11 18:30:08,775] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-11 18:30:08,775] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-11 18:30:08,775] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Đà Nẵng'
+[2025-12-11 18:30:08,778] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Đà Nẵng
+[2025-12-11 18:30:08,778] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Đà Nẵng (16.0748,108.224) score=1000
+[2025-12-11 18:30:08,779] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.074800:108.224000:guest
+[2025-12-11 18:30:08,788] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:56
+[2025-12-11 18:30:08,789] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:55
+[2025-12-11 18:30:08,789] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:55
+[2025-12-11 18:30:08,790] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:56
+[2025-12-11 18:30:08,791] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:57
+[2025-12-11 18:30:08,791] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:56
+[2025-12-11 18:30:09,289] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:55
+[2025-12-11 18:30:09,296] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:57
+[2025-12-11 18:30:09,297] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:57
+[2025-12-11 18:30:09,297] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:54
+[2025-12-11 18:30:09,299] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:56
+[2025-12-11 18:30:09,303] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:56
+[2025-12-11 18:30:09,798] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:58
+[2025-12-11 18:30:09,798] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:55
+[2025-12-11 18:30:09,798] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:55
+[2025-12-11 18:30:09,799] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:54
+[2025-12-11 18:30:09,800] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:54
+[2025-12-11 18:30:09,800] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:57
+[2025-12-11 18:30:10,297] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:57
+[2025-12-11 18:30:10,297] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:53
+[2025-12-11 18:30:10,299] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:58
+[2025-12-11 18:30:10,299] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:54
+[2025-12-11 18:30:10,299] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:54
+[2025-12-11 18:30:10,300] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:58
+[2025-12-11 18:30:10,803] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:101:59
+[2025-12-11 18:30:10,805] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:58
+[2025-12-11 18:30:10,805] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:55
+[2025-12-11 18:30:10,805] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:58
+[2025-12-11 18:30:10,806] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:56
+[2025-12-11 18:30:10,810] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:53
+[2025-12-11 18:30:11,305] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:55
+[2025-12-11 18:30:11,305] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:53
+[2025-12-11 18:30:11,305] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:57
+[2025-12-11 18:30:11,307] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:57
+[2025-12-11 18:30:11,307] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:102:59
+[2025-12-11 18:30:11,328] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:100:59
+[2025-12-11 18:30:11,810] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:53
+[2025-12-11 18:30:11,811] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:53
+[2025-12-11 18:30:11,814] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:58
+[2025-12-11 18:30:11,816] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:58
+[2025-12-11 18:30:11,819] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:54
+[2025-12-11 18:30:11,819] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:54
+[2025-12-11 18:30:12,314] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:56
+[2025-12-11 18:30:12,314] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:56
+[2025-12-11 18:30:12,314] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:55
+[2025-12-11 18:30:12,314] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:99:59
+[2025-12-11 18:30:12,315] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:53
+[2025-12-11 18:30:12,316] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:103:59
+[2025-12-11 18:30:12,821] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:55
+[2025-12-11 18:30:12,821] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:98:59
+[2025-12-11 18:30:12,821] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:56
+[2025-12-11 18:30:12,822] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:53
+[2025-12-11 18:30:12,822] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:57
+[2025-12-11 18:30:12,822] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:57
+[2025-12-11 18:30:13,319] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:58
+[2025-12-11 18:30:13,319] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:54
+[2025-12-11 18:30:13,320] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:54
+[2025-12-11 18:30:13,320] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:58
+[2025-12-11 18:30:13,320] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:104:59
+[2025-12-11 18:30:13,322] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:53
+[2025-12-11 18:30:13,824] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:59
+[2025-12-11 18:30:13,825] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:105:53
+[2025-12-11 18:30:13,825] DEBUG [backend.api.views.map_views] ✅ Trả tile từ Redis cache key=map:tile:precipitation:1765477200:7:97:59
+[2025-12-11 18:30:14,353] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:30:14,353] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 11 items for user=d
+[2025-12-11 18:30:19,881] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): []
+[2025-12-11 18:30:19,886] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-11 18:30:19,887] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-11 18:30:19,887] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Phan Thiết, Bình Thuận'
+[2025-12-11 18:30:19,981] DEBUG [backend.api.views.weather_views] ➕ add_search_history called: user=d, city_name=Phan Thiết, Bình Thuận, lat=10.9333, lon=108.1
+[2025-12-11 18:30:20,026] DEBUG [backend.api.views.weather_views] ♻️ Updated existing search history for user=d, city_name=Phan Thiết, Bình Thuận
+[2025-12-11 18:30:20,057] DEBUG [backend.api.views.weather_views] 🗑 [CACHE DELETE] search history cache cleared for key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:30:20,658] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:phan thiet, binh thuan
+[2025-12-11 18:30:20,660] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Phan Thiết, Bình Thuận (10.9333,108.1) score=100.0
+[2025-12-11 18:30:20,662] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:10.933300:108.100000:guest
+[2025-12-11 18:30:20,930] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:10.933300:108.100000:guest
+[2025-12-11 18:30:21,451] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:60
+[2025-12-11 18:30:21,479] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:60
+[2025-12-11 18:30:21,619] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:60
+[2025-12-11 18:30:21,631] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:61
+[2025-12-11 18:30:21,643] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:61
+[2025-12-11 18:30:21,672] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:61
+[2025-12-11 18:30:22,497] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:60
+[2025-12-11 18:30:22,528] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:61
+[2025-12-11 18:30:22,882] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:60
+[2025-12-11 18:30:22,924] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:101:62
+[2025-12-11 18:30:22,926] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:102:62
+[2025-12-11 18:30:23,235] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:61
+[2025-12-11 18:30:23,439] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:103:62
+[2025-12-11 18:30:23,685] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:60
+[2025-12-11 18:30:23,975] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:60
+[2025-12-11 18:30:24,032] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:100:62
+[2025-12-11 18:30:24,189] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:104:62
+[2025-12-11 18:30:24,682] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:61
+[2025-12-11 18:30:24,731] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:61
+[2025-12-11 18:30:24,816] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:106:59
+[2025-12-11 18:30:25,021] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:60
+[2025-12-11 18:30:25,184] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:105:62
+[2025-12-11 18:30:25,484] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:106:60
+[2025-12-11 18:30:25,768] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:106:58
+[2025-12-11 18:30:25,999] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:61
+[2025-12-11 18:30:26,012] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:106:61
+[2025-12-11 18:30:26,075] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:106:57
+[2025-12-11 18:30:26,508] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:106:62
+[2025-12-11 18:30:26,714] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:98:62
+[2025-12-11 18:30:27,208] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1765477200:7:99:62
+[2025-12-11 18:30:58,305] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:30:58,306] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:30:58,306] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:30:58,307] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-11 18:30:58,307] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050201:108.149310:loggedin
+[2025-12-11 18:30:58,818] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:30:58,818] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 11 items for user=d
+[2025-12-11 18:31:03,147] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken']
+[2025-12-11 18:31:03,148] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-11 18:31:03,148] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-11 18:31:03,149] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-11 18:31:03,149] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050201:108.149310:guest
+[2025-12-11 18:31:30,831] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:31:30,833] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:31:30,834] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:31:30,834] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-11 18:31:30,852] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050201:108.149310:loggedin
+[2025-12-11 18:31:31,346] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-11 18:31:34,739] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='me'
+[2025-12-11 18:31:34,925] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='m'
+[2025-12-11 18:31:35,656] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:me
+[2025-12-11 18:31:35,847] DEBUG [backend.api.views.weather_views] ❌ No fuzzy matches for 'm'
+[2025-12-11 18:31:43,793] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='berlin'
+[2025-12-11 18:31:44,313] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:berlin
+[2025-12-11 18:31:45,661] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:31:45,662] DEBUG [backend.api.views.weather_views] ➕ add_search_history called: user=d, city_name=Berlin, lat=52.52, lon=13.405
+[2025-12-11 18:31:45,662] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:31:45,666] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:31:45,666] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Berlin'
+[2025-12-11 18:31:45,667] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:52.520000:13.405000:loggedin
+[2025-12-11 18:31:45,674] DEBUG [backend.api.views.weather_views] ✅ Search history added for user=d, city_name=Berlin
+[2025-12-11 18:31:45,675] DEBUG [backend.api.views.weather_views] 🗑 [CACHE DELETE] search history cache cleared for key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:31:46,135] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:52.520000:13.405000:loggedin
+[2025-12-11 18:32:44,315] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-11 18:32:44,316] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1NDc5NzY0LCJqdGkiOiI4ODIyNmM0NmE4ODQ0MTViOGU2NDM0YzRlMjQwN2QwZSIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.jqUtd3CKYLOsuXiPeqevnKRa2ja_WMNICjNZhsU2jK8
+[2025-12-11 18:32:44,319] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:32:44,320] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:32:44,322] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-11 18:32:44,333] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050201:108.149310:loggedin
+[2025-12-11 18:32:44,827] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:32:44,827] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 12 items for user=d
+[2025-12-11 18:32:58,246] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='arab'
+[2025-12-11 18:32:58,844] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:arab
+[2025-12-11 18:33:01,022] DEBUG [backend.api.views.weather_views] ➕ add_search_history called: user=d, city_name=Arab, Alabama, lat=34.3309, lon=-86.4991
+[2025-12-11 18:33:01,022] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-11 18:33:01,026] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-11 18:33:01,026] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-11 18:33:01,026] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Arab, Alabama'
+[2025-12-11 18:33:01,029] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:34.330900:-86.499100:loggedin
+[2025-12-11 18:33:01,031] DEBUG [backend.api.views.weather_views] ✅ Search history added for user=d, city_name=Arab, Alabama
+[2025-12-11 18:33:01,032] DEBUG [backend.api.views.weather_views] 🗑 [CACHE DELETE] search history cache cleared for key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-11 18:33:01,444] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:34.330900:-86.499100:loggedin
+[2025-12-11 18:39:36,550] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could a tsunami occur in Japan tomorrow?
+[2025-12-11 18:39:44,754] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 96, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 148, in raise_error
+    raise ServerError(status_code, response_json, response)
+google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+[2025-12-11 18:40:02,523] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could a tsunami occur in Japan tomorrow?
+[2025-12-11 18:40:06,089] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 96, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 148, in raise_error
+    raise ServerError(status_code, response_json, response)
+google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+[2025-12-11 18:40:26,259] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: What is the weather in Hai Phong next week?
+[2025-12-11 18:40:32,046] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_forecast"],
+  "location": "Hai Phong",
+  "location_ascii": "Hai Phong",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-11 18:40:32,055] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_forecast'], 'location': 'Hai Phong', 'location_ascii': 'Hai Phong', 'day': '2025-12-11', 'time_of_day': None}
+[2025-12-11 18:50:44,668] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 18:50:44,774] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-11 18:50:53,544] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-11 18:50:53,639] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 04:16:53,591] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 04:16:53,697] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 04:16:56,054] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 04:16:56,154] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 04:17:54,078] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 04:17:54,148] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 04:18:53,617] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-12 04:18:55,912] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:18:55,914] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-12 04:19:58,194] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather tonight in Hai Phong?
+[2025-12-12 04:20:02,196] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "daily_aggregation",
+    "weather_overview",
+    "weather_forecast"
+  ],
+  "location": "Hai Phong",
+  "location_ascii": "Hai Phong",
+  "day": "2025-12-11",
+  "time_of_day": "night"
+}
+```
+[2025-12-12 04:20:02,204] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['daily_aggregation', 'weather_overview', 'weather_forecast'], 'location': 'Hai Phong', 'location_ascii': 'Hai Phong', 'day': '2025-12-11', 'time_of_day': 'night'}
+[2025-12-12 04:23:36,864] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-12 04:23:39,191] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:23:39,191] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-12 04:23:47,637] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Hue?
+[2025-12-12 04:23:50,209] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Hue",
+  "location_ascii": "Hue",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:23:50,210] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Hue', 'location_ascii': 'Hue', 'day': None, 'time_of_day': None}
+[2025-12-12 04:24:02,859] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather tonight in Ha Noi?
+[2025-12-12 04:24:11,674] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview", "weather_forecast", "daily_aggregation"],
+  "location": "Ha Noi",
+  "location_ascii": "Ha Noi",
+  "day": "2025-12-11",
+  "time_of_day": "night"
+}
+```
+[2025-12-12 04:24:11,676] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview', 'weather_forecast', 'daily_aggregation'], 'location': 'Ha Noi', 'location_ascii': 'Ha Noi', 'day': '2025-12-11', 'time_of_day': 'night'}
+[2025-12-12 04:24:27,488] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-12 04:24:29,823] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:24:29,823] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-12 04:24:45,184] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-12 04:24:48,369] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:24:48,371] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-12 04:25:22,291] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in ca mau?
+[2025-12-12 04:25:25,395] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "ca mau",
+  "location_ascii": "ca mau",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:25:25,396] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'ca mau', 'location_ascii': 'ca mau', 'day': None, 'time_of_day': None}
+[2025-12-12 04:25:33,023] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in cao lanh?
+[2025-12-12 04:25:34,907] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "cao lanh",
+  "location_ascii": "cao lanh",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:25:34,908] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'cao lanh', 'location_ascii': 'cao lanh', 'day': None, 'time_of_day': None}
+[2025-12-12 04:25:44,138] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in sai gon?
+[2025-12-12 04:25:46,359] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "sai gon",
+  "location_ascii": "sai gon",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:25:46,360] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'sai gon', 'location_ascii': 'sai gon', 'day': None, 'time_of_day': None}
+[2025-12-12 04:25:59,272] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Binh thuan?
+[2025-12-12 04:26:01,471] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "Binh thuan",
+  "location_ascii": "Binh thuan",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:26:01,472] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Binh thuan', 'location_ascii': 'Binh thuan', 'day': None, 'time_of_day': None}
+[2025-12-12 04:26:07,029] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token']
+[2025-12-12 04:26:07,030] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-12 04:26:07,030] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-12 04:26:08,016] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-12 04:26:08,016] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-12 04:26:08,020] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-12 04:26:08,021] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050140:108.149319:guest
+[2025-12-12 04:26:08,353] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050140:108.149319:guest
+[2025-12-12 04:26:26,629] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nan?
+[2025-12-12 04:26:29,730] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Da Nan",
+  "location_ascii": "Da Nan",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:26:29,730] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nan', 'location_ascii': 'Da Nan', 'day': None, 'time_of_day': None}
+[2025-12-12 04:26:35,439] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nangabc?
+[2025-12-12 04:26:42,112] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:26:42,113] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-12 04:26:57,740] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nangdef?
+[2025-12-12 04:27:01,922] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:27:01,922] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-12 04:27:15,420] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in tokyo?
+[2025-12-12 04:27:21,639] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "Tokyo",
+  "location_ascii": "Tokyo",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:27:21,640] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Tokyo', 'location_ascii': 'Tokyo', 'day': None, 'time_of_day': None}
+[2025-12-12 04:27:44,342] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in london?
+[2025-12-12 04:27:47,282] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "London",
+  "location_ascii": "London",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:27:47,283] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'London', 'location_ascii': 'London', 'day': None, 'time_of_day': None}
+[2025-12-12 04:27:55,907] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in bẻlin?
+[2025-12-12 04:27:58,954] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "bẻlin",
+  "location_ascii": "Berlin",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:27:58,956] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'bẻlin', 'location_ascii': 'belin', 'day': None, 'time_of_day': None}
+[2025-12-12 04:28:08,023] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in cali?
+[2025-12-12 04:28:11,943] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Cali",
+  "location_ascii": "Cali",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:28:11,944] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Cali', 'location_ascii': 'Cali', 'day': None, 'time_of_day': None}
+[2025-12-12 04:28:29,643] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in hue?
+[2025-12-12 04:28:31,903] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview"
+  ],
+  "location": "hue",
+  "location_ascii": "hue",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:28:31,904] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'hue', 'location_ascii': 'hue', 'day': None, 'time_of_day': None}
+[2025-12-12 04:28:39,755] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in bangkok?
+[2025-12-12 04:28:42,437] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Bangkok",
+  "location_ascii": "Bangkok",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 04:28:42,438] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Bangkok', 'location_ascii': 'Bangkok', 'day': None, 'time_of_day': None}
+[2025-12-12 04:28:48,737] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Mytho?
+[2025-12-12 04:28:49,098] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\nPlease retry in 11.046863506s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '11s'}]}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 98, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\nPlease retry in 11.046863506s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '11s'}]}}
+[2025-12-12 06:51:23,576] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 06:51:23,675] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 06:51:27,391] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 06:51:27,459] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 06:54:29,311] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token']
+[2025-12-12 06:54:29,312] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-12 06:54:29,313] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-12 06:54:30,250] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-12 06:54:30,250] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-12 06:54:30,252] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-12 06:54:30,253] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050185:108.149305:guest
+[2025-12-12 06:54:31,092] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050185:108.149305:guest
+[2025-12-12 06:54:38,160] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: how is the weather in Da Nang?
+[2025-12-12 06:54:41,287] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-12 06:54:41,288] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': None, 'time_of_day': None}
+[2025-12-12 07:03:57,706] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:03:57,776] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:04:18,405] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:04:18,474] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:04:25,856] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:04:25,922] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:05:29,813] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:05:29,880] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:05:49,258] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:05:49,326] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:07:21,905] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is tomorrow afternoon in Hai Phong suitable for traveling?
+[2025-12-12 07:07:22,153] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. ', 'status': 'RESOURCE_EXHAUSTED'}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 99, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. ', 'status': 'RESOURCE_EXHAUSTED'}}
+[2025-12-12 07:07:48,558] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:07:48,628] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:07:52,919] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:07:52,983] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:08:06,731] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:08:06,801] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:09:16,888] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is tomorrow afternoon in Hai Phong suitable for traveling?
+[2025-12-12 07:09:17,054] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. ', 'status': 'RESOURCE_EXHAUSTED'}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 102, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. ', 'status': 'RESOURCE_EXHAUSTED'}}
+[2025-12-12 07:09:34,541] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:09:34,612] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:09:38,548] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is tomorrow afternoon in Hai Phong suitable for traveling?
+[2025-12-12 07:09:43,144] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["activity_recommendation", "daily_aggregation", "weather_overview", "weather_forecast"],
+  "location": "Hai Phong",
+  "location_ascii": "Hai Phong",
+  "day": "2025-12-12",
+  "time_of_day": "afternoon"
+}
+```
+[2025-12-12 07:09:43,147] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['activity_recommendation', 'daily_aggregation', 'weather_overview', 'weather_forecast'], 'location': 'Hai Phong', 'location_ascii': 'Hai Phong', 'day': '2025-12-12', 'time_of_day': 'afternoon'}
+[2025-12-12 07:10:23,931] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:10:24,001] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:10:36,629] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:10:36,698] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:10:49,017] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:10:49,084] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:11:39,892] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:11:39,961] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:11:44,247] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:11:44,308] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:13:29,626] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:13:29,693] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:13:41,084] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:13:41,153] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:14:06,832] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:14:10,067] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] Your question must be in English and related to weather, which is the domain I can work with!
+[2025-12-12 07:15:06,742] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:15:07,133] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\nPlease retry in 53.037468328s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 102, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\nPlease retry in 53.037468328s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}
+[2025-12-12 07:16:55,646] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:16:55,712] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:17:00,121] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:17:00,290] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. ', 'status': 'RESOURCE_EXHAUSTED'}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 102, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 146, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. ', 'status': 'RESOURCE_EXHAUSTED'}}
+[2025-12-12 07:17:22,328] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:17:22,397] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:17:26,872] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:17:26,938] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:18:28,001] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:18:30,323] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 103, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 148, in raise_error
+    raise ServerError(status_code, response_json, response)
+google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+[2025-12-12 07:18:56,435] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:19:03,275] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] Your question must be in English and related to weather, which is the domain I can work with!
+[2025-12-12 07:21:41,865] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:21:41,934] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:22:04,484] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:22:04,552] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:22:57,294] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:23:02,696] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["natural_disaster_risk", "natural_disaster_forecast", "natural_disaster_overview"],
+  "location": "Tokyo",
+  "location_ascii": "Tokyo",
+  "day": "2025-12-12",
+  "time_of_day": null
+}
+```
+[2025-12-12 07:23:02,701] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['natural_disaster_risk', 'natural_disaster_forecast', 'natural_disaster_overview', 'disaster'], 'location': 'Tokyo', 'location_ascii': 'Tokyo', 'day': '2025-12-12', 'time_of_day': None}
+[2025-12-12 07:23:27,462] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:23:27,533] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:23:33,527] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:23:33,601] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:23:37,894] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:23:37,957] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:23:47,698] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:23:47,760] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:30:27,107] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:30:27,178] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:30:46,405] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:30:46,474] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:33:26,309] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:33:26,378] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:33:36,697] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:33:36,766] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:33:43,524] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:33:43,587] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:34:02,764] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:34:02,830] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:34:15,408] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:34:18,117] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "disaster"
+  ],
+  "location": "Tokyo",
+  "location_ascii": "Tokyo",
+  "day": "2025-12-12",
+  "time_of_day": null
+}
+```
+[2025-12-12 07:34:18,121] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['disaster'], 'location': 'Tokyo', 'location_ascii': 'Tokyo', 'day': '2025-12-12', 'time_of_day': None}
+[2025-12-12 07:36:09,673] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:36:09,738] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:36:18,175] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:36:23,846] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["disaster", "daily_aggregation", "weather_forecast"],
+  "location": "Tokyo",
+  "location_ascii": "Tokyo",
+  "day": "2025-12-12",
+  "time_of_day": null
+}
+```
+[2025-12-12 07:36:23,850] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['disaster', 'daily_aggregation', 'weather_forecast'], 'location': 'Tokyo', 'location_ascii': 'Tokyo', 'day': '2025-12-12', 'time_of_day': None}
+[2025-12-12 07:38:14,587] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:38:14,656] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:38:25,237] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:38:25,306] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:38:32,099] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:38:32,163] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:38:36,364] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:38:36,430] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:39:27,843] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:39:27,913] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:39:32,367] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:39:32,431] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:39:45,992] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:39:59,574] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["disaster", "daily_aggregation", "weather_overview", "weather_forecast"],
+  "location": "Tokyo",
+  "location_ascii": "Tokyo",
+  "day": "2024-05-17",
+  "time_of_day": null
+}
+```
+[2025-12-12 07:39:59,578] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['disaster', 'daily_aggregation', 'weather_overview', 'weather_forecast'], 'location': 'Tokyo', 'location_ascii': 'Tokyo', 'day': '2025-05-17', 'time_of_day': None}
+[2025-12-12 07:40:17,745] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:40:17,814] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:42:01,130] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:42:01,197] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:42:20,026] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:42:23,394] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["disaster", "weather_forecast", "daily_aggregation"],
+  "location": "Tokyo",
+  "location_ascii": "Tokyo",
+  "day": "2024-06-13",
+  "time_of_day": null
+}
+```
+[2025-12-12 07:42:23,399] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['disaster', 'weather_forecast', 'daily_aggregation'], 'location': 'Tokyo', 'location_ascii': 'Tokyo', 'day': '2025-06-13', 'time_of_day': None}
+[2025-12-12 07:46:02,423] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 07:46:02,495] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 07:46:14,339] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Could an earthquake happen in Tokyo tomorrow?
+[2025-12-12 07:46:17,787] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "disaster",
+    "daily_aggregation",
+    "weather_overview",
+    "weather_forecast"
+  ],
+  "location": "Tokyo",
+  "location_ascii": "Tokyo",
+  "day": "2023-10-28",
+  "time_of_day": null
+}
+```
+[2025-12-12 07:46:17,790] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['disaster', 'daily_aggregation', 'weather_overview', 'weather_forecast'], 'location': 'Tokyo', 'location_ascii': 'Tokyo', 'day': '2025-12-13', 'time_of_day': None}
+[2025-12-12 07:49:00,538] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is the weather nice in Da Nang today?
+[2025-12-12 07:49:03,510] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview",
+    "weather_forecast"
+  ],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": "2024-07-29",
+  "time_of_day": null
+}
+```
+[2025-12-12 07:49:03,511] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview', 'weather_forecast'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': '2025-07-29', 'time_of_day': None}
+[2025-12-12 08:00:37,224] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:00:37,293] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:00:50,909] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:00:50,976] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:00:52,334] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is the weather nice in Da Nang today?
+[2025-12-12 08:00:54,029] ERROR [backend.api.views.chatbot_views] Chatbot intent error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+Traceback (most recent call last):
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/backend/api/views/chatbot_views.py", line 104, in analyze_intent
+    response = client.models.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 5230, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/models.py", line 4012, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1388, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1224, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1201, in _request_once
+    errors.APIError.raise_for_response(response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 121, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+  File "/Users/phanvandat/Documents/greenwich_tren_mac/Finalproject/.venv/lib/python3.11/site-packages/google/genai/errors.py", line 148, in raise_error
+    raise ServerError(status_code, response_json, response)
+google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+[2025-12-12 08:02:23,215] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is the weather nice in Da Nang today?
+[2025-12-12 08:02:28,855] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview",
+    "weather_forecast"
+  ],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": "2024-07-30",
+  "time_of_day": null
+}
+```
+[2025-12-12 08:02:28,861] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview', 'weather_forecast'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': '2025-07-30', 'time_of_day': None}
+[2025-12-12 08:02:41,131] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:02:41,197] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:03:32,035] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:03:32,103] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:04:04,250] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:04:04,316] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:04:22,875] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:04:22,942] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:04:28,372] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:04:28,437] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:04:36,050] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:04:36,113] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:04:41,721] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:04:41,785] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:05:22,347] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:05:22,419] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:06:01,137] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is the weather nice in Da Nang at the momment ?
+[2025-12-12 08:06:05,327] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview",
+    "weather_forecast",
+    "daily_aggregation"
+  ],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": "2023-10-27",
+  "time_of_day": null
+}
+```
+[2025-12-12 08:06:05,331] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview', 'weather_forecast', 'daily_aggregation'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': '2025-10-27', 'time_of_day': None}
+[2025-12-12 08:06:52,640] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:06:52,709] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:07:14,196] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:07:14,265] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:07:19,501] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:07:19,566] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:08:34,766] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:08:34,837] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:08:42,437] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:08:42,502] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:08:47,975] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:08:48,041] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:10:44,975] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:10:45,044] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:10:56,382] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-12 08:10:56,452] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-12 08:11:21,936] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is the weather nice in Da Nang at the moment?
+[2025-12-12 08:11:26,660] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview"],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": "2023-10-27",
+  "time_of_day": null
+}
+```
+[2025-12-12 08:11:26,664] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview', 'weather_forecast'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': '2025-12-12', 'time_of_day': None}
+[2025-12-12 08:12:18,266] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is the weather nice in Da Nang the next day suitable for travel?
+[2025-12-12 08:12:22,457] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview", "weather_forecast", "daily_aggregation", "activity_recommendation"],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": "2024-05-24",
+  "time_of_day": null
+}
+```
+[2025-12-12 08:12:22,457] DEBUG [backend.api.views.chatbot_views] [Final Parsed Intent] {'intent': ['weather_overview', 'weather_forecast', 'daily_aggregation', 'activity_recommendation'], 'location': 'Da Nang', 'location_ascii': 'Da Nang', 'day': '2025-12-13', 'time_of_day': None}
