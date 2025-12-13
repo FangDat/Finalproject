@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+DEBUG_INTENT_LOG_FILE = BASE_DIR / 'checkjson.log'
 SECRET_KEY = 'django-insecure-#-q_^(f#_-$e73z^0$-@r3duc9!y_^b*re3*&6cinnfzz&p6c!'
 
 DEBUG = True
@@ -187,6 +187,12 @@ LOGGING = {
             'filename': BASE_DIR / 'debug.log',  # file log ghi ra cùng thư mục project
             'formatter': 'verbose',
         },
+        'intent_file': {
+        'class': 'logging.FileHandler',
+        'filename': BASE_DIR / 'checkjson.log',
+        'formatter': 'verbose',
+        'mode': 'a',   # append (ta sẽ clear bằng code)
+        },
     },
         'loggers': {
         'backend.api.views.weather_views': {  
@@ -213,7 +219,13 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
-        },                       
+        },  
+        'backend.api.views.weather_intent_views': {
+            'handlers': ['intent_file'],
+            'level': 'DEBUG',
+            'propagate': False,   # ❗ không đẩy sang debug.log
+        },
+                     
         'django': {
             'handlers': ['console'],
             'level': 'INFO',

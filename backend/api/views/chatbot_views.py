@@ -2,7 +2,7 @@ import logging
 import json
 import re
 import unicodedata
-from datetime import datetime
+from datetime import datetime, timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -10,6 +10,8 @@ from rest_framework import status
 from google import genai
 from google.cloud import aiplatform
 from datetime import datetime, timedelta 
+from backend.api.views.weather_intent_views import weather_by_intent
+from rest_framework.test import APIRequestFactory
 
 
 logger = logging.getLogger(__name__)
@@ -17,7 +19,7 @@ logger = logging.getLogger(__name__)
 # ---------------------
 # API KEY GEMINI 
 # ---------------------
-GEMINI_API_KEY = "AIzaSyC_nvEv1gM5SjwJT5D3EYb1RqMGQz-fCWA"
+GEMINI_API_KEY = "AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI"
 
 #AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI
 #AIzaSyDF8L7KU3jhUfCxD3PU6EVavb7afcUrLtI
@@ -84,6 +86,43 @@ RULES:
 5) OUTPUT:
 - JSON ONLY.
 """
+
+def get_local_today_by_utc_offset(utc_offset_hours: int):
+    """
+    Return local date based on UTC offset (e.g. +7 for Vietnam)
+    """
+    tz = timezone(timedelta(hours=utc_offset_hours))
+    return datetime.now(tz).date()
+
+def get_city_utc_offset_hours(location_ascii):
+    """
+    Resolve UTC offset (hours) from OpenWeather via weather_by_intent
+    Fallback: UTC+0
+    """
+    try:
+        dummy_payload = {
+            "location": location_ascii,
+            "location_ascii": location_ascii,
+            "intent": ["weather_overview"],
+            "day": None,
+            "time_of_day": None
+        }
+
+        weather = call_weather_router(dummy_payload)
+        tz_string = (
+            weather
+            .get("data", {})
+            .get("weather_overview", {})
+            .get("tz")
+        )
+
+        if tz_string:
+            return int(tz_string.split(":")[0])
+
+    except Exception as e:
+        logger.warning(f"Timezone detect failed: {e}")
+
+    return 0  # fallback UTC
 
 
 # ---------------------
@@ -159,17 +198,19 @@ def analyze_intent(request):
         # ------------------------------------------
         today_keywords = [
             "today", "right now", "this day", "currently",
-            "at the moment", "nowadays", "current day"
+            "at the moment", "nowadays", "current day", "now"
         ]
 
-        system_today = datetime.utcnow().date()  # ngày hệ thống thực
+        utc_offset_hours = get_city_utc_offset_hours(
+            result.get("location_ascii")
+        )
+        system_today = get_local_today_by_utc_offset(utc_offset_hours)
 
         if any(k in msg_lower for k in today_keywords):
 
-            # → BỎ LUÔN NGÀY GEMINI, SET LẠI 100%
+            # 👉 OVERRIDE day từ Gemini
             result["day"] = system_today.strftime("%Y-%m-%d")
 
-            # ép intent (y hệt tomorrow)
             if "weather_forecast" not in intents:
                 intents.append("weather_forecast")
             if "weather_overview" not in intents:
@@ -186,8 +227,7 @@ def analyze_intent(request):
             "the next day", "the day after today"
         ]
 
-        today = datetime.utcnow().date()  # ngày hệ thống thực
-        system_tomorrow = today + timedelta(days=1)
+        system_tomorrow = system_today + timedelta(days=1)
 
         if any(k in msg_lower for k in tomorrow_keywords):
 
@@ -235,10 +275,87 @@ def analyze_intent(request):
                     result["day"] = parsed.strftime("%Y-%m-%d")
             except:
                 pass
+            
+                # ------------------------------------------
+        # 4. FIX: DATE QUÁ XA (> 8 NGÀY) → KHÔNG FORECAST
+        # ------------------------------------------
+        if result.get("day"):
+            try:
+                target_day = datetime.strptime(
+                    result["day"], "%Y-%m-%d"
+                ).date()
 
-        logger.debug(f"[Final Parsed Intent] {result}")
-        return Response(result, status=200)
+                # local today theo city timezone
+                utc_offset_hours = get_city_utc_offset_hours(
+                    result.get("location_ascii")
+                )
+                local_today = get_local_today_by_utc_offset(
+                    utc_offset_hours
+                )
+
+                day_diff = (target_day - local_today).days
+
+                # OpenWeather forecast chỉ an toàn <= 8 ngày
+                if abs(day_diff) > 8:
+                    logger.info(
+                        f"[Intent Adjust] Day {target_day} is {day_diff} days away → disable forecast"
+                    )
+
+                    intents = result.get("intent", [])
+
+                    # remove forecast-related intents
+                    intents = [
+                        i for i in intents
+                        if i not in ("weather_forecast", "weather_overview")
+                    ]
+
+                    # force daily aggregation
+                    if "daily_aggregation" not in intents:
+                        intents.append("daily_aggregation")
+
+                    result["intent"] = intents
+
+            except Exception as e:
+                logger.warning(f"Date distance check failed: {e}")
+
+        # ============================
+        # 🔥 AUTO CALL WEATHER API 🔥
+        # ============================
+        weather_data = None
+        if any(i in result["intent"] for i in [
+            "weather_forecast",
+            "weather_overview",
+            "daily_aggregation"
+        ]):
+            try:
+                weather_data = call_weather_router(result)
+            except Exception as e:
+                logger.error(f"Weather router error: {e}", exc_info=True)
+
+        final_response = {
+            "intent_result": result,
+            "weather": weather_data
+        }
+
+        return Response(final_response, status=200)
+
 
     except Exception as e:
         logger.error(f"Chatbot intent error: {e}", exc_info=True)
         return Response({"error": str(e)}, status=500)
+    
+
+def call_weather_router(intent_json):
+    """
+    Internal call to weather_by_intent
+    Không phải HTTP call → gọi trực tiếp view
+    """
+    factory = APIRequestFactory()
+    fake_request = factory.post(
+        "/api/weather/by-intent/",
+        data=intent_json,
+        format="json"
+    )
+
+    response = weather_by_intent(fake_request)
+    return response.data
