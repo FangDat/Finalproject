@@ -1,0 +1,104 @@
+[2025-12-14 14:48:37,057] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-14 14:48:37,127] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-14 14:48:41,977] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-14 14:48:42,074] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-14 14:49:03,324] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token']
+[2025-12-14 14:49:03,326] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-14 14:49:03,327] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-14 14:49:04,176] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-14 14:49:04,177] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-14 14:49:04,186] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-14 14:49:04,188] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050236:108.149352:guest
+[2025-12-14 14:49:04,554] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050236:108.149352:guest
+[2025-12-14 14:49:18,071] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-14 14:49:18,073] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-14 14:49:18,074] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-14 14:49:18,074] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-14 14:49:18,096] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050236:108.149352:loggedin
+[2025-12-14 14:49:18,357] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050236:108.149352:loggedin
+[2025-12-14 14:49:18,624] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-14 14:49:18,625] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 15 items for user=d
+[2025-12-14 14:49:28,758] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is tomorrow afternoon in Hai Phong suitable for traveling?
+[2025-12-14 14:49:31,879] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview",
+    "weather_forecast",
+    "activity_recommendation",
+    "daily_aggregation"
+  ],
+  "location": "Hai Phong",
+  "location_ascii": "Hai Phong",
+  "day": "2024-05-16",
+  "time_of_day": "afternoon"
+}
+```
+[2025-12-14 14:49:32,428] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:hai phong
+[2025-12-14 14:49:35,076] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hai Phong
+[2025-12-14 14:49:35,244] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hai Phong
+[2025-12-14 15:19:08,727] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1NzI3MzQ4LCJqdGkiOiJiMWRiZGI1ZTEwOWQ0MTQxOTljMGMxZWUzM2FkMmFkYyIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.kPrLm311oAdjp8Ln5k9bFwoI5DNlmXZyi_o3Xm5XwZw
+[2025-12-14 15:45:23,978] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-14 15:45:24,047] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-14 15:46:57,916] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-14 15:46:57,983] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-14 15:47:43,849] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Is the Da Nang weather forecast for next month suitable for tourism?
+[2025-12-14 15:47:46,448] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_forecast",
+    "activity_recommendation"
+  ],
+  "location": "Da Nang",
+  "location_ascii": "Da Nang",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-14 15:47:47,005] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:da nang
+[2025-12-14 15:47:49,626] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Da Nang
+[2025-12-14 15:48:08,563] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1NzI5MDg4LCJqdGkiOiI5MzMyNjIyZTg2Y2I0NDJjOTBlMDE4NmVjNTFhM2U3ZCIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.ly6gjIaBBD74WBJTsJkdZxYwD4mhKknSpMlF-UBQxeI
+[2025-12-14 15:52:29,126] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: Hue will have rain or sunny in tomorrow?
+[2025-12-14 15:52:31,792] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": [
+    "weather_overview",
+    "weather_forecast",
+    "daily_aggregation"
+  ],
+  "location": "Hue",
+  "location_ascii": "Hue",
+  "day": "2024-06-11",
+  "time_of_day": null
+}
+```
+[2025-12-14 15:52:32,306] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:hue
+[2025-12-14 15:52:35,322] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hue
+[2025-12-14 15:52:35,521] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Hue
+[2025-12-14 15:54:48,383] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: What is the weather like in Quang Yen, Quang Ninh on December 20-21?
+[2025-12-14 15:54:54,700] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_forecast", "daily_aggregation"],
+  "location": "Quang Yen, Quang Ninh",
+  "location_ascii": "Quang Yen, Quang Ninh",
+  "day": "2024-12-20",
+  "time_of_day": null
+}
+```
+[2025-12-14 15:54:55,333] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:quang yen, quang ninh
+[2025-12-14 15:54:57,541] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Quang Yen, Quang Ninh
+[2025-12-14 15:54:57,726] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Quang Yen, Quang Ninh
+[2025-12-14 15:55:12,039] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: What is the weather like in Quang Yen, Quang Ninh on December 20-21?
+[2025-12-14 15:55:19,322] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_overview", "weather_forecast", "daily_aggregation"],
+  "location": "Quang Yen, Quang Ninh",
+  "location_ascii": "Quang Yen, Quang Ninh",
+  "day": "2023-12-20",
+  "time_of_day": null
+}
+```
+[2025-12-14 15:55:19,328] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Quang Yen, Quang Ninh
+[2025-12-14 15:55:19,554] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Quang Yen, Quang Ninh
+[2025-12-14 15:55:19,718] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Quang Yen, Quang Ninh
+[2025-12-14 15:57:12,406] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: When will Dung get married?
+[2025-12-14 15:57:14,649] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] Your question must be in English and related to weather or natural disasters, which are the domains I can work with!

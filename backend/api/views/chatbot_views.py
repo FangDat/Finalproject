@@ -12,6 +12,9 @@ from google.cloud import aiplatform
 from datetime import datetime, timedelta 
 from backend.api.views.weather_intent_views import weather_by_intent
 from rest_framework.test import APIRequestFactory
+from backend.api.services.weather_response_generator import (
+    generate_weather_response
+)
 
 
 logger = logging.getLogger(__name__)
@@ -332,9 +335,24 @@ def analyze_intent(request):
             except Exception as e:
                 logger.error(f"Weather router error: {e}", exc_info=True)
 
+        # ============================
+        # 🔥 STEP 4 – LLM RESPONSE 🔥
+        # ============================
+        final_answer = None
+
+        try:
+            final_answer = generate_weather_response(
+                user_question=user_message,
+                intent_result=result,
+                weather_data=weather_data.get("data") if weather_data else {}
+            )
+        except Exception as e:
+            logger.error(f"LLM response generation failed: {e}", exc_info=True)
+
         final_response = {
             "intent_result": result,
-            "weather": weather_data
+            "weather": weather_data,
+            "answer": final_answer
         }
 
         return Response(final_response, status=200)
