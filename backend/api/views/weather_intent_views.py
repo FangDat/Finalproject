@@ -66,6 +66,18 @@ def format_rainfall(mm):
 def format_pop(pop):
     return f"{int(pop * 100)}%" if pop is not None else None
 
+def map_aqi_level(aqi):
+    """
+    Convert OpenWeather AQI (1–5) → human readable
+    """
+    return {
+        1: "Good",
+        2: "Fair",
+        3: "Moderate",
+        4: "Poor",
+        5: "Very Poor",
+    }.get(aqi, "Unknown")
+
 
 def normalize_hourly(hour, tz_offset):
     return {
@@ -141,6 +153,26 @@ def normalize_daily_aggregation(raw):
             )
         }
     }
+
+def normalize_air_pollution(item, tz_offset):
+    """
+    Normalize OpenWeather air pollution forecast item
+    """
+    return {
+        "time": unix_to_local(item.get("dt"), tz_offset),
+        "air_quality": {
+            "aqi": item.get("main", {}).get("aqi"),
+            "level": map_aqi_level(
+                item.get("main", {}).get("aqi")
+            ),
+        },
+        "components (μg/m3)": {
+            "co": item.get("components", {}).get("co"),
+            "so2": item.get("components", {}).get("so2"),
+            "pm10": item.get("components", {}).get("pm10"),
+        },
+    }
+
 
 
 
@@ -294,6 +326,58 @@ def weather_by_intent(request):
 
         # 👉 RESPONSE CHO CHATBOT
         responses["weather_forecast"] = normalized_data
+        
+        # -------------------------------
+    # AIR POLLUTION FORECAST
+    # -------------------------------
+    if "air_pollution" in intents:
+        if settings.DEBUG:
+            logger.debug("CALLING AIR POLLUTION FORECAST API")
+
+        r = requests.get(
+            "https://api.openweathermap.org/data/2.5/air_pollution/forecast",
+            params={
+                "lat": lat,
+                "lon": lon,
+                "appid": OPENWEATHER_KEY,
+            },
+            timeout=8,
+        )
+
+        raw_data = r.json()
+
+        # timezone offset → reuse từ weather forecast nếu có
+        tz_offset = raw_data.get("timezone_offset", 0)
+        tz_string = f"{tz_offset // 3600:+03d}:00"
+
+        # fallback: dùng timezone của weather_forecast nếu tồn tại
+        if "weather_forecast" in responses:
+            tz_string = responses["weather_forecast"].get("tz", "+00:00")
+            try:
+                tz_offset = int(tz_string.split(":")[0]) * 3600
+            except:
+                tz_offset = 0
+
+        normalized_air = [
+            normalize_air_pollution(item, tz_offset)
+            for item in raw_data.get("list", [])
+        ]
+
+        responses["air_pollution"] = {
+            "coord": raw_data.get("coord"),
+            "forecast": normalized_air,
+        }
+
+        if settings.DEBUG:
+            logger.debug("AIR POLLUTION NORMALIZED RESPONSE (LLM READY)")
+            logger.debug(
+                json.dumps(
+                    responses["air_pollution"],
+                    indent=2,
+                    ensure_ascii=False,
+                )
+            )
+
 
     # -------------------------------
     # ACTIVITY / DISASTER → LLM LATER (RAM ONLY)

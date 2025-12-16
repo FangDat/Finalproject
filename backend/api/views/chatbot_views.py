@@ -12,6 +12,8 @@ from google.cloud import aiplatform
 from datetime import datetime, timedelta 
 from backend.api.views.weather_intent_views import weather_by_intent
 from rest_framework.test import APIRequestFactory
+from rest_framework.permissions import IsAuthenticated
+from backend.api.permissions.is_premium_user import IsPremiumUser
 from backend.api.services.weather_response_generator import (
     generate_weather_response
 )
@@ -85,6 +87,7 @@ RULES:
 - No date → include "weather_overview".
 - Travel/activity → include "activity_recommendation".
 - Disaster-related keywords → include "disaster".
+- Air condition, air pollution keywords -> include "air_pollution".
 
 5) OUTPUT:
 - JSON ONLY.
@@ -132,7 +135,7 @@ def get_city_utc_offset_hours(location_ascii):
 # API: Analyze Intent
 # ---------------------
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated, IsPremiumUser])
 def analyze_intent(request):
 
     user_message = request.data.get("message", "")
@@ -196,12 +199,33 @@ def analyze_intent(request):
 
         result["intent"] = intents
         
+        # ---------------------
+        # NEW FEATURE: detect air pollution intent
+        # ---------------------
+        air_pollution_keywords = [
+            "air quality", "air pollution", "pollution",
+            "aqi", "pm2.5", "pm10",
+            "smog", "haze", "dust",
+            "fine particles", "air condition",
+            "breathing", "respiratory"
+        ]
+
+        msg_lower = user_message.lower()
+        intents = result.get("intent", [])
+
+        if any(keyword in msg_lower for keyword in air_pollution_keywords):
+            if "air_pollution" not in intents:
+                intents.append("air_pollution")
+
+        result["intent"] = intents
+    
                 # ------------------------------------------
         # 3.1 FIX QUAN TRỌNG: ĐÚNG NGÀY "TODAY"
         # ------------------------------------------
         today_keywords = [
             "today", "right now", "this day", "currently",
-            "at the moment", "nowadays", "current day", "now"
+            "at the moment", "nowadays", "current day", "now", "tonight", "this", "present day"
+            "this morning", "this afternoon", "this evening", "this night"
         ]
 
         utc_offset_hours = get_city_utc_offset_hours(
@@ -311,6 +335,12 @@ def analyze_intent(request):
                         i for i in intents
                         if i not in ("weather_forecast", "weather_overview")
                     ]
+                    # giữ lại air_pollution & disaster
+                    if "air_pollution" not in intents and "air_pollution" in result.get("intent", []):
+                        intents.append("air_pollution")
+
+                    if "disaster" not in intents and "disaster" in result.get("intent", []):
+                        intents.append("disaster")
 
                     # force daily aggregation
                     if "daily_aggregation" not in intents:
@@ -320,6 +350,7 @@ def analyze_intent(request):
 
             except Exception as e:
                 logger.warning(f"Date distance check failed: {e}")
+
 
         # ============================
         # 🔥 AUTO CALL WEATHER API 🔥

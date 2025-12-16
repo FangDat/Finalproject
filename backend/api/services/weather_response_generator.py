@@ -49,9 +49,9 @@ IMPORTANT RULES:
 Mention only what is relevant:
 - temperature
 - rain probability or rainfall
-- cloud cover
 - visibility (if available)
 - wind (only if notable)
+- air pollution(only if notable)
 
 4) ACTIVITY_RECOMMENDATION
 If intent includes "activity_recommendation":

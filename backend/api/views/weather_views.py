@@ -7,7 +7,7 @@ from bson import ObjectId
 from django.utils import timezone
 from ..models import SearchHistory, User
 from rest_framework.permissions import IsAuthenticated
-from backend.api.permissions import IsPremiumUser
+from backend.api.permissions.is_premium_user import IsPremiumUser
 from django.core.cache import cache
 from pprint import pprint
 from collections import Counter
@@ -318,7 +318,7 @@ def get_city_from_coordinates(lat, lon, geocode_key):
 # ---------------------------
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsPremiumUser])
 def add_search_history(request):
     """
     Thêm entry search history cho user. Chống duplicate (cùng user + city_name).
@@ -365,7 +365,7 @@ def add_search_history(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsPremiumUser])
 def list_search_history(request):
     """
     Trả về search history dạng dropdown.
@@ -392,7 +392,7 @@ def list_search_history(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsPremiumUser])
 def clear_search_history(request, history_id=None):
     """
     Xóa item search history theo id.
