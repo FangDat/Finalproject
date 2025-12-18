@@ -43,7 +43,7 @@
 
         <!-- typing indicator -->
         <div v-if="isTyping" class="chat-message bot thinking">
-          VietCloud is thinking…
+          {{ thinkingText }}
         </div>
       </section>
 
@@ -96,6 +96,11 @@ export default {
       messages: [],
       isTyping: false,
 
+          // 🆕 THINKING ANIMATION
+      thinkingText: "VietCloud is thinking",
+      thinkingDots: 0,
+      thinkingTimer: null,
+
       welcomeMessage:
         "Hello! I'm VietCloud AI Assistant. Feel free to ask me about the weather anywhere in the world, get weather-related recommendations.",
     };
@@ -108,6 +113,25 @@ export default {
         new RegExp("(^| )" + name + "=([^;]+)")
       );
       return match ? decodeURIComponent(match[2]) : null;
+    },
+
+      startThinkingAnimation() {
+      this.thinkingDots = 0;
+      this.thinkingText = "VietCloud is thinking";
+
+      this.thinkingTimer = setInterval(() => {
+        this.thinkingDots = (this.thinkingDots + 1) % 6; // 0 → 5
+        this.thinkingText =
+          "VietCloud is thinking" + ".".repeat(this.thinkingDots);
+      }, 400);
+    },
+
+    stopThinkingAnimation() {
+      if (this.thinkingTimer) {
+        clearInterval(this.thinkingTimer);
+        this.thinkingTimer = null;
+      }
+      this.thinkingText = "VietCloud is thinking";
     },
 
     // ✅ Giống Home.vue (GIỮ NGUYÊN)
@@ -152,32 +176,6 @@ export default {
     saveChatHistory() {
       localStorage.setItem("vietcloud_chat", JSON.stringify(this.messages));
     },
-    // 🆕 Fake streaming typing (character by character)
-    async streamBotMessage(fullText, speed = 25) {
-      if (!fullText) return;
-
-      const botMessage = {
-        role: "bot",
-        text: "",
-      };
-
-      // push empty bot message first
-      this.messages.push(botMessage);
-      this.scrollToBottom();
-
-      for (let i = 0; i < fullText.length; i++) {
-        botMessage.text += fullText[i];
-
-        // auto scroll while typing
-        this.scrollToBottom();
-
-        // typing delay
-        await new Promise((resolve) => setTimeout(resolve, speed));
-      }
-
-      this.saveChatHistory();
-    },
-
 
     // 🆕 AUTO SCROLL
     scrollToBottom() {
@@ -215,63 +213,77 @@ export default {
     return result;
   },
 
-    // 🆕 SEND MESSAGE
-    async sendMessage() {
-      if (!this.userInput.trim() || this.isTyping) return;
+    // ✅ SEND MESSAGE (NO STREAMING)
+      async sendMessage() {
+        if (!this.userInput.trim() || this.isTyping) return;
 
-      // 🚫 limit 100 words
-      const wordCount = this.userInput.trim().split(/\s+/).length;
-      if (wordCount > 100) {
-        alert("Message must not exceed 100 words.");
-        return;
-      }
-
-      const text = this.userInput.trim();
-      this.userInput = "";
-
-      // add user message
-      this.messages.push({ role: "user", text });
-      this.saveChatHistory();
-      this.scrollToBottom();
-
-      this.isTyping = true;
-
-      try {
-        const res = await fetch(
-          "http://localhost:8000/api/chatbot/intent/",
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ message: text }),
-          }
-        );
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "Chatbot error");
+        const wordCount = this.userInput.trim().split(/\s+/).length;
+        if (wordCount > 100) {
+          alert("Message must not exceed 100 words.");
+          return;
         }
 
-        // add bot response
-        this.messages.push({
-          role: "bot",
-          text: data.answer || "The VietCloud system is overloaded. Please try again few minutes later.",
-        });
-      } catch (err) {
-        this.messages.push({
-          role: "bot",
-          text: "Sorry, your question must be in English and related to weather, which is the domain I can work with!",
-        });
-      } finally {
-        this.isTyping = false;
+        const text = this.userInput.trim();
+        this.userInput = "";
+
+        this.messages.push({ role: "user", text });
         this.saveChatHistory();
         this.scrollToBottom();
-      }
+
+        this.isTyping = true;
+        this.startThinkingAnimation();
+
+        try {
+          const res = await fetch(
+            "http://localhost:8000/api/chatbot/intent/",
+            {
+              method: "POST",
+              credentials: "include",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ message: text }),
+            }
+          );
+
+          let data = {};
+          try {
+            data = await res.json();
+          } catch {}
+
+          let botText = "";
+
+          if (res.status === 200) {
+            botText =
+              data.answer ||
+              "The VietCloud system is overloaded. Please try again few minutes later.";
+          } 
+          else if (res.status === 401 || res.status === 403) {
+            botText =
+              "Sorry, your question must be in English and related to weather, which is the domain I can work with!";
+          } 
+          else if ([503, 500, 429, 400].includes(res.status)) {
+            botText =
+              "The VietCloud system is overloaded. Please try again few minutes later.";
+          } 
+          else {
+            botText = "Something went wrong. Please try again later.";
+          }
+
+          this.messages.push({ role: "bot", text: botText });
+
+        } catch {
+          this.messages.push({
+            role: "bot",
+            text:
+              "Unable to connect to VietCloud server. Please check your connection and try again.",
+          });
+        } finally {
+          this.isTyping = false;
+          this.stopThinkingAnimation();
+          this.saveChatHistory();
+          this.scrollToBottom();
+        }
+      },
     },
-  },
 
   mounted() {
     this.fetchUserInfo();

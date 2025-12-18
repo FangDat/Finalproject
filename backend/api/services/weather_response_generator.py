@@ -9,12 +9,13 @@ logger = logging.getLogger(__name__)
 # ============================
 # INIT GEMINI CLIENT (REUSE KEY)
 # ============================
-GEMINI_API_KEY = "AIzaSyC_nvEv1gM5SjwJT5D3EYb1RqMGQz-fCWA"
+GEMINI_API_KEY = "AIzaSyCDdNGMoXI_NypdmkJS_y1LbZ14LT6YH0c"
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 #AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI
 #AIzaSyDF8L7KU3jhUfCxD3PU6EVavb7afcUrLtI
 #AIzaSyC_nvEv1gM5SjwJT5D3EYb1RqMGQz-fCWA
+#AIzaSyCDdNGMoXI_NypdmkJS_y1LbZ14LT6YH0c
 
 
 # ============================
