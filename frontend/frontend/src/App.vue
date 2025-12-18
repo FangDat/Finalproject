@@ -57,6 +57,10 @@ export default {
         window.location.reload();
       } catch (err) {
         console.error("Logout failed", err);
+         } finally {
+    // 🧹 XOÁ CHAT LOCALSTORAGE
+        localStorage.removeItem("vietcloud_chat");
+        
         document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         this.username = "";

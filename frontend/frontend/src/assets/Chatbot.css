@@ -86,13 +86,18 @@ a,
   padding: 15px;
   overflow-y: auto;
   background: #f5faff;
+
+  display: flex;
+  flex-direction: column;
 }
 
+
 .chat-message {
-  padding: 10px;
-  border-radius: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
   margin-bottom: 10px;
-  max-width: 70%;
+  max-width: 55%;
+  line-height: 1.5;
 }
 
 .chat-message.bot {
@@ -205,4 +210,87 @@ a,
   margin-bottom: 20px;
 }
 
+/* Chat smooth animation */
+.chat-message {
+  animation: fadeInUp 0.25s ease;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Thinking bubble */
+.chat-message.thinking {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* Scrollbar đẹp */
+.chat-window::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-window::-webkit-scrollbar-thumb {
+  background: #b5d8ff;
+  border-radius: 6px;
+}
+
+
+/* ⚠️ AI Disclaimer text */
+.ai-disclaimer {
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;
+  padding: 4px 10px;
+  background: #f9f9f9;
+  border-top: 1px solid #eee;
+}
+
+
+.chat-header {
+  padding: 18px;
+  background: #0077cc;
+  color: white;
+  text-align: center; /* 👈 căn giữa toàn bộ */
+}
+
+/* Title ở chính giữa */
+.chat-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* Reminder gọn, dễ đọc */
+.chat-reminder {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.chat-reminder strong {
+  font-weight: 600;
+}
+
+/* 🌡 Temperature highlight */
+.chat-message .temp {
+  color: #ff8c00;
+  font-weight: 600;
+}
+
+/* 🌧 Rain / precipitation highlight */
+.chat-message .rain {
+  color: #1e88e5;
+  font-weight: 600;
+}
 

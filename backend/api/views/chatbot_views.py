@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # ---------------------
 # API KEY GEMINI 
 # ---------------------
-GEMINI_API_KEY = "AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI"
+GEMINI_API_KEY = "AIzaSyC_nvEv1gM5SjwJT5D3EYb1RqMGQz-fCWA"
 
 #AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI
 #AIzaSyDF8L7KU3jhUfCxD3PU6EVavb7afcUrLtI
