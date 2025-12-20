@@ -27,6 +27,11 @@ export default {
     return {
       username: this.getCookie("username") || "",
       refreshInterval: null, // interval refresh token
+
+    // 🆕 detect sleep / wake
+    lastActiveTime: Date.now(),
+    wakeHandlerBound: null,
+
     };
   },
   computed: {
@@ -39,6 +44,79 @@ export default {
     getCookie(name) {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
+    },
+
+      // 🆕 HANDLE WAKE FROM SLEEP
+    handleWakeUp() {
+      const now = Date.now();
+      const diff = now - this.lastActiveTime;
+
+      // > 25 phút (token có thể hết hạn)
+      if (diff > 29 * 60 * 1000) {
+        console.log("💤 Wake after long idle → reload");
+        window.location.reload();
+        return;
+      }
+
+      this.lastActiveTime = now;
+    },
+
+    // 🆕 REGISTER LISTENERS
+    setupWakeListeners() {
+      this.wakeHandlerBound = this.handleWakeUp.bind(this);
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          this.wakeHandlerBound();
+        }
+      });
+
+      window.addEventListener("focus", this.wakeHandlerBound);
+
+      window.addEventListener("mousemove", () => {
+           this.lastActiveTime = Date.now();
+        });
+    },
+
+    async syncAuthSafe() {
+      try {
+        // 1️⃣ Thử refresh token trước
+        const refreshRes = await fetch("http://localhost:8000/api/refresh/", {
+          method: "POST",
+          credentials: "include",
+        });
+
+        if (!refreshRes.ok) {
+          console.warn("❌ Refresh token invalid");
+          this.username = "";
+          return;
+        }
+
+        // 2️⃣ Sau khi có access token → gọi user-info
+        const userRes = await fetch("http://localhost:8000/api/user-info/", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!userRes.ok) {
+          console.warn("❌ user-info failed");
+          this.username = "";
+          return;
+        }
+
+        const data = await userRes.json();
+
+        // 3️⃣ Update UI + cookie
+        this.username = data.username;
+
+        document.cookie = `username=${data.username}; path=/`;
+        document.cookie = `email=${data.email}; path=/`;
+
+        console.log("✅ Auth synced:", data.username);
+      } catch (err) {
+        console.error("syncAuthSafe error:", err);
+        this.username = "";
+      }
     },
 
     async logout() {
@@ -93,8 +171,11 @@ export default {
     },
   },
   mounted() {
+    this.syncAuthSafe();
+
     if (this.username) this.refreshToken();
     // Đồng bộ cookie username mỗi giây để update UI
+    this.setupWakeListeners();
     this.cookieCheckInterval = setInterval(() => {
       const cookieUsername = this.getCookie("username") || "";
       if (cookieUsername !== this.username) {
@@ -102,7 +183,7 @@ export default {
       }
     }, 1000);
 
-    // Refresh token tự động 20 phút 1 lần
+    // Refresh token tự động 29 phút 1 lần
     this.refreshInterval = setInterval(() => {
       this.refreshToken();
     }, 29 * 60 * 1000); // 20 mins

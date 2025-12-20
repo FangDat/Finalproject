@@ -477,6 +477,13 @@ def get_weather(request):
         # --- LOG DEBUG ---
     logger.debug("🍪 username_cookie: %s", username_cookie)
     logger.debug("🔑 is_logged_in: %s", is_logged_in)
+    
+    # --- PREMIUM LOGIC (CHUẨN) ---
+    is_premium = False
+    if request.user and request.user.is_authenticated:
+        is_premium = getattr(request.user, "is_premium", False)
+
+    logger.debug("💎 is_premium: %s", is_premium)
 
     try:
         city_name = None
@@ -530,7 +537,7 @@ def get_weather(request):
             lat_s = str(lat)
             lon_s = str(lon)
 
-        weather_cache_key = f"weather:{lat_s}:{lon_s}:{'loggedin' if is_logged_in else 'guest'}"
+        weather_cache_key = f"weather:{lat_s}:{lon_s}:{'premium' if is_premium else 'standard'}"
 
         # --- CACHE HIT ---
         cached_weather = cache.get(weather_cache_key)
@@ -569,7 +576,7 @@ def get_weather(request):
         # now = datetime.datetime.now(datetime.timezone.utc)
 
         # --- UPCOMING HOURS (5 hours) ---
-        max_hour_count = 12 if is_logged_in else 5
+        max_hour_count = 12 if is_premium else 5
         upcoming_hours = []
         for h in hourly:
             dt_local = datetime.datetime.fromtimestamp(h.get("dt"), datetime.timezone.utc).astimezone(tz)
@@ -590,7 +597,7 @@ def get_weather(request):
                 break
 
         # --- DAILY FORECAST ---
-        max_days = 7 if is_logged_in else 3
+        max_days = 7 if is_premium else 3
         daily_forecast_list = []
         for day_info in daily[: max_days]:
             dt_local = datetime.datetime.fromtimestamp(day_info.get("dt"), datetime.timezone.utc).astimezone(tz)

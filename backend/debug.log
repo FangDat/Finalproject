@@ -1,0 +1,394 @@
+[2025-12-20 13:29:41,240] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-20 13:29:41,309] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-20 13:29:45,734] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2025-12-20 13:29:45,801] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+[2025-12-20 13:29:56,050] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MjM5MTk2LCJqdGkiOiJjNjRkMzNkOTRmZmI0NzZjYTljOWY4ZTliYTQ0NDU3MiIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.R4UgM5WEJA4HIJUxF3_cChMw7QXdipCPv41YnGCwajc
+[2025-12-20 13:29:56,769] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'access_token']
+[2025-12-20 13:29:56,769] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-20 13:29:56,769] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-20 13:29:56,770] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 13:29:57,291] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-20 13:29:57,291] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 13 items for user=d
+[2025-12-20 13:29:57,918] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 13:29:57,919] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 13:29:57,920] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-20 13:29:57,920] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050222:108.149355:premium
+[2025-12-20 13:29:58,268] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050222:108.149355:premium
+[2025-12-20 13:31:03,797] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'access_token', 'username', 'email']
+[2025-12-20 13:31:03,799] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 13:31:03,799] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:31:03,799] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 13:31:03,799] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Da Lat'
+[2025-12-20 13:31:04,340] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:da lat
+[2025-12-20 13:31:04,341] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Đà Lạt, Lâm Đồng (11.9417,108.4383) score=1000
+[2025-12-20 13:31:04,341] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:11.941700:108.438300:premium
+[2025-12-20 13:31:04,545] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:11.941700:108.438300:premium
+[2025-12-20 13:31:04,800] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'access_token', 'username', 'email']
+[2025-12-20 13:31:04,801] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 13:31:04,801] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:31:04,801] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 13:31:04,801] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Hanoi'
+[2025-12-20 13:31:05,302] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:hanoi
+[2025-12-20 13:31:05,302] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Hà Nội (21,105.85) score=1000
+[2025-12-20 13:31:05,302] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:21.000000:105.850000:premium
+[2025-12-20 13:31:05,585] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:21.000000:105.850000:premium
+[2025-12-20 13:31:05,810] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'access_token', 'username', 'email']
+[2025-12-20 13:31:05,810] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 13:31:05,810] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:31:05,811] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 13:31:05,811] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Ho Chi Minh'
+[2025-12-20 13:31:06,349] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:ho chi minh
+[2025-12-20 13:31:06,349] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Hồ Chí Minh (10.7756,106.7019) score=1000
+[2025-12-20 13:31:06,350] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:10.775600:106.701900:premium
+[2025-12-20 13:31:06,623] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:10.775600:106.701900:premium
+[2025-12-20 13:31:06,684] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): []
+[2025-12-20 13:31:06,684] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-20 13:31:06,684] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-20 13:31:06,684] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:31:06,684] DEBUG [backend.api.views.weather_views] 🔍 Dùng fuzzy search nội bộ cho city_input='Đà Nẵng'
+[2025-12-20 13:31:07,243] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:đa nang
+[2025-12-20 13:31:07,243] DEBUG [backend.api.views.weather_views] ✅ Fuzzy top result: Đà Nẵng (16.0748,108.224) score=1000
+[2025-12-20 13:31:07,243] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.074800:108.224000:standard
+[2025-12-20 13:31:07,551] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.074800:108.224000:standard
+[2025-12-20 13:31:07,893] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:102:56
+[2025-12-20 13:31:07,954] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:100:56
+[2025-12-20 13:31:08,085] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:100:55
+[2025-12-20 13:31:08,127] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:101:56
+[2025-12-20 13:31:08,151] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:101:57
+[2025-12-20 13:31:08,249] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:101:55
+[2025-12-20 13:31:09,076] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:100:57
+[2025-12-20 13:31:09,077] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:99:56
+[2025-12-20 13:31:09,306] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:103:56
+[2025-12-20 13:31:09,334] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:101:54
+[2025-12-20 13:31:09,376] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:102:55
+[2025-12-20 13:31:09,726] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:102:57
+[2025-12-20 13:31:10,069] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:99:55
+[2025-12-20 13:31:10,096] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:101:58
+[2025-12-20 13:31:10,277] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:100:54
+[2025-12-20 13:31:10,288] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:103:55
+[2025-12-20 13:31:10,328] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:102:54
+[2025-12-20 13:31:10,568] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:99:57
+[2025-12-20 13:31:11,064] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:100:58
+[2025-12-20 13:31:11,073] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:99:58
+[2025-12-20 13:31:11,088] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:99:54
+[2025-12-20 13:31:11,327] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:103:58
+[2025-12-20 13:31:11,328] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:103:54
+[2025-12-20 13:31:11,874] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:103:57
+[2025-12-20 13:31:12,114] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:98:56
+[2025-12-20 13:31:12,114] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:101:59
+[2025-12-20 13:31:12,324] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:104:56
+[2025-12-20 13:31:12,348] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:101:53
+[2025-12-20 13:31:12,496] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:102:58
+[2025-12-20 13:31:12,951] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:102:53
+[2025-12-20 13:31:13,311] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:104:55
+[2025-12-20 13:31:13,352] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:98:55
+[2025-12-20 13:31:13,455] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:100:53
+[2025-12-20 13:31:13,489] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:104:57
+[2025-12-20 13:31:13,615] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:98:57
+[2025-12-20 13:31:14,115] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:100:59
+[2025-12-20 13:31:14,121] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:99:53
+[2025-12-20 13:31:14,538] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:102:59
+[2025-12-20 13:31:14,829] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:103:53
+[2025-12-20 13:31:15,038] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:98:54
+[2025-12-20 13:31:15,291] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:104:54
+[2025-12-20 13:31:15,579] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:99:59
+[2025-12-20 13:31:15,579] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:98:58
+[2025-12-20 13:31:15,902] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:104:53
+[2025-12-20 13:31:16,037] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:98:53
+[2025-12-20 13:31:16,096] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:98:59
+[2025-12-20 13:31:16,130] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:103:59
+[2025-12-20 13:31:16,474] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 13:31:16,811] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:104:58
+[2025-12-20 13:31:16,867] INFO [backend.api.views.map_views] [CACHE-DEBUG] 🔁 Lưu tile vào Redis cache key = map:tile:precipitation:1766236800:7:104:59
+[2025-12-20 13:35:59,324] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'access_token', 'username', 'email']
+[2025-12-20 13:35:59,325] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 13:35:59,325] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:35:59,325] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 13:36:00,170] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 13:36:00,171] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 13:36:00,171] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-20 13:36:00,171] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050190:108.149316:premium
+[2025-12-20 13:36:00,325] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 13:36:00,406] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050190:108.149316:premium
+[2025-12-20 13:36:28,313] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='H'
+[2025-12-20 13:36:28,833] DEBUG [backend.api.views.weather_views] ⚠️ Fuzzy top score 66.66666666666666 < 80 → coi như không hợp lệ
+[2025-12-20 13:36:29,198] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Ha'
+[2025-12-20 13:36:29,716] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:ha
+[2025-12-20 13:36:29,719] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Ha'
+[2025-12-20 13:36:29,720] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Ha
+[2025-12-20 13:36:29,891] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Hf'
+[2025-12-20 13:36:30,374] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:hf
+[2025-12-20 13:36:32,619] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'access_token', 'username', 'email']
+[2025-12-20 13:36:32,622] DEBUG [backend.api.views.weather_views] ➕ add_search_history called: user=d, city_name=Hof, Bavaria, lat=50.3167, lon=11.9167
+[2025-12-20 13:36:32,622] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 13:36:32,628] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:36:32,628] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 13:36:32,628] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Hof, Bavaria'
+[2025-12-20 13:36:32,628] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:50.316700:11.916700:premium
+[2025-12-20 13:36:32,660] DEBUG [backend.api.views.weather_views] ✅ Search history added for user=d, city_name=Hof, Bavaria
+[2025-12-20 13:36:32,661] DEBUG [backend.api.views.weather_views] 🗑 [CACHE DELETE] search history cache cleared for key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-20 13:36:32,881] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:50.316700:11.916700:premium
+[2025-12-20 13:49:10,838] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'access_token', 'username', 'email']
+[2025-12-20 13:49:10,842] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 13:49:10,842] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:49:10,842] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 13:49:11,705] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 13:49:11,705] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 13:49:11,708] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-20 13:49:11,710] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:premium
+[2025-12-20 13:49:11,858] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-20 13:49:11,859] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 14 items for user=d
+[2025-12-20 13:49:15,978] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken']
+[2025-12-20 13:49:15,978] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-20 13:49:15,978] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-20 13:49:15,978] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:49:15,978] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 13:49:15,982] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050190:108.149316:standard
+[2025-12-20 13:49:16,200] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050190:108.149316:standard
+[2025-12-20 13:49:26,149] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 13:49:26,150] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 13:49:26,150] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:49:26,151] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:49:26,151] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 13:49:26,152] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:standard
+[2025-12-20 13:49:31,792] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 13:49:31,793] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 13:49:31,793] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:49:31,793] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:49:31,793] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 13:49:31,794] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:standard
+[2025-12-20 13:50:09,761] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 13:50:09,766] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 13:50:09,766] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:50:09,766] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:50:09,766] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 13:50:09,768] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:standard
+[2025-12-20 13:54:07,096] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 13:54:07,098] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 13:54:07,099] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:54:07,099] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:54:07,099] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 13:54:07,100] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:standard
+[2025-12-20 13:54:08,291] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 13:54:08,292] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 13:54:08,292] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:54:08,292] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:54:08,292] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 13:54:08,293] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:standard
+[2025-12-20 13:54:10,220] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 13:54:10,220] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 13:54:10,220] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:54:10,221] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:54:10,221] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 13:54:10,222] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:standard
+[2025-12-20 13:54:11,026] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 13:54:11,026] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 13:54:11,026] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:54:11,026] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:54:11,027] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 13:54:11,027] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:standard
+[2025-12-20 13:54:15,408] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 13:54:15,409] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 13:54:15,409] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 13:54:15,409] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 13:54:16,350] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 13:54:16,350] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 13:54:16,350] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-20 13:54:16,351] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050190:108.149316:standard
+[2025-12-20 14:03:54,607] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 14:03:54,608] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 14:03:54,608] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:03:54,609] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 14:03:55,388] INFO [backend.api.views.weather_views] [ISO FIX] Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 14:03:55,388] DEBUG [backend.api.views.weather_views] [ISO FIX] Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 14:03:55,389] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-20 14:03:55,389] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050323:108.149590:standard
+[2025-12-20 14:03:55,679] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050323:108.149590:standard
+[2025-12-20 14:03:58,454] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 14:03:58,455] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: abc
+[2025-12-20 14:03:58,455] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:03:58,455] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 14:03:58,455] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:03:58,456] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:standard
+[2025-12-20 14:04:02,955] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken']
+[2025-12-20 14:04:02,955] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: None
+[2025-12-20 14:04:02,955] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: False
+[2025-12-20 14:04:02,955] DEBUG [backend.api.views.weather_views] 💎 is_premium: False
+[2025-12-20 14:04:02,955] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:04:02,961] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:standard
+[2025-12-20 14:04:07,575] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 14:04:07,576] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:04:07,576] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:04:07,578] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:04:07,578] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:04:07,584] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050323:108.149590:premium
+[2025-12-20 14:04:07,776] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050323:108.149590:premium
+[2025-12-20 14:04:08,106] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-20 14:04:08,106] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 14 items for user=d
+[2025-12-20 14:04:23,322] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 14:04:23,323] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:04:23,324] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:04:23,324] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:04:23,327] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:04:23,328] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:04:24,339] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:04:54,681] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 14:04:54,683] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:04:54,683] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:04:54,684] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:04:54,684] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:04:54,685] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:04:55,197] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:05:02,470] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MjQxMzAyLCJqdGkiOiIwNDY3NTI4ZmM3MWE0NjY3ODliY2ZjNzY0NjVmMzBkMCIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.-Vifgo-ZLC7b0WSWn_-HBVIz7TQLxAoBNAC4pHm8sjQ
+[2025-12-20 14:05:02,472] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'access_token', 'refresh_token', 'username', 'email']
+[2025-12-20 14:05:02,473] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:05:02,473] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MjQxMzAyLCJqdGkiOiIyNWFmNDkxNWI0NTU0OWQ0YmYxMjIxNmIwMDY2MDkwNiIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.4MYIbamqoasvkDFtfLre1IpIbp82fe9P4q3s-NGdoGo
+[2025-12-20 14:05:02,473] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:05:02,474] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:05:02,474] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:05:02,475] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:05:02,967] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:05:04,744] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:05:04,745] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:05:04,745] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:05:04,745] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:05:04,745] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:05:04,755] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:05:05,248] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:05:06,297] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:05:06,298] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:05:06,298] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:05:06,298] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:05:06,298] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:05:06,298] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:05:06,801] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:05:07,920] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:05:07,924] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:05:07,924] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:05:07,924] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:05:07,925] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:05:07,925] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:05:08,424] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:05:28,796] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:05:28,798] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:05:28,799] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:05:28,799] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:05:28,800] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:05:28,806] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:05:29,318] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:07:33,309] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:07:33,310] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:07:33,310] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:07:33,310] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:07:33,310] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:07:33,313] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:07:33,809] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:07:36,087] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:07:36,087] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:07:36,087] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:07:36,088] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:07:36,088] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:07:36,088] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:07:36,596] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:07:45,533] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:07:45,534] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:07:45,535] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:07:45,535] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:07:45,536] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:07:45,537] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:07:46,036] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:08:47,721] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:08:47,723] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:08:47,724] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:08:47,726] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:08:47,727] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:08:47,744] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:08:48,239] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:08:51,944] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:08:51,944] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:08:51,944] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:08:51,944] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:08:51,944] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:08:51,945] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050323:108.149590:premium
+[2025-12-20 14:08:52,446] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:15:56,647] DEBUG [backend.api.views.weather_views] 🔍 Fuzzy search local query='Huế'
+[2025-12-20 14:15:57,195] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:hue
+[2025-12-20 14:15:58,885] DEBUG [backend.api.views.weather_views] ➕ add_search_history called: user=d, city_name=Huế, Thừa Thiên-Huế, lat=16.4619, lon=107.5955
+[2025-12-20 14:15:58,885] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:15:58,890] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:15:58,890] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:15:58,890] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:15:58,890] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Huế, Thừa Thiên-Huế'
+[2025-12-20 14:15:58,891] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.461900:107.595500:premium
+[2025-12-20 14:15:58,914] DEBUG [backend.api.views.weather_views] ♻️ Updated existing search history for user=d, city_name=Huế, Thừa Thiên-Huế
+[2025-12-20 14:15:58,915] DEBUG [backend.api.views.weather_views] 🗑 [CACHE DELETE] search history cache cleared for key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-20 14:15:59,141] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.461900:107.595500:premium
+[2025-12-20 14:16:03,523] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:16:03,523] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:16:03,524] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:16:03,524] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:16:03,524] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Hof, Bavaria'
+[2025-12-20 14:16:03,524] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:50.316700:11.916700:premium
+[2025-12-20 14:16:03,734] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:50.316700:11.916700:premium
+[2025-12-20 14:16:37,341] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MjQxOTk3LCJqdGkiOiJiY2E5YjZlZGI4NzY0NmNjOTc3ZjI1MzBlOWE1NWFjOCIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.RtP28d-cpY8Syka6XdmnusM-W5CBpOXvURlOhYATrKk
+[2025-12-20 14:16:37,342] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MjQxOTk3LCJqdGkiOiI4YjVkYzk3ODFmMWU0ZDNkYTA0NGRmNGQ1MzA5YzkxYyIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.BRvXlw3AP_3fzGzfMpK9I1sT6VWGcNzza-AnPcMQp3k
+[2025-12-20 14:16:37,844] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:16:37,844] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:16:37,845] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:16:37,845] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:16:38,357] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] list_search_history for user=d, key=search_history:68c4107d2ff88c7dfc041f12
+[2025-12-20 14:16:38,357] DEBUG [backend.api.views.weather_views] 📄 list_search_history returned 14 items for user=d
+[2025-12-20 14:16:38,733] INFO [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 14:16:38,733] DEBUG [backend.api.views.weather_views] [ISO FIX] Đường Hoàng Văn Thái, Hòa Khánh Nam, Phường Hòa Khánh, Việt Nam → Đà Nẵng
+[2025-12-20 14:16:38,734] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ OpenCage reverse geocode: Đà Nẵng
+[2025-12-20 14:16:38,734] INFO [backend.api.views.weather_views] 🌍 [API CALL] Gọi OpenWeather cho weather:16.050222:108.149355:premium
+[2025-12-20 14:16:39,025] DEBUG [backend.api.views.weather_views] 🔁 Lưu weather vào Redis cache key=weather:16.050222:108.149355:premium
+[2025-12-20 14:16:44,080] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MjQyMDA0LCJqdGkiOiI2OGI3NTg4ZTQwMTM0Y2U0OTllZTU5NTEyOGRmNmRjMyIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.VTj6114zcKsnratCgOBmJ4N_muFAnHHqwvU6arz2YkU
+[2025-12-20 14:16:44,081] DEBUG [backend.api.views.auth_views] New access token generated: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MjQyMDA0LCJqdGkiOiI4NDBhNWY5NzUzNDU0NzQxYWY1ZWRmNDUxMTAzMGNiOSIsInVzZXJfaWQiOiI2OGM0MTA3ZDJmZjg4YzdkZmMwNDFmMTIifQ.IWKlI6VimyHDe1xEy9jiAO1VVR1_IqsY6qC6tqkg2zY
+[2025-12-20 14:16:44,584] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:16:44,585] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:16:44,585] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:16:44,585] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:16:44,585] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:16:44,588] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050222:108.149355:premium
+[2025-12-20 14:16:45,090] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:16:59,984] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:16:59,985] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:16:59,985] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:16:59,985] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:16:59,985] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Huế, Thừa Thiên-Huế'
+[2025-12-20 14:16:59,986] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.461900:107.595500:premium
+[2025-12-20 14:17:03,308] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:17:03,309] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:17:03,309] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:17:03,309] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:17:03,309] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Hof, Bavaria'
+[2025-12-20 14:17:03,310] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:50.316700:11.916700:premium
+[2025-12-20 14:20:36,922] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:20:36,924] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:20:36,924] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:20:36,925] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:20:36,925] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Đà Nẵng'
+[2025-12-20 14:20:36,929] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:16.050222:108.149355:premium
+[2025-12-20 14:20:37,440] DEBUG [backend.api.views.weather_views] 💾 [CACHE HIT] list_search_history for user=d
+[2025-12-20 14:26:29,756] DEBUG [backend.api.views.weather_views] 📄 request.COOKIES.keys(): ['csrftoken', 'refresh_token', 'username', 'email', 'access_token']
+[2025-12-20 14:26:29,757] DEBUG [backend.api.views.weather_views] 🍪 username_cookie: d
+[2025-12-20 14:26:29,757] DEBUG [backend.api.views.weather_views] 🔑 is_logged_in: True
+[2025-12-20 14:26:29,757] DEBUG [backend.api.views.weather_views] 💎 is_premium: True
+[2025-12-20 14:26:29,757] DEBUG [backend.api.views.weather_views] 📍 Lấy city_name từ query param name='Hof, Bavaria'
+[2025-12-20 14:26:29,758] INFO [backend.api.views.weather_views] 💾 [CACHE HIT] Trả dữ liệu từ Redis cho weather:50.316700:11.916700:premium
+[2025-12-20 14:31:29,873] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: suggest me some pornhub video with doggy style
+[2025-12-20 14:31:32,155] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] Your question must be in English and related to weather or natural disasters, which are the domains I can work with!
+[2025-12-20 14:33:39,909] DEBUG [backend.api.views.chatbot_views] [Chatbot] Analyze Intent: ho chi minh city will have thunderstorms next week?
+[2025-12-20 14:33:43,114] DEBUG [backend.api.views.chatbot_views] [Gemini Raw] ```json
+{
+  "intent": ["weather_forecast", "weather_overview"],
+  "location": "Ho Chi Minh City",
+  "location_ascii": "Ho Chi Minh City",
+  "day": null,
+  "time_of_day": null
+}
+```
+[2025-12-20 14:33:43,694] DEBUG [backend.api.views.weather_views] 🔁 [CACHE SET] fuzzy search saved key=fuzzy_local:ho chi minh city
+[2025-12-20 14:33:46,203] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Ho Chi Minh City
+[2025-12-20 14:33:46,432] DEBUG [backend.api.views.weather_views] ✅ [CACHE HIT] fuzzy search: Ho Chi Minh City

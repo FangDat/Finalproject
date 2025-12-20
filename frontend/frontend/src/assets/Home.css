@@ -508,4 +508,48 @@ a,
 
 }
 
+.chatbot-shortcut {
+  align-self: flex-end;
+  margin-top: -36px;
+  margin-bottom: 12px;
+  cursor: pointer;
 
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+
+.chatbot-shortcut:hover {
+  transform: scale(1.12);
+  opacity: 0.95;
+  animation: chatbot-pulse 1.6s ease-out infinite;
+}
+
+.chatbot-icon {
+  width: 200px;
+  height: 200px;
+}
+/* 🔁 Pulse animation khi hover */
+@keyframes chatbot-pulse {
+  0% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 0 rgba(135, 206, 250, 0.5));
+  }
+  70% {
+    transform: scale(1.16);
+    filter: drop-shadow(0 0 18px rgba(135, 206, 250, 0));
+  }
+  100% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 0 rgba(135, 206, 250, 0));
+  }
+}
+
+/* ✨ Pulse nhẹ khi hover ra (reset mượt) */
+@keyframes chatbot-pulse-out {
+  0% {
+    box-shadow: 0 0 0 10px rgba(135, 206, 250, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(135, 206, 250, 0);
+  }
+}

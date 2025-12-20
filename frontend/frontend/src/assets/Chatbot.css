@@ -257,7 +257,7 @@ a,
 
 
 .chat-header {
-  padding: 18px;
+  padding: 10px 10px;
   background: #0077cc;
   color: white;
   text-align: center; /* 👈 căn giữa toàn bộ */
@@ -283,14 +283,20 @@ a,
 }
 
 /* 🌡 Temperature highlight */
-.chat-message .temp {
+:deep(.temp) {
   color: #ff8c00;
   font-weight: 600;
 }
 
 /* 🌧 Rain / precipitation highlight */
-.chat-message .rain {
+:deep(.rain) {
   color: #1e88e5;
+  font-weight: 600;
+}
+
+/* ⚠️ Disaster / extreme weather highlight */
+:deep(.disaster) {
+  color: hsl(0, 79%, 44%);
   font-weight: 600;
 }
 

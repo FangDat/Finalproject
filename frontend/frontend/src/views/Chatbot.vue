@@ -194,24 +194,40 @@ export default {
       ];
     },
     highlightWeather(text) {
-  if (!text) return "";
+      if (!text || typeof text !== "string") return "";
 
-  let result = text;
+      let result = text;
 
-  // 🌡 Highlight temperature (°C, °F)
-    result = result.replace(
-      /(-?\d+(\.\d+)?\s?°\s?[CF])/gi,
-      '<span class="temp">$1</span>'
-    );
+      // 🌡 Temperature: 25°C | 25 °C | 25℃ | -3.5°C
+      result = result.replace(
+        /(-?\d+(?:\.\d+)?\s?(?:°\s?[CF]|℃|℉))/gi,
+        '<span class="temp">$1</span>'
+      );
+        /* =======================
+     🌡 TEMPERATURE KEYWORDS
+     ======================= */
+      result = result.replace(
+        /\b(temperature|temperatures|hot|warm|heatwave|heat|feels like|high temperature)\b/gi,
+        '<span class="temp">$1</span>'
+      );
 
-    // 🌧 Highlight precipitation / rain (mm)
-    result = result.replace(
-      /(\d+(\.\d+)?\s?mm|\brain\b|\bprecipitation\b)/gi,
-      '<span class="rain">$1</span>'
-    );
+      // 🌧 Rain / precipitation keywords + mm
+      result = result.replace(
+        /(\d+(?:\.\d+)?\s?mm|\brain\b|\brainfall\b|\braining\b|\bprecipitation\b|\bcool\b|\bcold\b)/gi,
+        '<span class="rain">$1</span>'
+      );
+        /* =======================
+     ⚠️ DISASTER KEYWORDS
+     (longer phrases first)
+     ======================= */
+      result = result.replace(
+        /\b(super typhoon|extreme weather|natural disaster|thunderstorms|hurricanes|cyclones|typhoons|tornado|earthquake|wildfires|landslide|tsunami|flood|storm|disasters|disasters)\b/gi,
+        '⚠️ <span class="disaster">$1</span>'
+      );
 
-    return result;
-  },
+      return result;
+    },
+
 
     // ✅ SEND MESSAGE (NO STREAMING)
       async sendMessage() {

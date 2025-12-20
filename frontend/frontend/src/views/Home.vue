@@ -123,7 +123,8 @@
 
       <!-- Sidebar phải -->
       <aside class="sidebar-right" v-if="!errorMessage">
-        <h3 class="section-title">3-Day Forecast</h3>
+        <h3 class="section-title">Daily Forecast</h3>
+
         <div
           v-for="(day, index) in forecast3days"
           :key="index"
@@ -135,10 +136,23 @@
             {{ day.temp.split('/').map(t => Math.round(formatTemp(t))).join('/') }}{{ tempUnitSymbol }}
           </div>
         </div>
-        <p v-if="!username" class="premium-text">
-          Want forecast for 7 days? → Sign up for VietCloud premium now!
+        <p v-if="!is_premium" class="premium-text">
+          Want forecast for 7 days?  Upgrade for VietCloud premium now!
         </p>
         <router-link v-if="!username" to="/signup" class="btn-signup">Sign up</router-link>
+         <!-- 🤖 Chatbot quick access (CHỈ PREMIUM) -->
+        <div
+          v-if="is_premium"
+          class="chatbot-shortcut"
+          @click="goToChatbot"
+          title="Open VietCloud Chatbot"
+        >
+          <img
+            src="@/assets/chatbot.png"
+            alt="Chatbot"
+            class="chatbot-icon"
+          />
+        </div>
       </aside>
     </div>
   </DynamicBackground>
@@ -241,6 +255,9 @@ export default {
       } catch (e) {
         return require("@/assets/01d.png");
       }
+    },
+    goToChatbot() {
+      this.$router.push("/chatbot");
     },
     onSearchInput() {
       if (this.suggestTimer) clearTimeout(this.suggestTimer);
