@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # ---------------------
 # API KEY GEMINI 
 # ---------------------
-GEMINI_API_KEY = "AIzaSyCDdNGMoXI_NypdmkJS_y1LbZ14LT6YH0c"
+GEMINI_API_KEY = "AIzaSyC_nvEv1gM5SjwJT5D3EYb1RqMGQz-fCWA"
 
 #AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI
 #AIzaSyDF8L7KU3jhUfCxD3PU6EVavb7afcUrLtI
@@ -130,6 +130,40 @@ def get_city_utc_offset_hours(location_ascii):
         logger.warning(f"Timezone detect failed: {e}")
 
     return 0  # fallback UTC
+# ---------------------
+# Greeting / Farewell detector
+# ---------------------
+def detect_greeting_or_farewell(message: str):
+    msg = message.lower().strip()
+
+    greetings = [
+        "hi", "hello", "hey", "good morning", "good afternoon",
+        "good evening", "hey there"
+    ]
+
+    thanks = [
+        "thanks", "thank you", "thx", "thank u",
+        "appreciate it", "much appreciated"
+    ]
+
+    farewells = [
+        "bye", "goodbye", "see you", "see ya",
+        "farewell", "take care"
+    ]
+
+    for g in greetings:
+        if msg == g or msg.startswith(g):
+            return "greeting"
+
+    for t in thanks:
+        if msg == t or msg.startswith(t):
+            return "thanks"
+
+    for f in farewells:
+        if msg == f or msg.startswith(f):
+            return "farewell"
+
+    return None
 
 
 # ---------------------
@@ -142,6 +176,26 @@ def analyze_intent(request):
     user_message = request.data.get("message", "")
     if not user_message:
         return Response({"error": "message is required"}, status=400)
+    
+    # ============================
+    # 🌟 GREETING / FAREWELL EXCEPTION
+    # ============================
+    greeting_type = detect_greeting_or_farewell(user_message)
+
+    if greeting_type == "greeting":
+        return Response({
+            "answer": "Hello! 👋 I’m VietCloud. I can help you with weather forecasts, air quality, and activity recommendations anytime. Just ask!"
+        }, status=200)
+
+    if greeting_type == "thanks":
+        return Response({
+            "answer": "You’re very welcome! 😊 If you need any weather information or travel advice, I’m always here to help."
+        }, status=200)
+
+    if greeting_type == "farewell":
+        return Response({
+            "answer": "Goodbye! 👋 Have a great day, and feel free to come back whenever you need weather updates."
+        }, status=200)
 
     try:
         logger.debug(f"[Chatbot] Analyze Intent: {user_message}")

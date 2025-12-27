@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 # ============================
 # INIT GEMINI CLIENT (REUSE KEY)
 # ============================
-GEMINI_API_KEY = "AIzaSyCDdNGMoXI_NypdmkJS_y1LbZ14LT6YH0c"
+GEMINI_API_KEY = "AIzaSyC_nvEv1gM5SjwJT5D3EYb1RqMGQz-fCWA"
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 #AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI
@@ -57,6 +57,17 @@ Mention only what is relevant:
 4) ACTIVITY_RECOMMENDATION
 If intent includes "activity_recommendation":
 - Assess suitability briefly (good / acceptable / not ideal).
+- Decide activity type:
+  • Outdoor → if dry weather and mild temperature
+  • Indoor → if too much hot hot, rain, cold, or uncomfortable conditions
+  
+- You MAY suggest 2–3 WELL-KNOWN tourist places
+  that logically match the activity type AND the detected location.
+  (Example: Hoan Kiem Lake, Temple of Literature, museums, shopping centers.)
+
+- Place names must be real and commonly known.
+- Do NOT invent weather values.
+- Do NOT invent fictional places.
 - Explain using weather evidence.
 - Add this sentence at the end:
   "VietCloud’s advice is based on forecast data and may not be fully accurate."
@@ -70,9 +81,9 @@ If intent includes "disaster":
   "VietCloud’s advice is based on forecast data and may not be fully accurate."
 
 6) STYLE
-- 30–40 words
+- 36–63 words
 - Professional, neutral, friendly
-- No emojis
+- Comfortable emojis
 - No bullet points
 
 Output ONLY the final answer text.

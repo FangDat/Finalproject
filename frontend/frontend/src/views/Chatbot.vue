@@ -207,13 +207,13 @@ export default {
      🌡 TEMPERATURE KEYWORDS
      ======================= */
       result = result.replace(
-        /\b(temperature|temperatures|hot|warm|heatwave|heat|feels like|high temperature)\b/gi,
+        /\b(temperature|temperatures|hot|warm|heatwave|heat|mild|high temperature)\b/gi,
         '<span class="temp">$1</span>'
       );
 
       // 🌧 Rain / precipitation keywords + mm
       result = result.replace(
-        /(\d+(?:\.\d+)?\s?mm|\brain\b|\brainfall\b|\braining\b|\bprecipitation\b|\bcool\b|\bcold\b)/gi,
+        /(\d+(?:\.\d+)?\s?mm|\brain\b|\brainy\b|\brainfall\b|\braining\b|\bprecipitation\b|\bcool\b|\bcold\b)/gi,
         '<span class="rain">$1</span>'
       );
         /* =======================
@@ -272,11 +272,11 @@ export default {
               data.answer ||
               "The VietCloud system is overloaded. Please try again few minutes later.";
           } 
-          else if (res.status === 401 || res.status === 403) {
+          else if (res.status === 401 || res.status === 403 || res.status === 400) {
             botText =
               "Sorry, your question must be in English and related to weather, which is the domain I can work with!";
           } 
-          else if ([503, 500, 429, 400].includes(res.status)) {
+          else if ([503, 500, 429].includes(res.status)) {
             botText =
               "The VietCloud system is overloaded. Please try again few minutes later.";
           } 

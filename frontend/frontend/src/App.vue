@@ -52,7 +52,7 @@ export default {
       const diff = now - this.lastActiveTime;
 
       // > 25 phút (token có thể hết hạn)
-      if (diff > 29 * 60 * 1000) {
+      if (diff > 15 * 60 * 1000) {
         console.log("💤 Wake after long idle → reload");
         window.location.reload();
         return;
