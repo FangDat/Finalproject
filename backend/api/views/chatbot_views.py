@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # ---------------------
 # API KEY GEMINI 
 # ---------------------
-GEMINI_API_KEY = "AIzaSyC_nvEv1gM5SjwJT5D3EYb1RqMGQz-fCWA"
+GEMINI_API_KEY = "AIzaSyCDdNGMoXI_NypdmkJS_y1LbZ14LT6YH0c"
 
 #AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI
 #AIzaSyDF8L7KU3jhUfCxD3PU6EVavb7afcUrLtI
@@ -89,9 +89,10 @@ RULES:
 - Travel/activity → include "activity_recommendation".
 - Disaster-related keywords → include "disaster".
 - Air condition, air pollution keywords -> include "air_pollution".
+- Health issues, advice when sick → include "healthcare".
 
 5) OUTPUT:
-- JSON ONLY.
+- JSON ONLY.are
 """
 
 def get_local_today_by_utc_offset(utc_offset_hours: int):
@@ -136,24 +137,16 @@ def get_city_utc_offset_hours(location_ascii):
 def detect_greeting_or_farewell(message: str):
     msg = message.lower().strip()
 
-    greetings = [
-        "hi", "hello", "hey", "good morning", "good afternoon",
-        "good evening", "hey there"
-    ]
 
     thanks = [
         "thanks", "thank you", "thx", "thank u",
-        "appreciate it", "much appreciated"
+        "appreciate it", "much appreciated","appreciate"
     ]
 
     farewells = [
         "bye", "goodbye", "see you", "see ya",
         "farewell", "take care"
     ]
-
-    for g in greetings:
-        if msg == g or msg.startswith(g):
-            return "greeting"
 
     for t in thanks:
         if msg == t or msg.startswith(t):
@@ -182,14 +175,10 @@ def analyze_intent(request):
     # ============================
     greeting_type = detect_greeting_or_farewell(user_message)
 
-    if greeting_type == "greeting":
-        return Response({
-            "answer": "Hello! 👋 I’m VietCloud. I can help you with weather forecasts, air quality, and activity recommendations anytime. Just ask!"
-        }, status=200)
 
     if greeting_type == "thanks":
         return Response({
-            "answer": "You’re very welcome! 😊 If you need any weather information or travel advice, I’m always here to help."
+            "answer": "You’re very welcome! 😊 If you need any weather information, health or travel advice base on weather, I’m always here to help."
         }, status=200)
 
     if greeting_type == "farewell":
@@ -273,7 +262,28 @@ def analyze_intent(request):
                 intents.append("air_pollution")
 
         result["intent"] = intents
-    
+        
+        # ---------------------
+        # NEW FEATURE: detect healthcare intent
+        # ---------------------
+        healthcare_keywords = [
+            "fever", "sick", "ill", "illness",
+            "headache", "cold", "flu",
+            "cough", "sore throat", "runny nose",
+            "fatigue", "tired", "weak",
+            "nausea", "vomit", "dizzy", "dizziness",
+            "health", "healthcare", "medical"
+        ]
+
+        msg_lower = user_message.lower()
+        intents = result.get("intent", [])
+
+        if any(keyword in msg_lower for keyword in healthcare_keywords):
+            if "healthcare" not in intents:
+                intents.append("healthcare")
+
+        result["intent"] = intents
+
                 # ------------------------------------------
         # 3.1 FIX QUAN TRỌNG: ĐÚNG NGÀY "TODAY"
         # ------------------------------------------

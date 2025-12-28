@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 # ============================
 # INIT GEMINI CLIENT (REUSE KEY)
 # ============================
-GEMINI_API_KEY = "AIzaSyC_nvEv1gM5SjwJT5D3EYb1RqMGQz-fCWA"
+GEMINI_API_KEY = "AIzaSyCDdNGMoXI_NypdmkJS_y1LbZ14LT6YH0c"
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 #AIzaSyBIMxmqjk-9sb7LPnB95kvbBXKnQcLkCkI
@@ -79,8 +79,23 @@ If intent includes "disaster":
 - Example: no signs of earthquakes or extreme weather.
 - Add this sentence at the end:
   "VietCloud’s advice is based on forecast data and may not be fully accurate."
+  
+6) HEALTHCARE
+If intent includes "healthcare":
+- Give GENERAL, NON-DIAGNOSTIC advice only.
+- Base suggestions on:
+  • reported symptoms
+  • current weather conditions
+- DO NOT provide medical diagnosis.
+- DO NOT prescribe medication.
+- Suggestions may include:
+  • rest, hydration
+  • avoiding extreme weather exposure
+  • appropriate clothing
+- Always end with this sentence EXACTLY:
+  "If your health condition worsens, we recommend visiting the nearest medical facility for appropriate treatment."
 
-6) STYLE
+7) STYLE
 - 36–63 words
 - Professional, neutral, friendly
 - Comfortable emojis

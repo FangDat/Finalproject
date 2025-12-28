@@ -84,6 +84,14 @@
 </template>
 
 <script>
+if (!window.__vietcloudChatPending) {
+  window.__vietcloudChatPending = {
+    pending: false,
+    answer: null,
+    promise: null,
+  };
+}
+
 export default {
   name: "Chatbot",
   data() {
@@ -213,7 +221,7 @@ export default {
 
       // 🌧 Rain / precipitation keywords + mm
       result = result.replace(
-        /(\d+(?:\.\d+)?\s?mm|\brain\b|\brainy\b|\brainfall\b|\braining\b|\bprecipitation\b|\bcool\b|\bcold\b)/gi,
+        /(\d+(?:\.\d+)?\s?mm|\brain\b|\brainy\b|\brainfall\b|\braining\b|\bprecipitation\b|\bcool\b|\bcold\b|\bcoldy\b)/gi,
         '<span class="rain">$1</span>'
       );
         /* =======================
@@ -230,6 +238,75 @@ export default {
 
 
     // ✅ SEND MESSAGE (NO STREAMING)
+      // async sendMessage() {
+      //   if (!this.userInput.trim() || this.isTyping) return;
+
+      //   const wordCount = this.userInput.trim().split(/\s+/).length;
+      //   if (wordCount > 100) {
+      //     alert("Message must not exceed 100 words.");
+      //     return;
+      //   }
+
+      //   const text = this.userInput.trim();
+      //   this.userInput = "";
+
+      //   this.messages.push({ role: "user", text });
+      //   this.saveChatHistory();
+      //   this.scrollToBottom();
+
+      //   this.isTyping = true;
+      //   this.startThinkingAnimation();
+
+      //   try {
+      //     const res = await fetch(
+      //       "http://localhost:8000/api/chatbot/intent/",
+      //       {
+      //         method: "POST",
+      //         credentials: "include",
+      //         headers: { "Content-Type": "application/json" },
+      //         body: JSON.stringify({ message: text }),
+      //       }
+      //     );
+
+      //     let data = {};
+      //     try {
+      //       data = await res.json();
+      //     } catch {}
+
+      //     let botText = "";
+
+      //     if (res.status === 200) {
+      //       botText =
+      //         data.answer ||
+      //         "The VietCloud system is overloaded. Please try again few minutes later.";
+      //     } 
+      //     else if (res.status === 401 || res.status === 403 || res.status === 400) {
+      //       botText =
+      //         "Sorry, your question must be in English and related to weather, which is the domain I can work with!";
+      //     } 
+      //     else if ([503, 500, 429].includes(res.status)) {
+      //       botText =
+      //         "The VietCloud system is overloaded. Please try again few minutes later.";
+      //     } 
+      //     else {
+      //       botText = "Something went wrong. Please try again later.";
+      //     }
+
+      //     this.messages.push({ role: "bot", text: botText });
+
+      //   } catch {
+      //     this.messages.push({
+      //       role: "bot",
+      //       text:
+      //         "Unable to connect to VietCloud server. Please check your connection and try again.",
+      //     });
+      //   } finally {
+      //     this.isTyping = false;
+      //     this.stopThinkingAnimation();
+      //     this.saveChatHistory();
+      //     this.scrollToBottom();
+      //   }
+      // },
       async sendMessage() {
         if (!this.userInput.trim() || this.isTyping) return;
 
@@ -249,61 +326,88 @@ export default {
         this.isTyping = true;
         this.startThinkingAnimation();
 
-        try {
-          const res = await fetch(
-            "http://localhost:8000/api/chatbot/intent/",
-            {
-              method: "POST",
-              credentials: "include",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ message: text }),
-            }
-          );
+        // 🔥 MARK PENDING (GLOBAL + LOCAL)
+        window.__vietcloudChatPending.pending = true;
+        window.__vietcloudChatPending.answer = null;
+        localStorage.setItem("vietcloud_chat_pending", "1");
 
-          let data = {};
-          try {
-            data = await res.json();
-          } catch {}
-
-          let botText = "";
-
-          if (res.status === 200) {
-            botText =
-              data.answer ||
-              "The VietCloud system is overloaded. Please try again few minutes later.";
-          } 
-          else if (res.status === 401 || res.status === 403 || res.status === 400) {
-            botText =
-              "Sorry, your question must be in English and related to weather, which is the domain I can work with!";
-          } 
-          else if ([503, 500, 429].includes(res.status)) {
-            botText =
-              "The VietCloud system is overloaded. Please try again few minutes later.";
-          } 
-          else {
-            botText = "Something went wrong. Please try again later.";
+        const fetchPromise = fetch(
+          "http://localhost:8000/api/chatbot/intent/",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: text }),
           }
+        )
+          .then(async (res) => {
+            const data = await res.json().catch(() => ({}));
+            let botText = "";
 
-          this.messages.push({ role: "bot", text: botText });
+            if (res.status === 200) {
+              botText =
+                data.answer ||
+                "The VietCloud system is overloaded. Please try again later.";
+            } else if ([400, 401, 403].includes(res.status)) {
+              botText =
+                "Sorry, your question must be in English and related to weather.";
+            } else {
+              botText = "Something went wrong. Please try again later.";
+            }
 
-        } catch {
-          this.messages.push({
-            role: "bot",
-            text:
-              "Unable to connect to VietCloud server. Please check your connection and try again.",
+            window.__vietcloudChatPending.answer = botText;
+            return botText;
+          })
+          .catch(() => {
+            const errText =
+              "Unable to connect to VietCloud server. Please try again.";
+            window.__vietcloudChatPending.answer = errText;
+            return errText;
+          })
+          .finally(() => {
+            window.__vietcloudChatPending.pending = false;
+            localStorage.removeItem("vietcloud_chat_pending");
           });
-        } finally {
-          this.isTyping = false;
-          this.stopThinkingAnimation();
-          this.saveChatHistory();
-          this.scrollToBottom();
-        }
+
+        window.__vietcloudChatPending.promise = fetchPromise;
+
+        const answer = await fetchPromise;
+
+        this.messages.push({ role: "bot", text: answer });
+        this.isTyping = false;
+        this.stopThinkingAnimation();
+        this.saveChatHistory();
+        this.scrollToBottom();
       },
+
     },
 
   mounted() {
     this.fetchUserInfo();
     this.loadChatHistory();
+
+      // 🔁 RESUME THINKING / ANSWER
+    if (localStorage.getItem("vietcloud_chat_pending") === "1") {
+      this.isTyping = true;
+      this.startThinkingAnimation();
+
+      const p = window.__vietcloudChatPending.promise;
+      if (p) {
+        p.then((answer) => {
+          if (
+            answer &&
+            !this.messages.some((m) => m.role === "bot" && m.text === answer)
+          ) {
+            this.messages.push({ role: "bot", text: answer });
+            this.saveChatHistory();
+            this.scrollToBottom();
+          }
+
+          this.isTyping = false;
+          this.stopThinkingAnimation();
+        });
+      }
+    }
 
     // 🔄 Sync cookie changes
     this.cookieCheckInterval = setInterval(() => {
