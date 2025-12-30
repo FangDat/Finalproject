@@ -110,13 +110,277 @@
         <!-- Điều kiện không khí -->
         <section class="card" v-if="!errorMessage">
           <h3 class="section-title">Air Condition</h3>
-          <div class="air-grid">
-            <div>🌡️ Real feel: {{ realFeel ? Math.round(formatTemp(realFeel)) + tempUnitSymbol : '—' }}</div>
-            <div>🫧 Humidity: {{ humidity ? humidity + '%' : '—' }}</div>
-            <div>💨 Wind: {{ wind ? Math.round(formatSpeed(wind)) + windUnitSymbol : '—' }}</div>
-            <div>👁️ Visibility: {{ formatDistance(visibility) }} {{ distanceUnitSymbol }}</div>
-            <div>🌞 UV index: {{ uvIndex }}</div>
-            <div>💧 Chance of rain: {{ chanceOfRain }}</div>
+
+          <div class="air-condition-list">
+
+            <!-- Item -->
+            <div class="air-item air-realfeel">
+              <div class="air-header" @click="toggleAir('realFeel')">
+                <div class="air-main">
+                  <span class="air-icon">🌡️</span>
+                  <span class="air-value">
+                    {{ realFeel ? Math.round(formatTemp(realFeel)) + tempUnitSymbol : '—' }}
+                  </span>
+                  <span class="air-label air-label-big">Real Feel</span>
+                </div>
+                <span class="air-toggle">{{ airOpen.realFeel ? '−' : '+' }}</span>
+              </div>
+
+              <div v-if="airOpen.realFeel" class="air-expand">
+                <div
+                  v-if="connectedBars?.real_feel"
+                  class="sparkbar"
+                  :class="connectedBars.real_feel.direction"
+                >
+                  <!-- ⭐ AVERAGE LINE (1 LẦN DUY NHẤT) -->
+                  <div
+                    class="spark-average-line dashed half"
+                    :style="getAverageLineStyle(connectedBars.real_feel.points)"
+                  >
+                    <span class="spark-avg-label">
+                      Avg {{ formatAvgValue('real_feel', connectedBars.real_feel.points) }}
+                    </span>
+                  </div>
+
+                  <div
+                    v-for="(p, i) in connectedBars.real_feel.points"
+                    :key="i"
+                    class="spark-col"
+                  >
+                    <div
+                      class="spark-point"
+                      :style="getSparkStyle(p)"
+                    ></div>
+
+                    <div class="spark-hour">
+                      {{ formatHour(p.time) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="air-item air-humidity">
+              <div class="air-header" @click="toggleAir('humidity')">
+                <div class="air-main">
+                  <span class="air-icon">🫧</span>
+                  <span class="air-value">{{ humidity ? humidity + '%' : '—' }}</span>
+                  <span class="air-label air-label-big">Humidity</span>
+                </div>
+                <span class="air-toggle">{{ airOpen.humidity ? '−' : '+' }}</span>
+              </div>
+
+              <div v-if="airOpen.humidity" class="air-expand">
+                <div
+                  v-if="connectedBars?.humidity"
+                  class="sparkbar"
+                  :class="connectedBars.humidity.direction"
+                >
+                  <div
+                    class="spark-average-line dashed half"
+                    :style="getAverageLineStyle(connectedBars.humidity.points)"
+                  >
+                    <span class="spark-avg-label">
+                      Avg {{ formatAvgValue('humidity', connectedBars.humidity.points) }}
+                    </span>
+                  </div>
+
+                  <div
+                    v-for="(p, i) in connectedBars.humidity.points"
+                    :key="i"
+                    class="spark-col"
+                  >
+                    <div
+                      class="spark-point"
+                      :style="getSparkStyle(p)"
+                    ></div>
+
+                    <div class="spark-hour">
+                      {{ formatHour(p.time) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="air-item air-wind">
+              <div class="air-header" @click="toggleAir('wind')">
+                <div class="air-main">
+                  <span class="air-icon">💨</span>
+                  <span class="air-value">
+                    {{ wind ? Math.round(formatSpeed(wind)) + windUnitSymbol : '—' }}
+                  </span>
+                  <span class="air-label air-label-big">Wind</span>
+                </div>
+                <span class="air-toggle">{{ airOpen.wind ? '−' : '+' }}</span>
+              </div>
+
+              <div v-if="airOpen.wind" class="air-expand">
+                <div
+                  v-if="connectedBars?.wind"
+                  class="sparkbar"
+                  :class="connectedBars.wind.direction"
+                >
+                  <div
+                    class="spark-average-line dashed half"
+                    :style="getAverageLineStyle(connectedBars.wind.points)"
+                  >
+                    <span class="spark-avg-label">
+                      Avg {{ formatAvgValue('wind', connectedBars.wind.points) }}
+                    </span>
+                  </div>
+
+                  <div
+                    v-for="(p, i) in connectedBars.wind.points"
+                    :key="i"
+                    class="spark-col"
+                  >
+                    <div
+                      class="spark-point"
+                      :style="getSparkStyle(p)"
+                    ></div>
+
+                    <div class="spark-hour">
+                      {{ formatHour(p.time) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="air-item air-visibility">
+              <div class="air-header" @click="toggleAir('visibility')">
+                <div class="air-main">
+                  <span class="air-icon">👁️</span>
+                  <span class="air-value">
+                    {{ formatDistance(visibility) }} {{ distanceUnitSymbol }}
+                  </span>
+                  <span class="air-label air-label-big">Visibility</span>
+                </div>
+                <span class="air-toggle">{{ airOpen.visibility ? '−' : '+' }}</span>
+              </div>
+
+              <div v-if="airOpen.visibility" class="air-expand">
+                <div
+                  v-if="connectedBars?.visibility"
+                  class="sparkbar"
+                  :class="connectedBars.visibility.direction"
+                >
+                  <div
+                    class="spark-average-line dashed half"
+                    :style="getAverageLineStyle(connectedBars.visibility.points)"
+                  >
+                    <span class="spark-avg-label">
+                      Avg {{ formatAvgValue('visibility', connectedBars.visibility.points) }}
+                    </span>
+                  </div>
+
+                  <div
+                    v-for="(p, i) in connectedBars.visibility.points"
+                    :key="i"
+                    class="spark-col"
+                  >
+                    <div
+                      class="spark-point"
+                      :style="getSparkStyle(p)"
+                    ></div>
+
+                    <div class="spark-hour">
+                      {{ formatHour(p.time) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="air-item air-uv">
+              <div class="air-header" @click="toggleAir('uv')">
+                <div class="air-main">
+                  <span class="air-icon">🌞</span>
+                  <span class="air-value">{{ uvIndex ?? '—' }}</span>
+                  <span class="air-label air-label-big">UV Index</span>
+                </div>
+                <span class="air-toggle">{{ airOpen.uv ? '−' : '+' }}</span>
+              </div>
+
+              <div v-if="airOpen.uv" class="air-expand">
+                <div
+                  v-if="connectedBars?.uv_index"
+                  class="sparkbar"
+                  :class="connectedBars.uv_index.direction"
+                >
+                  <div
+                    class="spark-average-line dashed half"
+                    :style="getAverageLineStyle(connectedBars.uv_index.points)"
+                  >
+                    <span class="spark-avg-label">
+                      Avg {{ formatAvgValue('uv_index', connectedBars.uv_index.points) }}
+                    </span>
+                  </div>
+
+                  <div
+                    v-for="(p, i) in connectedBars.uv_index.points"
+                    :key="i"
+                    class="spark-col"
+                  >
+                    <div
+                      class="spark-point"
+                      :style="getSparkStyle(p)"
+                    ></div>
+
+                    <div class="spark-hour">
+                      {{ formatHour(p.time) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="air-item air-rain">
+              <div class="air-header" @click="toggleAir('rain')">
+                <div class="air-main">
+                  <span class="air-icon">💧</span>
+                  <span class="air-value">{{ chanceOfRain }}</span>
+                  <span class="air-label air-label-big">Chance of Rain</span>
+                </div>
+                <span class="air-toggle">{{ airOpen.rain ? '−' : '+' }}</span>
+              </div>
+
+              <div v-if="airOpen.rain" class="air-expand">
+                <div
+                  v-if="connectedBars?.chance_of_rain"
+                  class="sparkbar"
+                  :class="connectedBars.chance_of_rain.direction"
+                >
+                  <div
+                    class="spark-average-line dashed half"
+                    :style="getAverageLineStyle(connectedBars.chance_of_rain.points)"
+                  >
+                    <span class="spark-avg-label">
+                      Avg {{ formatAvgValue('chance_of_rain', connectedBars.chance_of_rain.points) }}
+                    </span>
+                  </div>
+
+                  <div
+                    v-for="(p, i) in connectedBars.chance_of_rain.points"
+                    :key="i"
+                    class="spark-col"
+                  >
+                    <div
+                      class="spark-point"
+                      :style="getSparkStyle(p)"
+                    ></div>
+
+                    <div class="spark-hour">
+                      {{ formatHour(p.time) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
       </main>
@@ -169,7 +433,9 @@ import {
 } from '@/utils.js'
 import WeatherError from "@/components/WeatherError.vue";
 import DynamicBackground from "@/components/DynamicBackground.vue"; 
-
+const DOT_RADIUS = 5;
+const SPARK_HEIGHT = 80;  
+const SPARK_COL_WIDTH = 60;
 export default {
   name: "Home",
   components: { WeatherError, DynamicBackground },
@@ -203,7 +469,16 @@ export default {
         windSpeed: 'Km/h',
         Visibility: 'Kilometers'
       },
+      airOpen: {
+        realFeel: false,
+        humidity: false,
+        wind: false,
+        visibility: false,
+        uv: false,
+        rain: false
+      },
       currentIcon: "01d", // ✅ thêm để điều khiển nền
+      connectedBars: null,
     };
   },
   computed: {
@@ -242,6 +517,107 @@ export default {
         ? Math.round(mToMiles(meters))
         : Math.round(mToKm(meters))
     },
+    toggleAir(key) {
+      this.airOpen[key] = !this.airOpen[key];
+    },
+    // 🔹 đồng bộ bán kính dot = 10 / 2
+      // const DOT_RADIUS = 5;
+
+    getSparkStyle(point) {
+      const y = (point.normalized / 100) * SPARK_HEIGHT;
+      return {
+        bottom: `${y - DOT_RADIUS}px`
+      };
+    },
+
+
+getConnectorStyle(p1, p2) {
+  const y1 = (p1.normalized / 100) * SPARK_HEIGHT;
+  const y2 = (p2.normalized / 100) * SPARK_HEIGHT;
+
+  const dx = SPARK_COL_WIDTH;
+  const dy = y2 - y1;
+
+  const length = Math.sqrt(dx * dx + dy * dy);
+
+  // Góc gốc (đang bị đối xứng sai)
+  let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+  // 🔥 FIX THỦ CÔNG THEO QUY LUẬT 15°
+  // Nếu đường đang hướng lên → lật xuống
+  if (dy > 0) {
+    angle = -angle;
+  }
+
+  return {
+    width: `${length}px`,
+    bottom: `${y1}px`,
+    left: `50%`,
+    transform: `rotate(${angle}deg)`,
+    transformOrigin: "left center"
+  };
+},
+
+
+      // ✅ TÍNH GIÁ TRỊ NORMALIZED TRUNG BÌNH (0–100)
+getAverageNormalized(points) {
+  if (!points || !points.length) return 0;
+  const sum = points.reduce((acc, p) => acc + p.normalized, 0);
+  return sum / points.length;
+},
+
+      // ✅ STYLE CHO THANH NGANG TRUNG BÌNH
+      getAverageLineStyle(points) {
+        const avg = this.getAverageNormalized(points);
+        const y = (avg / 100) * SPARK_HEIGHT;
+
+        return {
+          bottom: `${y}px`
+        };
+      },
+      
+      formatAvgValue(type, points) {
+        if (!points || !points.length) return '';
+
+        const avg =
+          points.reduce((s, p) => s + p.value, 0) / points.length;
+
+        switch (type) {
+          case 'real_feel':
+            return Math.round(this.formatTemp(avg)) + this.tempUnitSymbol;
+
+          case 'humidity':
+          case 'chance_of_rain':
+            return Math.round(avg) + '%';
+
+          case 'wind':
+            return Math.round(this.formatSpeed(avg)) + this.windUnitSymbol;
+
+          case 'visibility':
+            return (
+              Math.round(this.formatDistance(avg)) +
+              ' ' +
+              this.distanceUnitSymbol
+            );
+
+          case 'uv':
+          case 'uv_index':
+            return avg.toFixed(1);
+
+          default:
+            return Math.round(avg);
+        }
+      },
+
+
+      // ✅ format giờ: 01, 02, 03
+      formatHour(time) {
+        if (!time) return "";
+        // "05:00" → "05"
+        return time.split(":")[0];
+      },
+
+
     getIconSrc(iconCode) {
       try {
         return require(`@/assets/${iconCode}.png`);
@@ -526,6 +902,11 @@ export default {
         temp: item.temp,
         icon: item.icon
       }));
+      if (data.connected_bars_12h) {
+        this.connectedBars = data.connected_bars_12h;
+      } else {
+        this.connectedBars = null;
+      }
     }
   },
   

@@ -553,3 +553,262 @@ a,
     box-shadow: 0 0 0 0 rgba(135, 206, 250, 0);
   }
 }
+
+/* =========================
+   🌬️ Air Condition (New)
+   ========================= */
+
+.air-condition-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.air-item {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.air-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.air-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.air-icon {
+  font-size: 1.3rem;
+}
+
+.air-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #222;
+}
+
+.air-label {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.air-toggle {
+  font-size: 1.6rem;
+  font-weight: bold;
+  line-height: 1;
+  user-select: none;
+}
+
+.air-expand {
+  margin-top: 12px;
+  height: 136px;  /* chỗ để mini-bar sau */
+  border-top: 1px dashed rgba(0,0,0,0.15);
+  padding-top: 8px;
+}
+
+.air-realfeel .air-label {
+  color: #ff7043; /* cam - nhiệt độ */
+}
+
+.air-humidity .air-label {
+  color: #26c6da; /* xanh nước */
+}
+
+.air-wind .air-label {
+  color: #42a5f5; /* xanh gió */
+}
+
+.air-visibility .air-label {
+  color: #7e57c2; /* tím */
+}
+
+.air-uv .air-label {
+  color: #fbc02d; /* vàng nắng */
+}
+
+.air-rain .air-label {
+  color: #4fc3f7; /* xanh mưa */
+}
+/* =========================
+   📊 Mini Spark Bar (FINAL)
+   ========================= */
+
+.sparkbar {
+  position: relative;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6px;
+}
+
+/* mỗi cột = dot + connector + hour */
+.spark-col {
+  position: relative;
+  width: 360px;
+  height: 100%;
+}
+
+/* DOT */
+.spark-point {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: currentColor;
+  z-index: 3;
+}
+
+/* CONNECTOR – mờ, có gap */
+.spark-connector {
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to bottom,
+    currentColor,
+    rgba(0,0,0,0)
+  );
+  opacity: 0.35;
+  z-index: 2;
+}
+
+/* HOUR LABEL */
+.spark-hour {
+  position: absolute;
+  bottom: -50px;              /* ⬇️ thấp hơn */
+  width: 100%;
+  text-align: center;
+  font-size: 0.85rem;         /* 🔼 to hơn */
+  font-weight: 600;
+  color: rgba(0,0,0,0.6);
+  user-select: none;
+}
+
+
+/* tone theo direction */
+.sparkbar.up {
+  color: rgba(255, 112, 67, 0.85);
+}
+
+.sparkbar.down {
+  color: rgba(38, 198, 218, 0.85);
+}
+
+.sparkbar.flat {
+  color: rgba(120, 120, 120, 0.6);
+}
+
+/* CONNECTOR NGANG giữa 2 dot */
+/* 🔗 Connector nối tâm dot → dot (REAL sparkline) */
+.spark-connector-horizontal {
+  position: absolute;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 2;
+}
+
+
+/* ⭐ THANH TRUNG BÌNH 12H */
+.spark-average-line {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.55;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ⭐ AVERAGE LINE – DASHED + HALF */
+.spark-average-line {
+  position: absolute;
+  height: 2px;
+  background: none;
+  border-top: 2px dashed currentColor;
+  opacity: 0.6;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* dài = 50% sparkbar */
+.spark-average-line.half {
+  width: 50%;
+  left: 25%;
+}
+
+/* label Average */
+.spark-avg-label {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: currentColor;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* =========================
+   ⭐ AVERAGE LINE – FULL WIDTH
+   ========================= */
+
+/* Ghi đè cấu hình cũ */
+.spark-average-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 2px;
+
+  background: none;
+  border-top: 2.5px dashed currentColor;
+
+  opacity: 0.75;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ❌ không dùng half nữa nhưng giữ để không lỗi */
+.spark-average-line.half {
+  width: 100%;
+  left: 0;
+}
+
+/* =========================
+   🔤 AVG LABEL – TO, ĐẬM, RÕ
+   ========================= */
+
+.spark-avg-label {
+  position: absolute;
+  top: -22px;
+  left: 0;
+
+  padding: 2px 8px;
+  border-radius: 6px;
+
+  font-size: 0.95rem;      /* 🔼 to hơn rõ */
+  font-weight: 800;        /* 🔥 đậm */
+
+  color: #000;
+  background: rgba(255, 255, 255, 0.85); /* nền trắng mờ dễ đọc */
+  backdrop-filter: blur(4px);
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  white-space: nowrap;
+  pointer-events: none;
+}

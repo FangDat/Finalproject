@@ -32,6 +32,11 @@ logger.setLevel(logging.DEBUG)
 
 import os, json
 
+from django.conf import settings
+
+CHECKBAR_PATH = os.path.join(settings.BASE_DIR, "checkbar.json")
+
+
 # --- Đọc file ISO codes một lần khi server start ---
 ISO_CODES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "iso_codes.json")
 try:
@@ -51,6 +56,27 @@ try:
 except Exception as e:
     WORLD_CITIES = []
     logger.warning("⚠️ Không load được worldcities.json: %s", e)
+    
+    
+def write_checkbar_file(lat, lon, fixed_name, connected_bars_12h):
+    """
+    Ghi dữ liệu bar/dot/line ra file JSON để debug frontend.
+    File sẽ bị clear và ghi lại mỗi lần gọi API.
+    """
+    payload = {
+        "location": fixed_name,
+        "lat": lat,
+        "lon": lon,
+        "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+        "connected_bars_12h": connected_bars_12h
+    }
+
+    try:
+        with open(CHECKBAR_PATH, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        logger.exception("❌ Cannot write checkbar.json: %s", e)
+
 
 # ---------------------------
 # Helpers / Weather / Autocomplete
@@ -454,6 +480,88 @@ def choose_daytime_icon(icons):
             most_common_icon = daytime_counter.most_common(1)[0][0]
     return most_common_icon
 
+def build_connected_bar_series(hourly, now, tz, metric, unit_hint=None, limit=12):
+    """
+    Build data cho mini bar dạng:
+    ●──●──●──● (connected dots)
+
+    metric:
+      - feels_like
+      - humidity
+      - wind
+      - visibility
+      - uv
+      - rain
+    """
+
+    points = []
+    raw_values = []
+
+    for h in hourly:
+        dt_local = datetime.datetime.fromtimestamp(
+            h.get("dt"), datetime.timezone.utc
+        ).astimezone(tz)
+
+        if dt_local <= now:
+            continue
+
+        if metric == "feels_like":
+            value = h.get("feels_like")
+        elif metric == "humidity":
+            value = h.get("humidity")
+        elif metric == "wind":
+            value = h.get("wind_speed")
+        elif metric == "visibility":
+            value = h.get("visibility")
+        elif metric == "uv":
+            value = h.get("uvi")
+        elif metric == "rain":
+            value = round(h.get("pop", 0) * 100)
+        else:
+            value = None
+
+        if value is None:
+            continue
+
+        raw_values.append(value)
+        points.append({
+            "time": dt_local.strftime("%H:%M"),
+            "value": value
+        })
+
+        if len(points) >= limit:
+            break
+
+    if not raw_values:
+        return None
+
+    min_v = min(raw_values)
+    max_v = max(raw_values)
+
+    # tránh chia cho 0
+    span = max(max_v - min_v, 1e-6)
+
+    # chuẩn hoá 0–100 cho layout
+    for p in points:
+        p["normalized"] = round((p["value"] - min_v) / span * 100, 1)
+
+    # xu hướng
+    direction = "flat"
+    if len(raw_values) >= 2:
+        if raw_values[-1] > raw_values[0]:
+            direction = "up"
+        elif raw_values[-1] < raw_values[0]:
+            direction = "down"
+
+    return {
+        "min": min_v,
+        "max": max_v,
+        "unit_hint": unit_hint,
+        "direction": direction,
+        "points": points
+    }
+
+
 # ---------------------------
 # GET WEATHER
 # ---------------------------
@@ -572,6 +680,37 @@ def get_weather(request):
         visibility = current.get("visibility")
         rainfall = current.get("rain", {}).get("1h")
         uv_index = current.get("uvi")
+        
+        
+        connected_bars_12h = {
+        "real_feel": build_connected_bar_series(
+            hourly, now, tz, "feels_like", unit_hint="temperature"
+        ),
+        "humidity": build_connected_bar_series(
+            hourly, now, tz, "humidity", unit_hint="percent"
+        ),
+        "wind": build_connected_bar_series(
+            hourly, now, tz, "wind", unit_hint="speed"
+        ),
+        "visibility": build_connected_bar_series(
+            hourly, now, tz, "visibility", unit_hint="distance"
+        ),
+        "uv_index": build_connected_bar_series(
+            hourly, now, tz, "uv", unit_hint="uv"
+        ),
+        "chance_of_rain": build_connected_bar_series(
+            hourly, now, tz, "rain", unit_hint="percent"
+        )
+        
+    }
+        # --- DEBUG CHECK BAR DATA ---
+        write_checkbar_file(
+        lat=float(lat),
+        lon=float(lon),
+        fixed_name=fixed_name,
+        connected_bars_12h=connected_bars_12h
+        )
+
 
         # now = datetime.datetime.now(datetime.timezone.utc)
 
@@ -627,6 +766,7 @@ def get_weather(request):
             "lat": float(lat),
             "lon": float(lon),
             "fixed_name": fixed_name,
+            "connected_bars_12h": connected_bars_12h,
             "source": "OpenWeather 3.0"
         }
         
