@@ -80,9 +80,9 @@
 /* 🌍 Nội dung chính */
 .main-content {
   flex: 1;
-  padding: 30px;
+  padding: 10px 0px 30px 30px;
   overflow-y: auto;
-  background: transparent !important; /* ❗ Không che nền động */
+  background: transparent !important;
   border: none !important;
 }
 
@@ -160,8 +160,8 @@
   margin: 0;
   background: #ffffff; /* giữ nền white để đọc rõ */
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   z-index: 9999; /* cao để phủ lên các thẻ khác nếu cần */
 }
 
@@ -341,6 +341,7 @@ a,
   height: 100vh;
   overflow-y: auto;
   padding-right: 10px;
+  padding-bottom: 30px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
@@ -365,7 +366,7 @@ a,
   gap: 18px;
   padding-bottom: 5px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.3) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 
 .scroll-x::-webkit-scrollbar {
@@ -373,12 +374,12 @@ a,
 }
 
 .scroll-x::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
   border-radius: 3px;
 }
 
 .scroll-x::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Media queries responsive */
@@ -425,41 +426,41 @@ a,
    🔽 Dropdown chung (suggest + history)
    ============================ */
 .search-dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    width: 100%;
-    max-height: 260px;
-    overflow-y: auto;
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 6px 0;
-    margin: 0;
-    list-style: none;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    border: 1px solid rgba(0,0,0,0.08);
-    z-index: 9999;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 6px 0;
+  margin: 0;
+  list-style: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  z-index: 9999;
 }
 
 /* ============================
    🔹 Từng item dropdown
    ============================ */
 .dropdown-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #222;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Hover */
 .dropdown-item:hover {
-    background: #f5f5f5;
+  background: #f5f5f5;
 }
 
 /* ---- Nút X trong search-history ---- */
@@ -468,7 +469,7 @@ a,
   color: #ff4d4d;
   cursor: pointer;
   padding: 4px 8px;
-  margin-left: 10px; 
+  margin-left: 10px;
 
   display: flex;
   align-items: center;
@@ -487,15 +488,14 @@ a,
   transform: scale(1.1);
 }
 
-
 /* ============================
    ⭐ Header nhỏ “Recent searches”
    ============================ */
 .dropdown-header {
-    padding: 8px 14px 4px 14px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #777;
+  padding: 8px 14px 4px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #777;
 }
 
 /* fix: always show the delete X button clearly */
@@ -505,7 +505,6 @@ a,
   align-items: center;
   padding: 8px 10px;
   cursor: pointer;
-
 }
 
 .chatbot-shortcut {
@@ -516,7 +515,6 @@ a,
 
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
-
 
 .chatbot-shortcut:hover {
   transform: scale(1.12);
@@ -609,9 +607,10 @@ a,
 
 .air-expand {
   margin-top: 12px;
-  height: 136px;  /* chỗ để mini-bar sau */
-  border-top: 1px dashed rgba(0,0,0,0.15);
+  min-height: 160px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.15);
   padding-top: 8px;
+  overflow: visible;
 }
 
 .air-realfeel .air-label {
@@ -637,178 +636,110 @@ a,
 .air-rain .air-label {
   color: #4fc3f7; /* xanh mưa */
 }
-/* =========================
-   📊 Mini Spark Bar (FINAL)
-   ========================= */
 
-.sparkbar {
-  position: relative;
-  height: 80px;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 6px;
-}
-
-/* mỗi cột = dot + connector + hour */
-.spark-col {
-  position: relative;
-  width: 360px;
-  height: 100%;
-}
-
-/* DOT */
-.spark-point {
+.spark-avg-label {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: currentColor;
-  z-index: 3;
+  top: -24px;              /* nhô lên rõ hơn */
+  left: 0;
+
+  font-size: 1rem;         /* 🔼 TO HƠN */
+  font-weight: 800;        /* 🔥 ĐẬM HƠN */
+
+  color: currentColor;
+  opacity: 0.95;
+  white-space: nowrap;
 }
 
-/* CONNECTOR – mờ, có gap */
-.spark-connector {
-  position: absolute;
-  left: 50%;
-  width: 2px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    to bottom,
-    currentColor,
-    rgba(0,0,0,0)
-  );
-  opacity: 0.35;
-  z-index: 2;
-}
-
-/* HOUR LABEL */
 .spark-hour {
   position: absolute;
-  bottom: -50px;              /* ⬇️ thấp hơn */
+  bottom: -56px;        /* hạ thấp vì chữ to hơn */
   width: 100%;
   text-align: center;
-  font-size: 0.85rem;         /* 🔼 to hơn */
-  font-weight: 600;
-  color: rgba(0,0,0,0.6);
+
+  font-size: 1.05rem;   /* 🔼 TO HƠN */
+  font-weight: 700;     /* 🔥 ĐẬM HƠN */
+
+  color: rgba(0,0,0,0.7);
   user-select: none;
 }
 
+/* =========================
+   🧾 Air info explanation
+   ========================= */
 
-/* tone theo direction */
-.sparkbar.up {
-  color: rgba(255, 112, 67, 0.85);
+.air-info {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.15);
 }
 
-.sparkbar.down {
-  color: rgba(38, 198, 218, 0.85);
+.air-info-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 4px;
 }
 
-.sparkbar.flat {
-  color: rgba(120, 120, 120, 0.6);
+.air-info-desc {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(0, 0, 0, 0.65);
 }
 
-/* CONNECTOR NGANG giữa 2 dot */
-/* 🔗 Connector nối tâm dot → dot (REAL sparkline) */
-.spark-connector-horizontal {
-  position: absolute;
-  height: 2px;
-  background: currentColor;
-  opacity: 0.35;
-  pointer-events: none;
-  z-index: 2;
+/* timeline text nhỏ hơn một chút */
+.timeline-info .air-info-title {
+  font-size: 0.95rem;
 }
 
-
-/* ⭐ THANH TRUNG BÌNH 12H */
-.spark-average-line {
-  position: absolute;
-  left: 6px;
-  right: 6px;
-  height: 2px;
-  background: currentColor;
-  opacity: 0.55;
-  z-index: 1;
-  pointer-events: none;
+.timeline-info .air-info-desc {
+  font-size: 0.85rem;
+  text-align: center;
+}
+/* Tạo khoảng trống dưới sparkline để tách khỏi phần About */
+.sparkbar {
+  padding-bottom: 36px; /* 🔼 thêm không gian cho spark-hour */
 }
 
-/* ⭐ AVERAGE LINE – DASHED + HALF */
-.spark-average-line {
-  position: absolute;
-  height: 2px;
-  background: none;
-  border-top: 2px dashed currentColor;
-  opacity: 0.6;
-  z-index: 1;
-  pointer-events: none;
+.air-info {
+  margin-top: 26px;      /* 🔼 xa hơn so với sparkline */
+  padding-top: 14px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.15);
 }
 
-/* dài = 50% sparkbar */
-.spark-average-line.half {
-  width: 50%;
-  left: 25%;
-}
+@media (max-width: 480px) {
+  .sparkbar {
+    padding-bottom: 44px; /* chữ giờ to, cần thêm không gian */
+  }
 
-/* label Average */
-.spark-avg-label {
-  position: absolute;
-  top: -16px;
-  left: 0;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: currentColor;
-  opacity: 0.85;
-  white-space: nowrap;
+  .air-info {
+    margin-top: 30px;
+  }
 }
 
 /* =========================
-   ⭐ AVERAGE LINE – FULL WIDTH
+   🎬 Air item slide animation
    ========================= */
 
-/* Ghi đè cấu hình cũ */
-.spark-average-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 2px;
-
-  background: none;
-  border-top: 2.5px dashed currentColor;
-
-  opacity: 0.75;
-  z-index: 2;
-  pointer-events: none;
+.air-slide-enter-active,
+.air-slide-leave-active {
+  transition:
+    max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  overflow: hidden;
 }
 
-/* ❌ không dùng half nữa nhưng giữ để không lỗi */
-.spark-average-line.half {
-  width: 100%;
-  left: 0;
+.air-slide-enter-from,
+.air-slide-leave-to {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
 }
 
-/* =========================
-   🔤 AVG LABEL – TO, ĐẬM, RÕ
-   ========================= */
-
-.spark-avg-label {
-  position: absolute;
-  top: -22px;
-  left: 0;
-
-  padding: 2px 8px;
-  border-radius: 6px;
-
-  font-size: 0.95rem;      /* 🔼 to hơn rõ */
-  font-weight: 800;        /* 🔥 đậm */
-
-  color: #000;
-  background: rgba(255, 255, 255, 0.85); /* nền trắng mờ dễ đọc */
-  backdrop-filter: blur(4px);
-
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-
-  white-space: nowrap;
-  pointer-events: none;
+.air-slide-enter-to,
+.air-slide-leave-from {
+  max-height: 700px; /* đủ cho chart + text */
+  opacity: 1;
+  transform: translateY(0);
 }
+

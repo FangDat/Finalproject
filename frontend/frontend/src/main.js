@@ -1,10 +1,14 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import VueApexCharts from "vue3-apexcharts";
 // import axios from "axios";
 
 // ✅ Import CSS của Leaflet
-import 'leaflet/dist/leaflet.css'
+import "leaflet/dist/leaflet.css";
 // axios.defaults.withCredentials = true;
-createApp(App).use(router).mount('#app')
+const app = createApp(App);
+app.use(VueApexCharts);
+app.use(router);
+app.mount("#app");
 // axios.defaults.withCredentials = true;
