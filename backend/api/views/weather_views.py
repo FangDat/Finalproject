@@ -561,6 +561,39 @@ def build_connected_bar_series(hourly, now, tz, metric, unit_hint=None, limit=12
         "points": points
     }
 
+def map_aqi_level(aqi):
+    """
+    Map AQI number (1–5) to human-readable text
+    """
+    mapping = {
+        1: "Good",
+        2: "Fair",
+        3: "Moderate",
+        4: "Poor",
+        5: "Very Poor",
+    }
+    return mapping.get(aqi, "Unknown")
+def map_aqi_meta(aqi):
+    """
+    Return AQI metadata for UI (label, color, percent)
+    """
+    meta = {
+        1: {"label": "Good", "color": "#4CAF50", "percent": 10},
+        2: {"label": "Fair", "color": "#CDDC39", "percent": 30},
+        3: {"label": "Moderate", "color": "#FFC107", "percent": 50},
+        4: {"label": "Poor", "color": "#FF5722", "percent": 70},
+        5: {"label": "Very Poor", "color": "#9C27B0", "percent": 90},
+    }
+    return meta.get(aqi)
+def format_duration_hm(minutes):
+    """
+    Convert minutes -> '11h28p'
+    """
+    if minutes is None:
+        return None
+    h = minutes // 60
+    m = minutes % 60
+    return f"{h}h{m:02d}m"
 
 # ---------------------------
 # GET WEATHER
@@ -670,6 +703,28 @@ def get_weather(request):
         timezone_offset_seconds = data.get("timezone_offset", 0)
         tz = datetime.timezone(datetime.timedelta(seconds=timezone_offset_seconds))
         now = datetime.datetime.now(tz)
+        
+        # --- SUN PATH ---
+        sunrise = current.get("sunrise")
+        sunset = current.get("sunset")
+
+        sun_path = None
+        if sunrise and sunset:
+            sunrise_local = datetime.datetime.fromtimestamp(
+                sunrise, datetime.timezone.utc
+            ).astimezone(tz)
+
+            sunset_local = datetime.datetime.fromtimestamp(
+                sunset, datetime.timezone.utc
+            ).astimezone(tz)
+
+            day_length_minutes = int((sunset_local - sunrise_local).total_seconds() / 60)
+
+            sun_path = {
+                "sunrise": sunrise_local.strftime("%H:%M"),
+                "sunset": sunset_local.strftime("%H:%M"),
+                "day_length": format_duration_hm(day_length_minutes)
+            }
 
         # --- CURRENT WEATHER ---
         temperature = current.get("temp")
@@ -748,6 +803,32 @@ def get_weather(request):
                 "temp": f"{int(max(temps))}/{int(min(temps))}",
                 "icon": most_common_icon
             })
+        
+        # --- AIR POLLUTION (AQI) ---
+        air_quality = None
+
+        try:
+            air_url = (
+                f"https://api.openweathermap.org/data/2.5/air_pollution"
+                f"?lat={lat}&lon={lon}&appid={api_key}"
+            )
+            air_resp = requests.get(air_url, timeout=6)
+
+            if air_resp.status_code == 200:
+                air_data = air_resp.json()
+                if air_data.get("list"):
+                    aqi_value = air_data["list"][0]["main"].get("aqi")
+                    meta = map_aqi_meta(aqi_value)
+
+                    if meta:
+                        air_quality = {
+                            "aqi": aqi_value,
+                            "label": meta["label"],
+                            "percent": meta["percent"],
+                            "color": meta["color"],
+                        }
+        except Exception as e:
+            logger.warning("⚠️ Cannot fetch air pollution data: %s", e)
 
 
         result = {
@@ -763,6 +844,8 @@ def get_weather(request):
             "visibility": visibility,
             "uv_index": uv_index,
             "rainfall": rainfall,
+            "air_quality": air_quality,
+            "sun_path": sun_path,
             "lat": float(lat),
             "lon": float(lon),
             "fixed_name": fixed_name,

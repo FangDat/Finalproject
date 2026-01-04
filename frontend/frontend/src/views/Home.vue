@@ -114,24 +114,134 @@
 
         <!-- Forecast trong ngày -->
         <section class="card" v-if="!errorMessage">
-          <h3 class="section-title">Today's Forecast</h3>
+          <h2 class="section-title">Today's Forecast</h2>
           <div class="forecast-today scroll-x">
             <div
               v-for="(item, index) in forecastToday"
               :key="index"
               class="forecast-item"
             >
-              <p>{{ item.time }}</p>
+              <p class="forecast-time">{{ item.time }}</p>
               <img :src="getIconSrc(item.icon)" class="forecast-icon" />
-              <p>{{ Math.round(formatTemp(item.temp)) + tempUnitSymbol }}</p>
+              <p class="forecast-temp">
+                {{ Math.round(formatTemp(item.temp)) + tempUnitSymbol }}
+              </p>
             </div>
+          </div>
+        </section>
+        <!-- ================= Extra Info Panels ================= -->
+        <section class="extra-panels" v-if="!errorMessage">
+          <div class="card extra-card">
+            <h2 class="section-title air-quality-title">📏 Air Quality
+                <span class="air-title-left">
+              <span class="aqi-help">
+                ?
+                <span class="aqi-tooltip">
+                  AQI (Air Quality Index) shows how clean or polluted the air is.
+                  Lower values mean better air quality and lower health risk.
+                </span>
+              </span>
+              </span>
+            </h2>
+
+            <div v-if="aqiInfo" class="extra-content">
+              <!-- Label -->
+              <p
+                class="extra-main-value"
+                :style="{ color: aqiInfo.color }"
+              >
+                {{ aqiInfo.label }}
+              </p>
+
+              <!-- AQI bar -->
+              <div class="aqi-bar">
+                <div class="aqi-segment good"></div>
+                <div class="aqi-segment fair"></div>
+                <div class="aqi-segment moderate"></div>
+                <div class="aqi-segment poor"></div>
+                <div class="aqi-segment very-poor"></div>
+
+                <!-- Dot -->
+                <div
+                  class="aqi-dot"
+                  :style="{ left: aqiDotPosition }"
+                ></div>
+              </div>
+
+              <!-- Description -->
+              <p class="extra-sub-text">
+                {{ aqiInfo.desc }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Sun Path -->
+          <div class="card extra-card">
+            <h2 class="section-title">🌞 Sun Path</h2>
+
+            <div class="sun-path-wrapper" v-if="sunPath">
+             <div class="sun-path-bar">
+              <!-- Layer nền (có overflow hidden) -->
+              <div class="sun-bar-track">
+                <div
+                  class="sun-night"
+                  :style="{ width: sunrisePercent + '%' }"
+                ></div>
+
+                <div
+                  class="sun-day"
+                  :style="{ width: (sunsetPercent - sunrisePercent) + '%' }"
+                ></div>
+
+                <div
+                  class="sun-night"
+                  :style="{ width: (100 - sunsetPercent) + '%' }"
+                ></div>
+              </div>
+
+              <!-- Dots nằm ngoài track -->
+              <div
+                class="sun-dot sun-dot-sunrise"
+                :style="{ left: sunrisePercent + '%' }"
+              ></div>
+
+              <div
+                class="sun-dot sun-dot-sunset"
+                :style="{ left: sunsetPercent + '%' }"
+              ></div>
+            </div>
+
+              <!-- Only 00:00 & 24:00 -->
+              <div class="sun-time-labels">
+                <span>00:00</span>
+                <span>24:00</span>
+              </div>
+
+              <!-- Sunrise / Sunset text -->
+              <div class="sun-events">
+                <div class="sun-event-row">
+                  <span class="sun-event-label">Sunrise</span>
+                  <span class="sun-event-value">{{ sunPath.sunrise }}</span>
+                </div>
+
+                <div class="sun-event-row">
+                  <span class="sun-event-label">Sunset</span>
+                  <span class="sun-event-value">{{ sunPath.sunset }}</span>
+                </div>
+
+                <div class="sun-event-row">
+                  <span class="sun-event-label">Daylight</span>
+                  <span class="sun-event-value">{{ sunPath.day_length }}</span>
+                </div>
+              </div>
+              </div>
           </div>
         </section>
 
         <!-- Điều kiện không khí với ApexCharts -->
         <!-- Điều kiện không khí với animation mượt -->
         <section class="card" v-if="!errorMessage">
-          <h3 class="section-title">Air Condition</h3>
+          <h2 class="section-title">Air Condition</h2>
 
           <div class="air-condition-list">
 
@@ -318,22 +428,24 @@
 
       <!-- Sidebar phải -->
       <aside class="sidebar-right" v-if="!errorMessage">
-        <h3 class="section-title">Daily Forecast</h3>
+        <h2 class="section-title">Daily Forecast</h2>
         <div
           v-for="(day, index) in forecast3days"
           :key="index"
           class="forecast-3day"
         >
-          <div>{{ day.day }}</div>
-          <img :src="getDayIcon(day.icon)" class="forecast-icon" />
-          <div>
-            {{
-              day.temp
-                .split("/")
-                .map((t) => Math.round(formatTemp(t)))
-                .join("/")
-            }}{{ tempUnitSymbol }}
+          <div class="forecast-day">
+            {{ formatDayShort(day.day) }}
           </div>
+          <img :src="getDayIcon(day.icon)" class="forecast-icon" />
+            <div class="forecast-temp">
+              {{
+                day.temp
+                  .split("/")
+                  .map((t) => Math.round(formatTemp(t)))
+                  .join("/")
+              }}{{ tempUnitSymbol }}
+            </div>
         </div>
         <p v-if="!is_premium" class="premium-text">
           Want forecast for 7 days? Upgrade for VietCloud premium now!
@@ -391,6 +503,8 @@ export default {
       forecastToday: [],
       forecast3days: [],
       humidity: null,
+      sunPath: null,
+      aqiLevel: null,
       errorMessage: "",
       errorGif: "",
       settings: {
@@ -470,6 +584,63 @@ export default {
     distanceUnitSymbol() {
       return this.settings.Visibility === "Miles" ? " miles" : " km";
     },
+    sunrisePercent() {
+      if (!this.sunPath?.sunrise) return 0;
+      const [h, m] = this.sunPath.sunrise.split(":").map(Number);
+      return ((h * 60 + m) / 1440) * 100;
+    },
+    sunsetPercent() {
+      if (!this.sunPath?.sunset) return 100;
+      const [h, m] = this.sunPath.sunset.split(":").map(Number);
+      return ((h * 60 + m) / 1440) * 100;
+    },
+      aqiInfo() {
+        const map = {
+          1: {
+            label: "Good",
+            color: "#4CAF50",
+            desc:
+              "Air quality is poor, and pollution levels can negatively impact health, especially for sensitive individuals. " +
+          "Limiting outdoor activities and avoiding intense exercise outside is recommended.",
+          },
+          2: {
+            label: "Fair",
+            color: "#8BC34A",
+            desc:
+               "Air quality is generally acceptable, with low levels of air pollutants. " +
+          "Sensitive individuals may notice mild effects, but outdoor activities are still safe for most people.",
+          },
+          3: {
+            label: "Moderate",
+            color: "#FFC107",
+            desc:
+               "Air quality is moderate, which means pollution levels may begin to affect sensitive groups such as children, the elderly, or people with respiratory conditions. " +
+          "Reducing prolonged outdoor activities may be helpful for those at risk.",
+          },
+          4: {
+            label: "Poor",
+            color: "#FF9800",
+            desc:
+              "Air quality is poor, and pollution levels can negatively impact health, especially for sensitive individuals. " +
+          "Limiting outdoor activities and avoiding intense exercise outside is recommended.",
+          },
+          5: {
+            label: "Very Poor",
+            color: "#F44336",
+            desc:
+               "Air quality is very poor, with high pollution levels that may cause health effects for everyone. " +
+          "Outdoor activities should be avoided when possible, and staying indoors is strongly advised.",
+          },
+        };
+
+        return map[this.aqiLevel] || null;
+      },
+
+      aqiDotPosition() {
+        if (!this.aqiLevel) return "0%";
+        // 1 → 10%, 2 → 30%, 3 → 50%, 4 → 70%, 5 → 90%
+        return `${(this.aqiLevel - 0.5) * 20}%`;
+      },
   },
   watch: {
     condition(newVal) {
@@ -571,6 +742,16 @@ export default {
       } catch (e) {
         return require("@/assets/01d.png");
       }
+    },
+    formatDayShort(dateStr) {
+      // dateStr dạng: "2026-01-05"
+    if (!dateStr) return "";
+      const parts = dateStr.split("-");
+      if (parts.length !== 3) return dateStr;
+
+      const day = parts[2];
+      const month = parts[1];
+      return `${day}/${month}`;
     },
     goToChatbot() {
       this.$router.push("/chatbot");
@@ -844,6 +1025,14 @@ export default {
       } else {
         this.connectedBars = null;
       }
+      if (data.sun_path) {
+        this.sunPath = data.sun_path;
+      }   
+      if (data.air_quality?.aqi) {
+        this.aqiLevel = data.air_quality.aqi;
+      } else if (data.aqi) {
+        this.aqiLevel = data.aqi;
+      }   
     },
   },
   mounted() {
