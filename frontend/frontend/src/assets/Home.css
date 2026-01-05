@@ -1092,3 +1092,58 @@ a,
     transform: none;
   }
 }
+/* =========================
+   🌞 Sun Path Dot Tooltip
+   ========================= */
+
+.sun-dot-help {
+  position: absolute;
+  cursor: default;
+}
+
+/* Tooltip giống AQI */
+.sun-tooltip {
+  position: absolute;
+  bottom: 100%;              /* 🔼 bung lên trên dot */
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+
+  margin-bottom: 8px;
+
+  padding: 6px 10px;
+  min-width: 120px;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+
+  border-radius: 8px;
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+
+  z-index: 9999;
+}
+
+/* Hover show */
+.sun-dot-help:hover .sun-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+/* Mobile fallback */
+@media (max-width: 480px) {
+  .sun-tooltip {
+    left: auto;
+    right: 0;
+    margin-left: 0;
+    top: 28px;
+    transform: none;
+  }
+}

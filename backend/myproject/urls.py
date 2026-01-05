@@ -8,7 +8,10 @@ from backend.api.views.map_views import get_weather_map, proxy_tile
 from backend.api.views.auth_views import (
     signup, login, logout, refresh_token,
     change_password, delete_account,
-    check_premium, CustomTokenObtainPairView, user_info
+    check_premium, CustomTokenObtainPairView, user_info,  verify_change_email_password,
+    change_email_send_otp,
+    change_email_verify_otp,
+    change_email_resend_otp
 )
 
 from backend.api.views.weather_views import (
@@ -61,5 +64,10 @@ urlpatterns = [
     path('api/user-info/', user_info, name="user_info"),
     
     path('api/chatbot/intent/', analyze_intent, name="chatbot_intent"),
+    # Change email
+    path('api/change-email/verify-password/', verify_change_email_password),
+    path('api/change-email/send-otp/', change_email_send_otp),
+    path('api/change-email/verify-otp/', change_email_verify_otp),
+    path('api/change-email/resend-otp/', change_email_resend_otp),
 
 ]

@@ -290,3 +290,63 @@ def user_info(request):
         "is_premium": bool(getattr(request.user, 'is_premium', False)),
         "user_id": str(request.user.id)
     })
+
+# ---------------------------
+# CHANGE EMAIL - VERIFY PASSWORD
+# ---------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def verify_change_email_password(request):
+    user = request.user
+    password = request.data.get("password")
+
+    if not password:
+        return Response({"error": "Password is required"}, status=400)
+
+    if not check_password(password, user.password):
+        return Response({"error": "Incorrect password"}, status=403)
+
+    return Response({"message": "Password verified"}, status=200)
+
+# ---------------------------
+# CHANGE EMAIL - SEND OTP
+# ---------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_email_send_otp(request):
+    from .verifyotp_views import send_change_email_otp_logic, normalize_email
+
+    user = request.user
+    raw_email = request.data.get("new_email")
+    new_email = normalize_email(raw_email)
+
+    if not new_email:
+        return Response({"error": "New email required"}, status=400)
+
+    return send_change_email_otp_logic(user, new_email)
+
+# ---------------------------
+# CHANGE EMAIL - VERIFY OTP
+# ---------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_email_verify_otp(request):
+    from .verifyotp_views import verify_change_email_otp_logic
+
+    user = request.user
+    otp = request.data.get("otp")
+
+    if not otp:
+        return Response({"error": "OTP required"}, status=400)
+
+    return verify_change_email_otp_logic(user, otp)
+
+# ---------------------------
+# CHANGE EMAIL - RESEND OTP
+# ---------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_email_resend_otp(request):
+    from .verifyotp_views import resend_change_email_otp_logic
+
+    return resend_change_email_otp_logic(request.user)

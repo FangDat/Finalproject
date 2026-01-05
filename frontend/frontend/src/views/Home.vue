@@ -200,15 +200,25 @@
               </div>
 
               <!-- Dots nằm ngoài track -->
+              <!-- Sunrise dot -->
               <div
-                class="sun-dot sun-dot-sunrise"
+                class="sun-dot sun-dot-sunrise sun-dot-help"
                 :style="{ left: sunrisePercent + '%' }"
-              ></div>
+              >
+                <span class="sun-tooltip">
+                  ☀️ Sunrise · {{ sunPath.sunrise }}
+                </span>
+              </div>
 
+              <!-- Sunset dot -->
               <div
-                class="sun-dot sun-dot-sunset"
+                class="sun-dot sun-dot-sunset sun-dot-help"
                 :style="{ left: sunsetPercent + '%' }"
-              ></div>
+              >
+                <span class="sun-tooltip">
+                  🌙 Sunset · {{ sunPath.sunset }}
+                </span>
+              </div>
             </div>
 
               <!-- Only 00:00 & 24:00 -->

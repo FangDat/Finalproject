@@ -28,7 +28,7 @@ GEMINI_API_KEY = "AIzaSyCOdMKITA3Mr4_JhwFelKs4RLhP1K2ZGBg"
 
 #AIzaSyDUEOGW5X4bnZjzImUKklS6qzcNcXsRbmo
 #AIzaSyCOdMKITA3Mr4_JhwFelKs4RLhP1K2ZGBg
-
+#AIzaSyBnVPuxArZoouSU3xt0bC5cmn6wf20rRCg
 #AIzaSyDy9xG4nZ79S4ixJwRs3vYqVASJaBLn6CQ
 
 # ---------------------

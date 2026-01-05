@@ -39,7 +39,7 @@
           <label>Email</label>
           <div class="inline-input">
             <input type="text" :value="email || 'No email found'" readonly />
-            <span class="change-link">change email</span>
+            <span class="change-link" @click="openChangeEmail">change email</span>
           </div>
         </div>
         <div class="info-row">
@@ -125,6 +125,85 @@
         <router-link to="/terms">Terms & Conditions</router-link>
       </footer>
     </main>
+    <!-- Overlay + Change Email Modal -->
+    <transition name="fade">
+      <div v-if="showChangeEmail" class="overlay">
+        <div class="modal">
+          <h2>Change Email</h2>
+
+          <!-- STEP 1: Verify password -->
+          <div v-if="changeEmailStep === 1" class="form-group password-wrapper">
+            <label>Current password</label>
+            <input
+              :type="showEmailPassword ? 'text' : 'password'"
+              v-model="email_password"
+              placeholder="Enter your password"
+            />
+            <span class="toggle-icon" @click="showEmailPassword = !showEmailPassword">
+              {{ showEmailPassword ? '🙈' : '👁' }}
+            </span>
+          </div>
+
+          <!-- STEP 2: New email -->
+          <div v-if="changeEmailStep === 2" class="form-group">
+            <label>New email</label>
+            <input
+              type="email"
+              v-model.trim="new_email"
+              placeholder="Enter new email"
+            />
+          </div>
+
+          <!-- Alert -->
+          <div class="alert-box" v-if="changeEmailAlert" :class="{'success': changeEmailSuccess, 'error': !changeEmailSuccess}">
+            {{ changeEmailAlert }}
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-secondary" @click="closeChangeEmail">Close</button>
+            <button class="btn-primary" @click="handleChangeEmail" :disabled="changeEmailLoading">
+              <span v-if="!changeEmailLoading">
+                {{ changeEmailStep === 1 ? 'Verify' : 'Send OTP' }}
+              </span>
+              <span v-else>Processing...</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <div v-if="showChangeEmailOtp" class="otp-modal-overlay">
+      <div class="otp-modal">
+        <h2>Please enter the verification code sent to your email</h2>
+
+        <div class="otp-inputs">
+          <input
+            v-for="(digit, index) in otpDigits"
+            :key="index"
+            v-model="otpDigits[index]"
+            maxlength="1"
+            @input="focusNext(index)"
+            @keydown.backspace="focusPrev(index, $event)"
+          />
+        </div>
+
+        <button class="btn-verify" @click="verifyChangeEmailOtp" :disabled="verifyingOtp">
+          <span v-if="!verifyingOtp">Verify</span>
+          <span v-else>Verifying...</span>
+        </button>
+
+        <p class="resend-text">
+          Didn’t receive code?
+          <span v-if="resendTimer > 0">Resend in {{ resendTimer }}s</span>
+          <span v-else class="resend-link" @click="resendChangeEmailOtp">
+            Resend code
+          </span>
+        </p>
+
+        <p class="otp-error" v-if="otpError">{{ otpError }}</p>
+      </div>
+    </div>
+
+
 
     <!-- Overlay + Change Password Modal -->
     <transition name="fade">
@@ -237,6 +316,7 @@
   </div>
 </template>
 
+
 <script>
 import axios from "axios";
 
@@ -276,6 +356,23 @@ export default {
       showPopup: false,
       popupMessage: "",
       popupSuccess: true,
+      // ===== Change Email =====
+      showChangeEmail: false,
+      changeEmailStep: 1,
+      email_password: "",
+      new_email: "",
+      changeEmailAlert: "",
+      changeEmailSuccess: false,
+      changeEmailLoading: false,
+      showEmailPassword: false,
+
+      // OTP
+      showChangeEmailOtp: false,
+      otpDigits: ["", "", "", "", "", ""],
+      resendTimer: 60,
+      otpError: null,
+      otpInterval: null,
+      verifyingOtp: false,
     };
   },
   created() {
@@ -297,6 +394,136 @@ export default {
     },
 
     handleAction(action) { /* giữ nguyên */ },
+      openChangeEmail() {
+      this.showChangeEmail = true;
+      this.changeEmailStep = 1;
+    },
+
+    closeChangeEmail() {
+    this.showChangeEmail = false;
+    this.email_password = "";
+    this.new_email = "";
+    this.changeEmailAlert = "";
+    this.changeEmailSuccess = false;
+    this.showEmailPassword = false;
+
+    // reset OTP state nếu user đóng giữa chừng
+    this.otpDigits = ["", "", "", "", "", ""];
+    this.otpError = null;
+  },
+
+    async handleChangeEmail() {
+    this.changeEmailAlert = "";
+    this.changeEmailLoading = true;
+
+    try {
+      if (this.changeEmailStep === 1) {
+        await axios.post(
+          "http://localhost:8000/api/change-email/verify-password/",
+          { password: this.email_password },
+          { withCredentials: true }
+        );
+        this.changeEmailStep = 2;
+      } else {
+        await axios.post(
+          "http://localhost:8000/api/change-email/send-otp/",
+          { new_email: this.new_email },
+          { withCredentials: true }
+        );
+        this.showChangeEmail = false;
+        this.showChangeEmailOtp = true;
+        this.startResendCountdown();
+      }
+    } catch (err) {
+      this.changeEmailAlert = err.response?.data?.error || "Action failed.";
+      this.changeEmailSuccess = false;
+    } finally {
+      this.changeEmailLoading = false;
+    }
+  },
+   async verifyChangeEmailOtp() {
+    this.verifyingOtp = true;
+    this.otpError = null;
+
+    const otpCode = this.otpDigits.join("");
+    if (otpCode.length !== 6) {
+      this.otpError = "Please enter all 6 digits.";
+      this.verifyingOtp = false;
+      return;
+    }
+
+    try {
+      await axios.post(
+        "http://localhost:8000/api/change-email/verify-otp/",
+        { otp: otpCode },
+        { withCredentials: true }
+      );
+
+      // ✅ UX giống Change Password
+      this.showChangeEmailOtp = false;
+      this.popupMessage = "Email changed successfully.";
+      this.popupSuccess = true;
+      this.showPopup = true;
+
+      // ⏳ Logout giống hệt Change Password
+      setTimeout(() => {
+        document.cookie.split(";").forEach(c => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+
+        // reset state (tránh bug sau reload)
+        this.otpDigits = ["", "", "", "", "", ""];
+        this.resendTimer = 60;
+        this.otpError = null;
+
+        this.$router.push("/");
+        window.location.reload();
+      }, 3000);
+
+    } catch (err) {
+      this.otpError =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Invalid or expired OTP.";
+    } finally {
+      this.verifyingOtp = false;
+    }
+  },
+  
+  startResendCountdown() {
+  this.resendTimer = 60;
+  if (this.otpInterval) clearInterval(this.otpInterval);
+  this.otpInterval = setInterval(() => {
+    if (this.resendTimer > 0) this.resendTimer--;
+    else clearInterval(this.otpInterval);
+  }, 1000);
+},
+
+  async resendChangeEmailOtp() {
+    try {
+      await axios.post(
+        "http://localhost:8000/api/change-email/resend-otp/",
+        {},
+        { withCredentials: true }
+      );
+      this.startResendCountdown();
+    } catch {
+      this.otpError = "Failed to resend OTP.";
+    }
+  },
+focusNext(index) {
+  if (this.otpDigits[index].length === 1 && index < 5) {
+    this.$el.querySelectorAll(".otp-inputs input")[index + 1].focus();
+  }
+},
+
+focusPrev(index, event) {
+  if (!this.otpDigits[index] && index > 0 && event.key === "Backspace") {
+    this.$el.querySelectorAll(".otp-inputs input")[index - 1].focus();
+  }
+},
 
     openChangePassword() { this.showChangePassword = true; },
     closeChangePassword() {

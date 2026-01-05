@@ -241,3 +241,162 @@ def resend_otp(request):
         return Response({"error": "Failed to resend OTP"}, status=500)
 
     return Response({"message": "New OTP sent successfully"}, status=200)
+
+# ============================
+# CHANGE EMAIL - SEND OTP LOGIC (FIXED)
+# ============================
+def send_change_email_otp_logic(user, raw_new_email):
+    from ..models import User
+
+    new_email = normalize_email(raw_new_email)
+    logger.debug(
+        f"📨 [CHANGE_EMAIL][SEND_OTP] user={user.username}, new_email={new_email}"
+    )
+
+    if not new_email:
+        return Response({"error": "Email is required"}, status=400)
+
+    if User.objects.filter(email=new_email).exists():
+        return Response({"error": "Email already in use"}, status=400)
+
+    otp_key = f"change_email_otp:{user.id}"
+    pending_key = f"change_email_pending:{user.id}"
+
+    # 🔥 xoá OTP cũ nếu tồn tại
+    redis_client.delete(otp_key)
+
+    otp = generate_otp()
+
+    redis_client.setex(otp_key, OTP_EXPIRE_SECONDS, otp)
+    redis_client.setex(
+        pending_key,
+        PENDING_EXPIRE_SECONDS,
+        json.dumps({
+            "user_id": str(user.id),
+            "new_email": new_email
+        })
+    )
+
+    # 🐞 debug OTP
+    logger.debug(
+        f"💾 [CHANGE_EMAIL] Redis saved OTP={otp} for user_id={user.id}"
+    )
+
+    subject = "VietCloud – Confirm your new email"
+    message = (
+        f"Hello {user.username},\n\n"
+        f"Your OTP to change email is: {otp}\n\n"
+        f"This code will expire in 10 minutes.\n\n"
+        "— VietCloud Team"
+    )
+
+    try:
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [new_email])
+    except Exception:
+        logger.exception("❌ Failed to send change email OTP")
+        redis_client.delete(otp_key)
+        redis_client.delete(pending_key)
+        return Response({"error": "Failed to send OTP"}, status=500)
+
+    return Response({"message": "OTP sent to new email"}, status=200)
+
+# ============================
+# CHANGE EMAIL - VERIFY OTP (FIXED)
+# ============================
+def verify_change_email_otp_logic(user, otp_input):
+    otp_key = f"change_email_otp:{user.id}"
+    pending_key = f"change_email_pending:{user.id}"
+
+    stored_otp = redis_client.get(otp_key)
+    if not stored_otp:
+        return Response({"error": "OTP expired or not found"}, status=400)
+
+    logger.debug(
+        f"🔍 [CHANGE_EMAIL][VERIFY] input={otp_input}, stored={stored_otp}"
+    )
+
+    if str(otp_input).strip() != str(stored_otp).strip():
+        return Response({"error": "Invalid OTP"}, status=400)
+
+    pending_raw = redis_client.get(pending_key)
+    if not pending_raw:
+        return Response({"error": "Pending email change expired"}, status=400)
+
+    try:
+        pending_data = json.loads(pending_raw)
+        new_email = normalize_email(pending_data.get("new_email"))
+    except Exception:
+        logger.exception("❌ Pending parse error")
+        return Response({"error": "Internal server error"}, status=500)
+
+    user.email = new_email
+    user.save()
+
+    redis_client.delete(otp_key)
+    redis_client.delete(pending_key)
+
+    logger.debug(
+        f"✅ [CHANGE_EMAIL] Email updated to {new_email} for user={user.username}"
+    )
+
+    resp = Response({
+        "message": "Email changed successfully. Logged out automatically.",
+        "new_email": new_email
+    }, status=200)
+
+    resp.delete_cookie("access_token", domain="localhost", path="/")
+    resp.delete_cookie("refresh_token", domain="localhost", path="/")
+    
+    return resp 
+
+# ============================
+# CHANGE EMAIL - RESEND OTP (FIXED)
+# ============================
+def resend_change_email_otp_logic(user):
+    otp_key = f"change_email_otp:{user.id}"
+    pending_key = f"change_email_pending:{user.id}"
+
+    pending_raw = redis_client.get(pending_key)
+    if not pending_raw:
+        return Response({"error": "Pending email change expired"}, status=400)
+
+    ttl = redis_client.ttl(otp_key)
+    if ttl and ttl > 0:
+        return Response({
+            "error": "OTP still valid. Please wait before requesting again.",
+            "seconds_remaining": ttl
+        }, status=429)
+
+    # 🔥 XOÁ OTP CŨ
+    redis_client.delete(otp_key)
+
+    pending_data = json.loads(pending_raw)
+    new_email = normalize_email(pending_data.get("new_email"))
+
+    otp = generate_otp()
+
+    # ✅ SET LẠI OTP
+    redis_client.setex(otp_key, OTP_EXPIRE_SECONDS, otp)
+
+    # ✅ RESET TTL CỦA PENDING (CỰC KỲ QUAN TRỌNG)
+    redis_client.expire(pending_key, PENDING_EXPIRE_SECONDS)
+
+    logger.debug(
+        f"🔁 [CHANGE_EMAIL][RESEND] new OTP={otp}, pending TTL reset for user_id={user.id}"
+    )
+
+    subject = "VietCloud – Your new email OTP (Resent)"
+    message = (
+        f"Hello {user.username},\n\n"
+        f"Your new OTP code is: {otp}\n\n"
+        "— VietCloud Team"
+    )
+
+    try:
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [new_email])
+    except Exception:
+        logger.exception("❌ Failed to resend change email OTP")
+        return Response({"error": "Failed to resend OTP"}, status=500)
+
+    return Response({"message": "OTP resent successfully"}, status=200)
+
