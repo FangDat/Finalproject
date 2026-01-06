@@ -210,12 +210,12 @@ def change_password(request):
         return Response({"error": "New password cannot be the same"}, status=400)
     if len(new_password) < 8:
         return Response({"error": "Password must be at least 8 characters"}, status=400)
-    if not re.search(r"[a-z]", new_password):
-        return Response({"error": "Must contain lowercase"}, status=400)
-    if not re.search(r"[A-Z]", new_password):
-        return Response({"error": "Must contain uppercase"}, status=400)
-    if not re.search(r"\d", new_password):
-        return Response({"error": "Must contain number"}, status=400)
+    # if not re.search(r"[a-z]", new_password):
+    #     return Response({"error": "Must contain lowercase"}, status=400)
+    # if not re.search(r"[A-Z]", new_password):
+    #     return Response({"error": "Must contain uppercase"}, status=400)
+    # if not re.search(r"\d", new_password):
+    #     return Response({"error": "Must contain number"}, status=400)
     if new_password != confirm_password:
         return Response({"error": "Passwords do not match"}, status=400)
 
@@ -350,3 +350,49 @@ def change_email_resend_otp(request):
     from .verifyotp_views import resend_change_email_otp_logic
 
     return resend_change_email_otp_logic(request.user)
+
+# ============================
+# FORGOT PASSWORD - SEND OTP
+# ============================
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password_send_otp(request):
+    from .verifyotp_views import send_forgot_password_otp_logic
+    return send_forgot_password_otp_logic(request.data.get("email"))
+
+
+# ============================
+# FORGOT PASSWORD - VERIFY OTP
+# ============================
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password_verify_otp(request):
+    from .verifyotp_views import verify_forgot_password_otp_logic
+    return verify_forgot_password_otp_logic(
+        request.data.get("email"),
+        request.data.get("otp")
+    )
+
+
+# ============================
+# FORGOT PASSWORD - RESET
+# ============================
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password_reset(request):
+    from .verifyotp_views import reset_password_logic
+    return reset_password_logic(
+        request.data.get("email"),
+        request.data.get("new_password"),
+        request.data.get("confirm_password")
+    )
+
+
+# ============================
+# FORGOT PASSWORD - RESEND OTP
+# ============================
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password_resend_otp(request):
+    from .verifyotp_views import resend_forgot_password_otp_logic
+    return resend_forgot_password_otp_logic(request.data.get("email"))

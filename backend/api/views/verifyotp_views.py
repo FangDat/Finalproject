@@ -400,3 +400,156 @@ def resend_change_email_otp_logic(user):
 
     return Response({"message": "OTP resent successfully"}, status=200)
 
+# ============================
+# FORGOT PASSWORD - SEND OTP
+# ============================
+def send_forgot_password_otp_logic(raw_email):
+    from ..models import User
+
+    email = normalize_email(raw_email)
+    logger.debug(f"📨 [FORGOT_PWD][SEND] email={email}")
+
+    if not email:
+        return Response({"error": "Email is required"}, status=400)
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        # ❗ Không leak email tồn tại hay không
+        return Response({"message": "If the email exists, OTP has been sent"}, status=200)
+
+    otp_key = f"forgot_pwd_otp:{email}"
+    pending_key = f"forgot_pwd_pending:{email}"
+
+    # Xoá OTP cũ
+    redis_client.delete(otp_key)
+
+    otp = generate_otp()
+    redis_client.setex(otp_key, OTP_EXPIRE_SECONDS, otp)
+    redis_client.setex(
+        pending_key,
+        PENDING_EXPIRE_SECONDS,
+        json.dumps({"email": email})
+    )
+
+    logger.debug(f"💾 [FORGOT_PWD] OTP={otp} saved for {email}")
+
+    subject = "VietCloud – Reset your password"
+    message = (
+        f"Hello {user.username},\n\n"
+        f"Your OTP to reset password is: {otp}\n\n"
+        "This code will expire in 10 minutes.\n\n"
+        "— VietCloud Team"
+    )
+
+    try:
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+    except Exception:
+        logger.exception("❌ Failed to send forgot password OTP")
+        redis_client.delete(otp_key)
+        redis_client.delete(pending_key)
+        return Response({"error": "Failed to send OTP"}, status=500)
+
+    return Response({"message": "OTP sent successfully"}, status=200)
+
+
+# ============================
+# FORGOT PASSWORD - VERIFY OTP
+# ============================
+def verify_forgot_password_otp_logic(raw_email, otp_input):
+    email = normalize_email(raw_email)
+
+    if not email or not otp_input:
+        return Response({"error": "Email and OTP required"}, status=400)
+
+    otp_key = f"forgot_pwd_otp:{email}"
+    pending_key = f"forgot_pwd_pending:{email}"
+
+    stored_otp = redis_client.get(otp_key)
+    if not stored_otp:
+        return Response({"error": "OTP expired or not found"}, status=400)
+
+    if str(otp_input).strip() != str(stored_otp).strip():
+        return Response({"error": "Invalid OTP"}, status=400)
+
+    if not redis_client.get(pending_key):
+        return Response({"error": "Reset session expired"}, status=400)
+
+    logger.debug(f"✅ [FORGOT_PWD] OTP verified for {email}")
+
+    return Response({"message": "OTP verified"}, status=200)
+
+
+# ============================
+# FORGOT PASSWORD - RESET
+# ============================
+def reset_password_logic(raw_email, new_password, confirm_password):
+    from ..models import User
+
+    email = normalize_email(raw_email)
+    pending_key = f"forgot_pwd_pending:{email}"
+    otp_key = f"forgot_pwd_otp:{email}"
+
+    if not redis_client.get(pending_key):
+        return Response({"error": "Reset session expired"}, status=400)
+
+    if not new_password or not confirm_password:
+        return Response({"error": "Password required"}, status=400)
+
+    if len(new_password) < 8:
+        return Response({"error": "Password must be at least 8 characters"}, status=400)
+
+    if new_password != confirm_password:
+        return Response({"error": "Passwords do not match"}, status=400)
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=404)
+
+    user.password = new_password
+    user.save()
+
+    # Cleanup Redis
+    redis_client.delete(otp_key)
+    redis_client.delete(pending_key)
+
+    logger.debug(f"🔐 [FORGOT_PWD] Password reset success for {email}")
+
+    return Response(
+        {"message": "Password reset successfully. Please login again."},
+        status=200
+    )
+
+
+# ============================
+# FORGOT PASSWORD - RESEND OTP
+# ============================
+def resend_forgot_password_otp_logic(raw_email):
+    email = normalize_email(raw_email)
+    otp_key = f"forgot_pwd_otp:{email}"
+    pending_key = f"forgot_pwd_pending:{email}"
+
+    if not redis_client.get(pending_key):
+        return Response({"error": "Reset session expired"}, status=400)
+
+    ttl = redis_client.ttl(otp_key)
+    if ttl and ttl > 0:
+        return Response(
+            {"error": "OTP still valid", "seconds_remaining": ttl},
+            status=429
+        )
+
+    redis_client.delete(otp_key)
+    otp = generate_otp()
+    redis_client.setex(otp_key, OTP_EXPIRE_SECONDS, otp)
+
+    subject = "VietCloud – Reset password OTP (Resent)"
+    message = f"Your new OTP is: {otp}"
+
+    try:
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+    except Exception:
+        return Response({"error": "Failed to resend OTP"}, status=500)
+
+    return Response({"message": "OTP resent successfully"}, status=200)

@@ -11,7 +11,12 @@ from backend.api.views.auth_views import (
     check_premium, CustomTokenObtainPairView, user_info,  verify_change_email_password,
     change_email_send_otp,
     change_email_verify_otp,
-    change_email_resend_otp
+    change_email_resend_otp,
+    forgot_password_send_otp,
+    forgot_password_verify_otp,
+    forgot_password_reset,
+    forgot_password_resend_otp,
+    
 )
 
 from backend.api.views.weather_views import (
@@ -69,5 +74,11 @@ urlpatterns = [
     path('api/change-email/send-otp/', change_email_send_otp),
     path('api/change-email/verify-otp/', change_email_verify_otp),
     path('api/change-email/resend-otp/', change_email_resend_otp),
+    # Forgot password
+    path('api/forgot-password/send-otp/', forgot_password_send_otp),
+    path('api/forgot-password/verify-otp/', forgot_password_verify_otp),
+    path('api/forgot-password/reset/', forgot_password_reset),
+    path('api/forgot-password/resend-otp/', forgot_password_resend_otp),
+
 
 ]

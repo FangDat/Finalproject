@@ -45,11 +45,110 @@
         </button>
       </form>
 
-      <a href="#" class="forgot-link">Forgot Password?</a>
+      <a href="#" class="forgot-link" @click.prevent="openForgotPassword">
+        Forgot Password?
+      </a>
+
 
       <hr class="divider" />
       <router-link to="/signup" class="btn-signup">Sign up for VietCloud</router-link>
       <p class="signup-text">Don't have an account</p>
+    </div>
+  </div>
+  <!-- ================= FORGOT PASSWORD MODAL ================= -->
+  <transition name="fade">
+    <div v-if="showForgotPassword" class="overlay">
+      <div class="modal">
+        <h2>Forgot Password</h2>
+        <p class="note">
+          Enter your registered email to reset your password.
+        </p>
+
+        <!-- STEP 1: Email -->
+        <div v-if="forgotStep === 1" class="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            v-model.trim="forgotEmail"
+            placeholder="Enter your email"
+          />
+        </div>
+
+        <!-- STEP 3: New password -->
+        <div v-if="forgotStep === 3">
+          <div class="form-group password-wrapper">
+            <label>New password</label>
+            <input
+              :type="showForgotPasswordText ? 'text' : 'password'"
+              v-model="forgotNewPassword"
+              placeholder="Enter new password"
+            />
+            <span class="toggle-icon" @click="showForgotPasswordText = !showForgotPasswordText">
+              {{ showForgotPasswordText ? '🙈' : '👁' }}
+            </span>
+          </div>
+
+          <div class="form-group password-wrapper">
+            <label>Confirm password</label>
+            <input
+              :type="showForgotPasswordText ? 'text' : 'password'"
+              v-model="forgotConfirmPassword"
+              placeholder="Confirm new password"
+            />
+          </div>
+        </div>
+
+        <!-- Alert -->
+        <div
+          class="alert-box"
+          v-if="forgotAlert"
+          :class="{ success: forgotSuccess, error: !forgotSuccess }"
+        >
+          {{ forgotAlert }}
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-secondary" @click="closeForgotPassword">Close</button>
+          <button class="btn-primary" @click="handleForgotPassword" :disabled="forgotLoading">
+            <span v-if="!forgotLoading">
+              {{ forgotStep === 1 ? 'Send OTP' : 'Reset password' }}
+            </span>
+            <span v-else>Processing...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </transition>
+
+  <!-- ================= OTP MODAL ================= -->
+  <div v-if="showForgotOtp" class="otp-modal-overlay">
+    <div class="otp-modal">
+      <h2>Enter verification code</h2>
+
+      <div class="otp-inputs" ref="forgotOtpInputs">
+        <input
+          v-for="(digit, index) in forgotOtpDigits"
+          :key="index"
+          v-model="forgotOtpDigits[index]"
+          maxlength="1"
+          @input="focusNextForgot(index)"
+          @keydown.backspace="focusPrevForgot(index, $event)"
+        />
+      </div>
+
+      <button class="btn-verify" @click="verifyForgotOtp" :disabled="verifyingForgotOtp">
+        Verify
+      </button>
+
+      <p class="resend-text">
+        Didn’t receive code?
+        <span v-if="resendTimer > 0">Resend in {{ resendTimer }}s</span>
+        <span v-else class="resend-link" @click="resendForgotOtp">
+          Resend code
+        </span>
+      </p>
+
+      <p class="otp-error" v-if="forgotOtpError">{{ forgotOtpError }}</p>
     </div>
   </div>
 </template>
@@ -76,6 +175,24 @@ export default {
         username: "",
         password: "",
       },
+      // ===== Forgot Password =====
+      showForgotPassword: false,
+      forgotStep: 1,
+      forgotEmail: "",
+      forgotNewPassword: "",
+      forgotConfirmPassword: "",
+      forgotAlert: "",
+      forgotSuccess: false,
+      forgotLoading: false,
+      showForgotPasswordText: false,
+
+      // OTP
+      showForgotOtp: false,
+      forgotOtpDigits: ["", "", "", "", "", ""],
+      forgotOtpError: null,
+      verifyingForgotOtp: false,
+      resendTimer: 60,
+      otpInterval: null,
     };
   },
   methods: {
@@ -84,6 +201,128 @@ export default {
       this.alertMessage = "";
       this.alertType = "info";
     },
+    openForgotPassword() {
+      this.showForgotPassword = true;
+      this.forgotStep = 1;
+    },
+
+    closeForgotPassword() {
+      this.showForgotPassword = false;
+      this.showForgotOtp = false;
+      this.forgotEmail = "";
+      this.forgotNewPassword = "";
+      this.forgotConfirmPassword = "";
+      this.forgotAlert = "";
+      this.forgotOtpDigits = ["", "", "", "", "", ""];
+      this.forgotOtpError = null;
+    },
+
+    async handleForgotPassword() {
+      this.forgotAlert = "";
+      this.forgotLoading = true;
+
+      try {
+        if (this.forgotStep === 1) {
+          await axios.post("http://localhost:8000/api/forgot-password/send-otp/", {
+            email: this.forgotEmail,
+          });
+
+          this.showForgotPassword = false;
+          this.showForgotOtp = true;
+          this.startResendCountdown();
+        } else {
+          if (this.forgotNewPassword !== this.forgotConfirmPassword) {
+            this.forgotAlert = "Passwords do not match.";
+            this.forgotSuccess = false;
+            return;
+          }
+
+          await axios.post("http://localhost:8000/api/forgot-password/reset/", {
+            email: this.forgotEmail,
+            new_password: this.forgotNewPassword,
+            confirm_password: this.forgotConfirmPassword,
+          });
+
+          this.forgotAlert = "Password reset successfully.";
+          this.forgotSuccess = true;
+
+          setTimeout(() => {
+            this.closeForgotPassword();
+          }, 2000);
+        }
+      } catch (err) {
+        this.forgotAlert = err.response?.data?.error || "Action failed.";
+        this.forgotSuccess = false;
+      } finally {
+        this.forgotLoading = false;
+      }
+    },
+
+    async verifyForgotOtp() {
+      this.verifyingForgotOtp = true;
+      this.forgotOtpError = null;
+
+      const otp = this.forgotOtpDigits.join("");
+      if (otp.length !== 6) {
+        this.forgotOtpError = "Please enter all 6 digits.";
+        this.verifyingForgotOtp = false;
+        return;
+      }
+
+      try {
+        await axios.post("http://localhost:8000/api/forgot-password/verify-otp/", {
+          email: this.forgotEmail,
+          otp,
+        });
+
+        this.showForgotOtp = false;
+        this.showForgotPassword = true;
+        this.forgotStep = 3;
+      } catch (err) {
+        this.forgotOtpError = err.response?.data?.error || "Invalid or expired OTP.";
+      } finally {
+        this.verifyingForgotOtp = false;
+      }
+    },
+
+    startResendCountdown() {
+      this.resendTimer = 60;
+      if (this.otpInterval) clearInterval(this.otpInterval);
+      this.otpInterval = setInterval(() => {
+        if (this.resendTimer > 0) this.resendTimer--;
+        else clearInterval(this.otpInterval);
+      }, 1000);
+    },
+
+    async resendForgotOtp() {
+      await axios.post("http://localhost:8000/api/forgot-password/resend-otp/", {
+        email: this.forgotEmail,
+      });
+      this.startResendCountdown();
+    },
+
+    focusNextForgot(index) {
+      if (
+        this.forgotOtpDigits[index] &&
+        index < this.forgotOtpDigits.length - 1
+      ) {
+        const inputs = this.$refs.forgotOtpInputs?.querySelectorAll("input");
+        inputs?.[index + 1]?.focus();
+      }
+    },
+
+    focusPrevForgot(index, event) {
+      if (
+        event.key === "Backspace" &&
+        !this.forgotOtpDigits[index] &&
+        index > 0
+      ) {
+        const inputs = this.$refs.forgotOtpInputs?.querySelectorAll("input");
+        inputs?.[index - 1]?.focus();
+      }
+    },
+
+
     async handleLogin() {
       this.resetErrors();
 

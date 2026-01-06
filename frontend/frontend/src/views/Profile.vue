@@ -211,7 +211,8 @@
         <div class="modal">
           <h2>Change Password</h2>
           <p class="note">
-            Password needs to be at least <b>8 characters long</b> and contain at least one <b>lowercase letter</b>, one <b>uppercase letter</b>, and a <b>number</b>.
+            Password needs to be at least <b>8 characters long</b> 
+            <!-- Password needs to be at least <b>8 characters long</b> and contain at least one <b>lowercase letter</b>, one <b>uppercase letter</b>, and a <b>number</b>. -->
           </p>
 
           <div class="form-group password-wrapper">
