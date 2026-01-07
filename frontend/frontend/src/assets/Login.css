@@ -100,7 +100,7 @@ body {
 
 .btn-signup {
   display: inline-block;
-  width: 100%;
+  width: 95%;
   padding: 12px;
   background: #fff;
   color: #0077b6;
@@ -142,7 +142,7 @@ body {
 
 /* Form fields */
 .input-box {
-  width: 100%;
+  width: 95%;
   padding: 12px;
   margin: 10px 0;
   border-radius: 10px;
@@ -228,7 +228,7 @@ body {
 }
 
 .form-group input {
-  width: 100%;
+  width: 95%;
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #ccc;
@@ -390,3 +390,26 @@ body {
   color: #c62828;
   font-weight: 500;
 }
+/* ===== Forgot password email error spacing ===== */
+.email-group .error-msg {
+  margin-top: 6px;      /* đẩy xuống */
+  margin-bottom: 4px;
+}
+
+/* ===== Forgot password STEP 3 input width fix ===== */
+.modal .password-wrapper {
+  width: 90%;              /* kéo dài thêm 1 tí */
+  max-width: 320px;
+  margin-left: 8px;       /* 👈 đẩy sang trái */
+  margin-right: auto;
+  margin-bottom: 16px;
+}
+
+.modal .password-wrapper input {
+  width: 100%;
+}
+.modal .password-wrapper .toggle-icon {
+  right: -36px;
+  top: 36px;
+}
+

@@ -15,13 +15,15 @@
       <!-- Sign in link -->
       <p class="signin-text">
         Already have an account?
-        <router-link to="/login" class="signin-link">Sign in</router-link>
+        <router-link to="/login" class="signin-link">Log in</router-link>
       </p>
 
-      <!-- Alert box -->
-      <div v-if="alertMessage" :class="['alert-box', alertType]">
-        {{ alertMessage }}
-      </div>
+      <div
+      v-if="alertType === 'success' && alertMessage"
+      class="alert-box success"
+    >
+      {{ alertMessage }}
+    </div>
 
       <!-- Form -->
       <form class="signup-form" @submit.prevent="handleSignup">
@@ -173,34 +175,37 @@ export default {
         if (!this.username) this.errors.username = "Please enter your username.";
         if (!this.email) this.errors.email = "Please enter your email.";
         if (!this.password) this.errors.password = "Please enter your password.";
-        if (!this.confirmPassword) this.errors.confirmPassword = "Please confirm your password.";
-        this.alertMessage = "Please fill in all required fields.";
-        this.alertType = "warning";
+        if (!this.confirmPassword)
+          this.errors.confirmPassword = "Please confirm your password.";
         return;
       }
 
       if (this.password !== this.confirmPassword) {
         this.errors.confirmPassword = "Passwords do not match.";
-        this.alertMessage = "Passwords do not match.";
-        this.alertType = "warning";
         return;
       }
 
       if (this.password.length < 8) {
         this.errors.password = "Password must be at least 8 characters long.";
-        this.alertMessage = "Password must be at least 8 characters long.";
-        this.alertType = "warning";
         return;
       }
 
-
       this.submitting = true;
       try {
-        const payload = { username: this.username, email: this.email, password: this.password };
-        const res = await axios.post("http://localhost:8000/api/signup/", payload, {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        });
+        const payload = {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        };
+
+        const res = await axios.post(
+          "http://localhost:8000/api/signup/",
+          payload,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
 
         if (res.status === 200 || res.status === 201) {
           this.showOtpModal = true;
@@ -218,12 +223,8 @@ export default {
         const data = err.response.data;
         if (data.email?.[0]?.toLowerCase().includes("already in use")) {
           this.errors.email = "This email is already in use!";
-          this.alertMessage = "This email is already in use!";
-          this.alertType = "warning";
         } else if (data.username?.[0]?.toLowerCase().includes("already exists")) {
           this.errors.username = "Username already exists!";
-          this.alertMessage = "Username already exists!";
-          this.alertType = "warning";
 
         } else {
           this.alertMessage = "Signup failed. Please check your inputs.";

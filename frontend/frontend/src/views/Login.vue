@@ -9,15 +9,17 @@
 
       <p class="login-title">To continue, log into VietCloud.</p>
 
-      <!-- Alert box giống SignUp -->
-      <div v-if="alertMessage" :class="['alert-box', alertType]">
+      <div
+        v-if="alertType === 'success' && alertMessage"
+        class="alert-box success"
+      >
         {{ alertMessage }}
       </div>
 
       <!-- Login bằng Gmail (placeholder) -->
-      <button class="btn-gmail" type="button">LOG IN WITH GMAIL</button>
+      <!-- <button class="btn-gmail" type="button">LOG IN WITH GMAIL</button>
 
-      <p class="or-text">OR</p>
+      <p class="or-text">OR</p> -->
 
       <!-- Form -->
       <form @submit.prevent="handleLogin">
@@ -51,8 +53,8 @@
 
 
       <hr class="divider" />
+            <p class="signup-text">Don't have an account</p>
       <router-link to="/signup" class="btn-signup">Sign up for VietCloud</router-link>
-      <p class="signup-text">Don't have an account</p>
     </div>
   </div>
   <!-- ================= FORGOT PASSWORD MODAL ================= -->
@@ -65,13 +67,18 @@
         </p>
 
         <!-- STEP 1: Email -->
-        <div v-if="forgotStep === 1" class="form-group">
+        <div v-if="forgotStep === 1" class="form-group email-group">
           <label>Email</label>
-          <input
-            type="email"
-            v-model.trim="forgotEmail"
-            placeholder="Enter your email"
-          />
+         <input
+          v-model.trim="forgotEmail"
+          type="email"
+          placeholder="Enter your email"
+          required
+          :class="{ 'input-error': !!forgotErrors.email }"
+        />
+        <p v-if="forgotErrors.email" class="error-msg">
+          {{ forgotErrors.email }}
+        </p>
         </div>
 
         <!-- STEP 3: New password -->
@@ -95,6 +102,12 @@
               v-model="forgotConfirmPassword"
               placeholder="Confirm new password"
             />
+             <span
+              class="toggle-icon"
+              @click="showForgotPasswordText = !showForgotPasswordText"
+            >
+              {{ showForgotPasswordText ? '🙈' : '👁' }}
+            </span>
           </div>
         </div>
 
@@ -169,8 +182,11 @@ export default {
       // UI state
       alertMessage: "",
       alertType: "info", // success | error | warning
-
+      // forgotEmailError: "",
       // field errors
+      forgotErrors: {
+        email: "",
+      },
       errors: {
         username: "",
         password: "",
@@ -204,6 +220,7 @@ export default {
     openForgotPassword() {
       this.showForgotPassword = true;
       this.forgotStep = 1;
+      this.forgotErrors = { email: "" };
     },
 
     closeForgotPassword() {
@@ -219,13 +236,34 @@ export default {
 
     async handleForgotPassword() {
       this.forgotAlert = "";
+      this.forgotErrors = { email: "" };
+
+      // ===== FRONTEND VALIDATION =====
+      if (this.forgotStep === 1) {
+        if (!this.forgotEmail) {
+          this.forgotErrors.email = "Please enter your email.";
+          return;
+        }
+
+        // HTML5 email format check
+        const emailInput = document.createElement("input");
+        emailInput.type = "email";
+        emailInput.value = this.forgotEmail;
+
+        if (!emailInput.checkValidity()) {
+          this.forgotErrors.email = "Please enter a valid email address.";
+          return;
+        }
+      }
+
       this.forgotLoading = true;
 
       try {
         if (this.forgotStep === 1) {
-          await axios.post("http://localhost:8000/api/forgot-password/send-otp/", {
-            email: this.forgotEmail,
-          });
+          await axios.post(
+            "http://localhost:8000/api/forgot-password/send-otp/",
+            { email: this.forgotEmail }
+          );
 
           this.showForgotPassword = false;
           this.showForgotOtp = true;
@@ -237,20 +275,31 @@ export default {
             return;
           }
 
-          await axios.post("http://localhost:8000/api/forgot-password/reset/", {
-            email: this.forgotEmail,
-            new_password: this.forgotNewPassword,
-            confirm_password: this.forgotConfirmPassword,
-          });
+          await axios.post(
+            "http://localhost:8000/api/forgot-password/reset/",
+            {
+              email: this.forgotEmail,
+              new_password: this.forgotNewPassword,
+              confirm_password: this.forgotConfirmPassword,
+            }
+          );
 
           this.forgotAlert = "Password reset successfully.";
           this.forgotSuccess = true;
 
-          setTimeout(() => {
-            this.closeForgotPassword();
-          }, 2000);
+          setTimeout(() => this.closeForgotPassword(), 2000);
         }
       } catch (err) {
+        // Backend email error
+        if (
+          this.forgotStep === 1 &&
+          err.response?.status === 400 &&
+          err.response.data?.error
+        ) {
+          this.forgotErrors.email = err.response.data.error;
+          return;
+        }
+
         this.forgotAlert = err.response?.data?.error || "Action failed.";
         this.forgotSuccess = false;
       } finally {

@@ -416,7 +416,10 @@ def send_forgot_password_otp_logic(raw_email):
         user = User.objects.get(email=email)
     except User.DoesNotExist:
         # ❗ Không leak email tồn tại hay không
-        return Response({"message": "If the email exists, OTP has been sent"}, status=200)
+        return Response(
+            {"error": "This email is not registered with VietCloud."},
+            status=400
+        )
 
     otp_key = f"forgot_pwd_otp:{email}"
     pending_key = f"forgot_pwd_pending:{email}"
