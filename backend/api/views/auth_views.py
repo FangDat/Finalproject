@@ -292,11 +292,16 @@ def user_info(request):
     })
 
 # ---------------------------
-# CHANGE EMAIL - VERIFY PASSWORD
+# CHANGE EMAIL - VERIFY PASSWORD (FIXED)
 # ---------------------------
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def verify_change_email_password(request):
+    import redis
+    import json
+
+    redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+
     user = request.user
     password = request.data.get("password")
 
@@ -306,15 +311,27 @@ def verify_change_email_password(request):
     if not check_password(password, user.password):
         return Response({"error": "Incorrect password"}, status=403)
 
+    # 🔐 SET PASS VERIFIED FLAG (TTL 5 phút)
+    pass_key = f"change_email_pass_verified:{user.id}"
+    redis_client.setex(pass_key, 300, "true")
+
     return Response({"message": "Password verified"}, status=200)
 
 # ---------------------------
-# CHANGE EMAIL - SEND OTP
+# CHANGE EMAIL - SEND OTP (FIXED HARD CHECK)
 # ---------------------------
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_email_send_otp(request):
     from .verifyotp_views import send_change_email_otp_logic, normalize_email
+    import redis
+
+    redis_client = redis.StrictRedis(
+        host='localhost',
+        port=6379,
+        db=0,
+        decode_responses=True
+    )
 
     user = request.user
     raw_email = request.data.get("new_email")
@@ -322,6 +339,14 @@ def change_email_send_otp(request):
 
     if not new_email:
         return Response({"error": "New email required"}, status=400)
+
+    # 🔐 HARD CHECK PASSWORD VERIFIED
+    pass_key = f"change_email_pass_verified:{user.id}"
+    if not redis_client.get(pass_key):
+        return Response(
+            {"error": "Password verification required"},
+            status=403
+        )
 
     return send_change_email_otp_logic(user, new_email)
 

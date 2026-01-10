@@ -252,6 +252,13 @@ def send_change_email_otp_logic(user, raw_new_email):
     logger.debug(
         f"📨 [CHANGE_EMAIL][SEND_OTP] user={user.username}, new_email={new_email}"
     )
+    
+    pass_key = f"change_email_pass_verified:{user.id}"
+    if not redis_client.get(pass_key):
+        return Response(
+            {"error": "Password verification required"},
+            status=403
+        )
 
     if not new_email:
         return Response({"error": "Email is required"}, status=400)
@@ -304,6 +311,13 @@ def send_change_email_otp_logic(user, raw_new_email):
 # CHANGE EMAIL - VERIFY OTP (FIXED)
 # ============================
 def verify_change_email_otp_logic(user, otp_input):
+    pass_key = f"change_email_pass_verified:{user.id}"
+    if not redis_client.get(pass_key):
+        return Response(
+            {"error": "Password verification required"},
+            status=403
+        )
+        
     otp_key = f"change_email_otp:{user.id}"
     pending_key = f"change_email_pending:{user.id}"
 
@@ -334,6 +348,7 @@ def verify_change_email_otp_logic(user, otp_input):
 
     redis_client.delete(otp_key)
     redis_client.delete(pending_key)
+    redis_client.delete(pass_key)
 
     logger.debug(
         f"✅ [CHANGE_EMAIL] Email updated to {new_email} for user={user.username}"
@@ -353,6 +368,13 @@ def verify_change_email_otp_logic(user, otp_input):
 # CHANGE EMAIL - RESEND OTP (FIXED)
 # ============================
 def resend_change_email_otp_logic(user):
+    pass_key = f"change_email_pass_verified:{user.id}"
+    if not redis_client.get(pass_key):
+        return Response(
+            {"error": "Password verification required"},
+            status=403
+        )
+    
     otp_key = f"change_email_otp:{user.id}"
     pending_key = f"change_email_pending:{user.id}"
 
@@ -415,7 +437,6 @@ def send_forgot_password_otp_logic(raw_email):
     try:
         user = User.objects.get(email=email)
     except User.DoesNotExist:
-        # ❗ Không leak email tồn tại hay không
         return Response(
             {"error": "This email is not registered with VietCloud."},
             status=400
@@ -424,15 +445,20 @@ def send_forgot_password_otp_logic(raw_email):
     otp_key = f"forgot_pwd_otp:{email}"
     pending_key = f"forgot_pwd_pending:{email}"
 
-    # Xoá OTP cũ
     redis_client.delete(otp_key)
 
     otp = generate_otp()
+
     redis_client.setex(otp_key, OTP_EXPIRE_SECONDS, otp)
+
+    # 🔐 pending KHỞI TẠO verified = false
     redis_client.setex(
         pending_key,
         PENDING_EXPIRE_SECONDS,
-        json.dumps({"email": email})
+        json.dumps({
+            "email": email,
+            "verified": False
+        })
     )
 
     logger.debug(f"💾 [FORGOT_PWD] OTP={otp} saved for {email}")
@@ -475,8 +501,26 @@ def verify_forgot_password_otp_logic(raw_email, otp_input):
     if str(otp_input).strip() != str(stored_otp).strip():
         return Response({"error": "Invalid OTP"}, status=400)
 
-    if not redis_client.get(pending_key):
+    pending_raw = redis_client.get(pending_key)
+    if not pending_raw:
         return Response({"error": "Reset session expired"}, status=400)
+
+    try:
+        pending_data = json.loads(pending_raw)
+    except Exception:
+        return Response({"error": "Invalid reset session"}, status=500)
+
+    # ✅ ĐÁNH DẤU ĐÃ VERIFY
+    pending_data["verified"] = True
+
+    redis_client.setex(
+        pending_key,
+        PENDING_EXPIRE_SECONDS,
+        json.dumps(pending_data)
+    )
+
+    # 🔥 Có thể xoá OTP luôn để tránh reuse
+    redis_client.delete(otp_key)
 
     logger.debug(f"✅ [FORGOT_PWD] OTP verified for {email}")
 
@@ -491,10 +535,22 @@ def reset_password_logic(raw_email, new_password, confirm_password):
 
     email = normalize_email(raw_email)
     pending_key = f"forgot_pwd_pending:{email}"
-    otp_key = f"forgot_pwd_otp:{email}"
 
-    if not redis_client.get(pending_key):
+    pending_raw = redis_client.get(pending_key)
+    if not pending_raw:
         return Response({"error": "Reset session expired"}, status=400)
+
+    try:
+        pending_data = json.loads(pending_raw)
+    except Exception:
+        return Response({"error": "Invalid reset session"}, status=500)
+
+    # 🔐 BẮT BUỘC ĐÃ VERIFY OTP
+    if not pending_data.get("verified"):
+        return Response(
+            {"error": "OTP not verified"},
+            status=403
+        )
 
     if not new_password or not confirm_password:
         return Response({"error": "Password required"}, status=400)
@@ -514,7 +570,6 @@ def reset_password_logic(raw_email, new_password, confirm_password):
     user.save()
 
     # Cleanup Redis
-    redis_client.delete(otp_key)
     redis_client.delete(pending_key)
 
     logger.debug(f"🔐 [FORGOT_PWD] Password reset success for {email}")

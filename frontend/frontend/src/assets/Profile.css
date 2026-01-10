@@ -351,8 +351,8 @@ a,
 }
 
 .password-wrapper input {
-  width: 95%;
-  padding-right: 40px; /* chừa chỗ cho icon 👁 */
+  width: 100%;
+  padding-right: 350px; /* chừa chỗ cho icon 👁 */
 }
 
 .toggle-icon {
@@ -363,6 +363,8 @@ a,
   cursor: pointer;
   font-size: 1.1rem;
   user-select: none;
+
+  transform: translateX(300px); /* ← ĐẨY SANG PHẢI THÊM */
 }
 
 button[disabled] {

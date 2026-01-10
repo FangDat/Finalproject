@@ -198,7 +198,7 @@ export default {
               },
             },
           ],
-          xaxis: this.getTimeMarkers(color),
+          //xaxis: this.getTimeMarkers(color),
         },
       };
     },
@@ -220,44 +220,44 @@ export default {
       return hour;
     },
 
-    getTimeMarkers(color) {
-      const markers = [];
-      const currentHour = new Date().getHours();
+    // getTimeMarkers(color) {
+    //   const markers = [];
+    //   const currentHour = new Date().getHours();
 
-      this.points.forEach((point, index) => {
-        const hour = parseInt(point.time?.split(":")[0] || "0");
+    //   this.points.forEach((point, index) => {
+    //     const hour = parseInt(point.time?.split(":")[0] || "0");
 
-        if (hour === currentHour && index === 0) {
-          markers.push({
-            x: this.formatTime(point.time),
-            borderColor: "#5f27cd",
-            strokeDashArray: 0,
-            borderWidth: 2,
-            opacity: 0.5,
-            label: {
-              style: {
-                color: "#fff",
-                background: "#5f27cd",
-                fontSize: "8px",
-                fontWeight: 700,
-                padding: {
-                  left: 5,
-                  right: 5,
-                  top: 1,
-                  bottom: 1,
-                },
-                borderRadius: 3,
-              },
-              text: "Now",
-              orientation: "horizontal",
-              offsetY: -8,
-            },
-          });
-        }
-      });
+    //     if (hour === currentHour && index === 0) {
+    //       markers.push({
+    //         x: this.formatTime(point.time),
+    //         borderColor: "#5f27cd",
+    //         strokeDashArray: 0,
+    //         borderWidth: 2,
+    //         opacity: 0.5,
+    //         label: {
+    //           style: {
+    //             color: "#fff",
+    //             background: "#5f27cd",
+    //             fontSize: "8px",
+    //             fontWeight: 700,
+    //             padding: {
+    //               left: 5,
+    //               right: 5,
+    //               top: 1,
+    //               bottom: 1,
+    //             },
+    //             borderRadius: 3,
+    //           },
+    //           text: "Now",
+    //           orientation: "horizontal",
+    //           offsetY: -8,
+    //         },
+    //       });
+    //     }
+    //   });
 
-      return markers;
-    },
+    //   return markers;
+    // },
   },
 };
 </script>
