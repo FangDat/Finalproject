@@ -2,20 +2,16 @@
 
 import json
 import logging
-from google import genai
+from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
 # ============================
-# INIT GEMINI CLIENT (REUSE KEY)
+# INIT OPENAI CLIENT
 # ============================
-GEMINI_API_KEY = "AIzaSyCOdMKITA3Mr4_JhwFelKs4RLhP1K2ZGBg"
-client = genai.Client(api_key=GEMINI_API_KEY)
+OPENAI_API_KEY = "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"
 
-#AIzaSyDUEOGW5X4bnZjzImUKklS6qzcNcXsRbmo
-#AIzaSyCOdMKITA3Mr4_JhwFelKs4RLhP1K2ZGBg
-#AIzaSyBnVPuxArZoouSU3xt0bC5cmn6wf20rRCg
-#AIzaSyDy9xG4nZ79S4ixJwRs3vYqVASJaBLn6CQ
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 # ============================
@@ -89,9 +85,10 @@ If intent includes "healthcare":
 - DO NOT provide medical diagnosis.
 - DO NOT prescribe medication.
 - Suggestions may include:
-  • rest, hydration
+  • rest, hydration if needed
   • avoiding extreme weather exposure
   • appropriate clothing
+  • wear masks if air pollution is high
 - Always end with this sentence EXACTLY:
   "If your health condition worsens, we recommend visiting the nearest medical facility for appropriate treatment."
 
@@ -126,15 +123,21 @@ def generate_weather_response(
     logger.debug("LLM RESPONSE INPUT")
     logger.debug(json.dumps(payload, indent=2, ensure_ascii=False))
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=[
-            WEATHER_RESPONSE_PROMPT,
-            json.dumps(payload, ensure_ascii=False)
-        ]
+    response = client.responses.create(
+        model="gpt-4o",  # GPT-4.0 (OpenAI standard)
+        input=[
+            {
+                "role": "system",
+                "content": WEATHER_RESPONSE_PROMPT
+            },
+            {
+                "role": "user",
+                "content": json.dumps(payload, ensure_ascii=False)
+            }
+        ],
     )
 
-    answer = response.text.strip()
+    answer = response.output_text.strip()
 
     logger.debug("LLM RESPONSE OUTPUT")
     logger.debug(answer)
