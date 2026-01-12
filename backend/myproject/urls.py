@@ -16,6 +16,7 @@ from backend.api.views.auth_views import (
     forgot_password_verify_otp,
     forgot_password_reset,
     forgot_password_resend_otp,
+    payment_success_mock,
     
 )
 
@@ -80,5 +81,13 @@ urlpatterns = [
     path('api/forgot-password/reset/', forgot_password_reset),
     path('api/forgot-password/resend-otp/', forgot_password_resend_otp),
 
+    # ============================
+    # MOCK PAYMENT (TEMP)
+    # ============================
+    path(
+        'api/payment-success-mock/',
+        payment_success_mock,
+        name='payment_success_mock'
+    ),
 
 ]

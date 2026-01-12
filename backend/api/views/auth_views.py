@@ -421,3 +421,24 @@ def forgot_password_reset(request):
 def forgot_password_resend_otp(request):
     from .verifyotp_views import resend_forgot_password_otp_logic
     return resend_forgot_password_otp_logic(request.data.get("email"))
+
+# ============================
+# MOCK PAYMENT SUCCESS
+# ============================
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def payment_success_mock(request):
+    """
+    Tạm thời dùng để giả lập Stripe payment success
+    Sau này Stripe webhook chỉ cần gọi lại logic này
+    """
+    user = request.user
+
+    # Activate premium 30 days
+    user.activate_premium(days=30)
+
+    return Response({
+        "message": "Payment successful. Premium activated.",
+        "is_premium": True,
+        "premium_expires_at_ts": user.premium_expires_at_ts
+    }, status=200)

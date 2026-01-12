@@ -2,83 +2,125 @@ import logging
 import json
 import re
 import unicodedata
-from datetime import datetime, timezone, timedelta
-
+from datetime import datetime, timezone
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from datetime import datetime, timedelta 
+
 from rest_framework.test import APIRequestFactory
+from rest_framework.permissions import IsAuthenticated
 
 from backend.api.views.weather_intent_views import weather_by_intent
 from backend.api.permissions.is_premium_user import IsPremiumUser
-from backend.api.services.weather_response_generator import generate_weather_response
+from backend.api.services.weather_response_generator import (
+    generate_weather_response
+)
 
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
-# =====================================================
-# OPENAI GPT-4o CONFIG
-# =====================================================
+# ---------------------
+# OPENAI GPT-4o API KEY
+# ---------------------
 OPENAI_API_KEY = "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"
-
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# =====================================================
-# REMOVE ACCENTS (BACKUP NORMALIZATION)
-# =====================================================
+# ---------------------
+# Remove accents (backup normalization)
+# ---------------------
 def remove_accents(text):
     text = unicodedata.normalize("NFD", text)
     return "".join(c for c in text if unicodedata.category(c) != "Mn")
 
-# =====================================================
-# DATE / TIME HELPERS (GIỮ NGUYÊN)
-# =====================================================
-def get_local_today_by_utc_offset(utc_offset_hours: int):
-    tz = timezone(timedelta(hours=utc_offset_hours))
-    return datetime.now(tz).date()
+# ---------------------
+# Normalize and tokenize
+# ---------------------
+def normalize_and_tokenize(text: str):
+    """
+    Normalize text for safe keyword matching:
+    - lowercase
+    - collapse spaces
+    - tokenize into words
+    """
+    text = text.lower()
+    text = re.sub(r"\s+", " ", text).strip()
+    tokens = re.findall(r"[a-z0-9']+", text)
+    return text, tokens
 
-def get_city_utc_offset_hours(location_ascii):
-    try:
-        dummy_payload = {
-            "location": location_ascii,
-            "location_ascii": location_ascii,
-            "intent": ["weather_overview"],
-            "day": None,
-            "time_of_day": None
-        }
-        weather = call_weather_router(dummy_payload)
-        tz_string = weather.get("data", {}).get("weather_overview", {}).get("tz")
-        if tz_string:
-            return int(tz_string.split(":")[0])
-    except Exception as e:
-        logger.warning(f"Timezone detect failed: {e}")
-    return 0
 
-# =====================================================
-# GREETING / FAREWELL DETECTOR (GIỮ NGUYÊN)
-# =====================================================
-def detect_greeting_or_farewell(message: str):
-    msg = message.lower().strip()
-    thanks = [
-        "thanks", "thank you", "thx", "thank u",
-        "appreciate it", "much appreciated", "appreciate"
-    ]
-    farewells = [
-        "bye", "goodbye", "see you", "see ya",
-        "farewell", "take care"
-    ]
-    for t in thanks:
-        if msg == t or msg.startswith(t):
-            return "thanks"
-    for f in farewells:
-        if msg == f or msg.startswith(f):
-            return "farewell"
-    return None
+# ---------------------
+# MATCH KEYWORDS EXACTLY
+# ---------------------
+def match_keywords_exact(text: str, tokens: list, keywords: list):
+    """
+    Matching rules:
+    - Single-word keyword: must match exactly one token
+    - Multi-word keyword: must match the full phrase with word boundaries
+    """
+    for kw in keywords:
+        kw = kw.lower().strip()
 
-# =====================================================
+        if " " in kw:
+            # multi-word phrase: match full phrase
+            pattern = rf"\b{re.escape(kw)}\b"
+            if re.search(pattern, text):
+                return True
+        else:
+            # single-word: match token exactly
+            if kw in tokens:
+                return True
+
+    return False
+
+
+
+# ---------------------
+# PROMPT (GIỮ NGUYÊN 100%)
+# ---------------------
+INTENT_PROMPT = f"""
+You are an advanced intent extraction AI. 
+The input question MUST be written in English. 
+If the input is not English, reply with EXACT STRING:
+
+"Your question must be in English and related to weather or natural disasters, which are the domains I can work with!"
+
+Your job: extract meaning from English weather-related or natural-disaster-related questions.
+
+
+RULES:
+
+1) LANGUAGE CHECK:
+- If the user input is NOT in English → STOP and return the error string above.
+
+2) LOCATION:
+- Extract the city/province clearly.
+- If no valid location → location = null.
+
+3) DATE & TIME:
+- Convert detected dates to ISO format YYYY-MM-DD.
+- If the date contains NO year → infer future year.
+- Detect time-of-day keywords.
+
+4) INTENTS:
+- Specific date → include "daily_aggregation".
+- today/tomorrow → include "weather_overview" + "weather_forecast".
+- week/month → include "weather_forecast".
+- No date → include "weather_overview".
+- Travel/activity → include "activity_recommendation".
+- Disaster-related keywords → include "disaster".
+- Air condition, air pollution keywords -> include "air_pollution".
+- Health issues, advice when sick → include "healthcare".
+
+5) OUTPUT:
+- JSON ONLY.are
+"""
+
+# ---------------------
 # FUNCTION CALLING SCHEMA
-# =====================================================
+# ---------------------
 WEATHER_INTENT_FUNCTION = {
     "name": "extract_weather_intent",
     "description": "Extract structured weather intent from English user question",
@@ -101,9 +143,65 @@ WEATHER_INTENT_FUNCTION = {
     }
 }
 
-# =====================================================
-# API: ANALYZE INTENT
-# =====================================================
+# ---------------------
+# TIMEZONE HELPERS (GIỮ NGUYÊN)
+# ---------------------
+def get_local_today_by_utc_offset(utc_offset_hours: int):
+    tz = timezone(timedelta(hours=utc_offset_hours))
+    return datetime.now(tz).date()
+
+def get_city_utc_offset_hours(location_ascii):
+    try:
+        dummy_payload = {
+            "location": location_ascii,
+            "location_ascii": location_ascii,
+            "intent": ["weather_overview"],
+            "day": None,
+            "time_of_day": None
+        }
+        weather = call_weather_router(dummy_payload)
+        tz_string = (
+            weather
+            .get("data", {})
+            .get("weather_overview", {})
+            .get("tz")
+        )
+        if tz_string:
+            return int(tz_string.split(":")[0])
+    except Exception as e:
+        logger.warning(f"Timezone detect failed: {e}")
+    return 0
+
+# ---------------------
+# Greeting / Farewell detector (GIỮ NGUYÊN)
+# ---------------------
+def detect_greeting_or_farewell(message: str):
+    msg = message.lower().strip()
+
+    thanks = [
+        "thanks", "thank you", "thx", "thank u",
+        "appreciate it", "much appreciated","appreciate"
+    ]
+
+    farewells = [
+        "bye", "goodbye", "see you", "see ya",
+        "farewell", "take care"
+    ]
+
+    for t in thanks:
+        if msg == t or msg.startswith(t):
+            return "thanks"
+
+    for f in farewells:
+        if msg == f or msg.startswith(f):
+            return "farewell"
+
+    return None
+
+
+# ---------------------
+# API: Analyze Intent
+# ---------------------
 @api_view(["POST"])
 @permission_classes([IsAuthenticated, IsPremiumUser])
 def analyze_intent(request):
@@ -112,8 +210,8 @@ def analyze_intent(request):
     if not user_message:
         return Response({"error": "message is required"}, status=400)
 
-    # 🌟 GREETING / FAREWELL
     greeting_type = detect_greeting_or_farewell(user_message)
+
     if greeting_type == "thanks":
         return Response({
             "answer": "You’re very welcome! 😊 If you need any weather information, health or travel advice base on weather, I’m always here to help."
@@ -127,44 +225,13 @@ def analyze_intent(request):
     try:
         logger.debug(f"[Chatbot] Analyze Intent: {user_message}")
 
-        # ============================
-        # 🔥 GPT-4o FUNCTION CALLING
-        # ============================
+        # =====================================================
+        # 🔥 GPT-4o FUNCTION CALLING (THAY GEMINI – DUY NHẤT)
+        # =====================================================
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are an intent extraction AI.\n"
-                        "Input MUST be English.\n"
-                        "If not English → DO NOT CALL FUNCTION.\n\n"
-                        
-                        "INTENT RULES:\n"
-
-                        "1) LOCATION:\n"
-                        "- Extract the city/province clearly."
-                        "- If no valid location → location = null.\n\n"
-
-                        "2) DATE & TIME:\n"
-                        "- Convert detected dates to ISO format YYYY-MM-DD.\n"
-                        "- If the date contains NO year → infer future year.\n"
-                        "- Detect time-of-day keywords."
-                        
-                        "3) INTENT TYPES:\n"
-                        "- Specific date → daily_aggregation\n"
-                        "- today/tomorrow → weather_overview + weather_forecast\n"
-                        "- week/month → weather_forecast\n"
-                        "- No date → weather_overview\n"
-                        "- Travel/activity → activity_recommendation\n"
-                        "- Disaster keywords → disaster\n"
-                        "- Air quality keywords → air_pollution\n"
-                        "- Health issues → healthcare"
-
-                        "5) OUTPUT:\n"
-                        "- JSON ONLY.\n"    
-                    )
-                },
+                {"role": "system", "content": INTENT_PROMPT},
                 {"role": "user", "content": user_message}
             ],
             tools=[{"type": "function", "function": WEATHER_INTENT_FUNCTION}],
@@ -174,92 +241,93 @@ def analyze_intent(request):
         message = response.choices[0].message
 
         if not message.tool_calls:
-            return Response({
-                "error": "Your question must be in English and related to weather, natural disasters, air quality or healthcare!."
-            }, status=400)
-
-        tool_args = json.loads(message.tool_calls[0].function.arguments)
-        result = tool_args
-
-        logger.debug(f"[GPT-4o Intent JSON] {json.dumps(result, indent=2)}")
-
-        # ============================
-        # PYTHON BACKUP LOGIC (GIỮ NGUYÊN)
-        # ============================
-        if not result.get("location"):
             return Response(
-                {"error": "Your question must contain a valid location."},
+                {"error": "Your question must be in English and related to weather, which is the domain I can work with!"},
                 status=400
             )
 
-        result["location_ascii"] = remove_accents(result["location"])
-        msg_lower = user_message.lower()
-        intents = result.get("intent", [])
+        result = json.loads(message.tool_calls[0].function.arguments)
 
-        # --- DISASTER ---
+        logger.debug(f"[GPT-4o Intent JSON] {json.dumps(result, indent=2)}")
+
+ # ---------------------
+        # Python backup: generate location_ascii
+        # ---------------------
+        if result.get("location"):
+            result["location_ascii"] = remove_accents(result["location"])
+        else:
+            return Response(
+                {"error": "Your question must be in English and must contain a valid location."},
+                status=400
+            )
+
+        # ---------------------
+        # NEW FEATURE: detect disaster intent
+        # ---------------------
         disaster_keywords = [
             "typhoon", "storm", "super typhoon", "hurricane", "cyclone",
             "flood", "tsunami", "tornado", "earthquake",
             "wildfire", "thunderstorm", "landslide",
             "extreme weather", "natural disaster", "disaster"
         ]
+
         msg_lower = user_message.lower()
         intents = result.get("intent", [])
-        
-        if any(k in msg_lower for k in disaster_keywords):
+
+        if any(keyword in msg_lower for keyword in disaster_keywords):
             if "disaster" not in intents:
                 intents.append("disaster")
-        
-        result["intent"] = intents
 
-        # --- AIR POLLUTION ---
+        result["intent"] = intents
+        
+        # ---------------------
+        # NEW FEATURE: detect air pollution intent
+        # ---------------------
         air_pollution_keywords = [
-             "air quality", "air pollution", "pollution",
+            "air quality", "air pollution", "pollution",
             "aqi", "pm2.5", "pm10",
             "smog", "haze", "dust",
             "fine particles", "air condition",
             "breathing", "respiratory"
         ]
+
         msg_lower = user_message.lower()
         intents = result.get("intent", [])
-        
-        if any(k in msg_lower for k in air_pollution_keywords):
+
+        if any(keyword in msg_lower for keyword in air_pollution_keywords):
             if "air_pollution" not in intents:
                 intents.append("air_pollution")
-                
-        result["intent"] = intents
 
-        # --- HEALTHCARE ---
+        result["intent"] = intents
+        
+        # ---------------------
+        # NEW FEATURE: detect healthcare intent
+        # ---------------------
         healthcare_keywords = [
-             "fever", "sick", "ill", "illness",
+            "fever", "sick", "ill", "illness",
             "headache", "cold", "flu",
             "cough", "sore throat", "runny nose",
             "fatigue", "tired", "weak",
             "nausea", "vomit", "dizzy", "dizziness",
             "health", "healthcare", "medical"
         ]
-        
+
         msg_lower = user_message.lower()
         intents = result.get("intent", [])
-        
-        if any(k in msg_lower for k in healthcare_keywords):
+
+        if any(keyword in msg_lower for keyword in healthcare_keywords):
             if "healthcare" not in intents:
                 intents.append("healthcare")
 
         result["intent"] = intents
 
-        # ============================
-        # TODAY / TOMORROW OVERRIDE
-        # ============================
-        utc_offset = get_city_utc_offset_hours(result["location_ascii"])
-        system_today = get_local_today_by_utc_offset(utc_offset)
-
-           # ------------------------------------------
+                # ------------------------------------------
         # 3.1 FIX QUAN TRỌNG: ĐÚNG NGÀY "TODAY"
         # ------------------------------------------
+        msg_lower, tokens = normalize_and_tokenize(user_message)
         today_keywords = [
             "today", "right now", "this day", "currently",
-            "at the moment", "nowadays", "current day", "now", "tonight", "this", "present day"
+            "at the moment", "nowadays", "current day", "now", "tonight", "present day",
             "this morning", "this afternoon", "this evening", "this night"
         ]
 
@@ -268,18 +336,19 @@ def analyze_intent(request):
         )
         system_today = get_local_today_by_utc_offset(utc_offset_hours)
 
-        if any(k in msg_lower for k in today_keywords):
-
-            # 👉 OVERRIDE day từ Gemini
+        if match_keywords_exact(msg_lower, tokens, today_keywords):
+            # override day
             result["day"] = system_today.strftime("%Y-%m-%d")
-
             if "weather_forecast" not in intents:
                 intents.append("weather_forecast")
             if "weather_overview" not in intents:
                 intents.append("weather_overview")
-
             result["intent"] = intents
-        
+
+         # ------------------------------------------
+        # 3. FIX QUAN TRỌNG: ĐÚNG NGÀY "TOMORROW"
+        # ------------------------------------------
+        msg_lower, tokens = normalize_and_tokenize(user_message)
         tomorrow_keywords = [
             "tomorrow", "tommorow", "tommorrow", 
             "tmrw", "tomo", "next day", 
@@ -288,17 +357,13 @@ def analyze_intent(request):
 
         system_tomorrow = system_today + timedelta(days=1)
 
-        if any(k in msg_lower for k in tomorrow_keywords):
-
-            # → BỎ LUÔN NGÀY GEMINI, SET LẠI 100%
+        if match_keywords_exact(msg_lower, tokens, tomorrow_keywords):
+            # override day
             result["day"] = system_tomorrow.strftime("%Y-%m-%d")
-
-            # ép intent
             if "weather_forecast" not in intents:
                 intents.append("weather_forecast")
             if "weather_overview" not in intents:
                 intents.append("weather_overview")
-
             result["intent"] = intents
         # ---------------------
         # NEW: Handle "next week"
@@ -383,12 +448,15 @@ def analyze_intent(request):
             except Exception as e:
                 logger.warning(f"Date distance check failed: {e}")
 
+
         # ============================
-        # AUTO CALL WEATHER API
+        # 🔥 AUTO CALL WEATHER API 🔥
         # ============================
         weather_data = None
         if any(i in result["intent"] for i in [
-            "weather_forecast", "weather_overview", "daily_aggregation", "air_pollution"
+            "weather_forecast",
+            "weather_overview",
+            "daily_aggregation"
         ]):
             try:
                 weather_data = call_weather_router(result)
@@ -396,36 +464,44 @@ def analyze_intent(request):
                 logger.error(f"Weather router error: {e}", exc_info=True)
 
         # ============================
-        # STEP 4 – LLM RESPONSE
+        # 🔥 STEP 4 – LLM RESPONSE 🔥
         # ============================
         final_answer = None
-        
-        final_answer = generate_weather_response(
-            user_question=user_message,
-            intent_result=result,
-            weather_data=weather_data.get("data") if weather_data else {}
-        )
 
-        return Response({
+        try:
+            final_answer = generate_weather_response(
+                user_question=user_message,
+                intent_result=result,
+                weather_data=weather_data.get("data") if weather_data else {}
+            )
+        except Exception as e:
+            logger.error(f"LLM response generation failed: {e}", exc_info=True)
+
+        final_response = {
             "intent_result": result,
             "weather": weather_data,
             "answer": final_answer
-        }, status=200)
+        }
+
+        return Response(final_response, status=200)
+
 
     except Exception as e:
         logger.error(f"Chatbot intent error: {e}", exc_info=True)
         return Response({"error": str(e)}, status=500)
+    
 
-
-# =====================================================
-# INTERNAL WEATHER ROUTER
-# =====================================================
 def call_weather_router(intent_json):
+    """
+    Internal call to weather_by_intent
+    Không phải HTTP call → gọi trực tiếp view
+    """
     factory = APIRequestFactory()
     fake_request = factory.post(
         "/api/weather/by-intent/",
         data=intent_json,
         format="json"
     )
+
     response = weather_by_intent(fake_request)
     return response.data

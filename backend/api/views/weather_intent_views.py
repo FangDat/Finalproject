@@ -256,6 +256,7 @@ def weather_by_intent(request):
             params={
                 "lat": lat,
                 "lon": lon,
+                "units": "metric",
                 "appid": OPENWEATHER_KEY,
             },
             timeout=8,
