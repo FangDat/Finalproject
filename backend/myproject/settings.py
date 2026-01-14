@@ -1,12 +1,16 @@
 from pathlib import Path
 from datetime import timedelta
-
+import os
+from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG_INTENT_LOG_FILE = BASE_DIR / 'checkjson.log'
 SECRET_KEY = 'django-insecure-#-q_^(f#_-$e73z^0$-@r3duc9!y_^b*re3*&6cinnfzz&p6c!'
 
 DEBUG = True
-
+load_dotenv() 
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 ALLOWED_HOSTS = []
 
 # ----------------------

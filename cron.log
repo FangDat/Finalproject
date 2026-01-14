@@ -10,3 +10,7 @@ Matched: 1, Modified: 1
 [2026-01-12 17:16:02,330] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
 Expired users matched: 1
 Matched: 1, Modified: 1
+[2026-01-14 14:36:01,498] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-14 14:36:01,684] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 1
+Matched: 1, Modified: 1

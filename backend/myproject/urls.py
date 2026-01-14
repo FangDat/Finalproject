@@ -17,6 +17,7 @@ from backend.api.views.auth_views import (
     forgot_password_reset,
     forgot_password_resend_otp,
     payment_success_mock,
+    stripe_webhook
     
 )
 
@@ -88,6 +89,11 @@ urlpatterns = [
         'api/payment-success-mock/',
         payment_success_mock,
         name='payment_success_mock'
+    ),
+    path(
+    'api/stripe/webhook/',
+    stripe_webhook,
+    name='stripe_webhook'
     ),
 
 ]

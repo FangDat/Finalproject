@@ -3,7 +3,7 @@ import datetime
 from urllib.parse import quote
 import logging
 import re
-
+import stripe
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -15,6 +15,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.hashers import check_password
 from django.core.mail import send_mail
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 
 from ..permissions import IsPremiumUser
@@ -25,7 +27,7 @@ from ..authentication import CustomJWTAuthentication
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # ---------------------------
 # Custom Token Serializer
@@ -442,3 +444,67 @@ def payment_success_mock(request):
         "is_premium": True,
         "premium_expires_at_ts": user.premium_expires_at_ts
     }, status=200)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])  # Stripe không dùng JWT
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+
+    # ----------------------------
+    # 1. Verify signature
+    # ----------------------------
+    try:
+        event = stripe.Webhook.construct_event(
+            payload=payload,
+            sig_header=sig_header,
+            secret=endpoint_secret,
+        )
+    except ValueError as e:
+        logger.error("Stripe webhook invalid payload")
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError:
+        logger.error("Stripe webhook invalid signature")
+        return HttpResponse(status=400)
+
+    event_type = event["type"]
+    logger.info(f"[Stripe Webhook] Event received: {event_type}")
+
+    # ----------------------------
+    # 2. Handle event SAFELY
+    # ----------------------------
+
+    # ✅ CHỈ HANDLE CHECKOUT
+    if event_type == "checkout.session.completed":
+        session = event["data"]["object"]
+
+        user_id = session.get("client_reference_id")
+        logger.info(f"Checkout completed for user_id={user_id}")
+
+        if user_id:
+            try:
+                user = User.objects.get(_id=user_id)
+                user.activate_premium(days=30)
+                logger.info(f"Premium activated for user {user.username}")
+            except User.DoesNotExist:
+                logger.warning(f"User not found for id={user_id}")
+
+    # 🟡 LOG NHƯNG KHÔNG XỬ LÝ
+    elif event_type in [
+        "payment_intent.created",
+        "payment_intent.succeeded",
+        "charge.succeeded",
+        "charge.updated",
+    ]:
+        logger.debug(f"Ignored Stripe event: {event_type}")
+
+    # 🟡 EVENT KHÁC → BỎ QUA
+    else:
+        logger.debug(f"Unhandled Stripe event: {event_type}")
+
+    # ----------------------------
+    # 3. ACK STRIPE
+    # ----------------------------
+    return HttpResponse(status=200)
