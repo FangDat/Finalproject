@@ -37,7 +37,7 @@ export default {
   computed: {
     showHeader() {
       const path = this.$route.path;
-      return !(path === "/login" || path === "/signup" || path === "/credit-card");
+      return !(path === "/login" || path === "/signup" || path === "/Billing");
     },
   },
   methods: {

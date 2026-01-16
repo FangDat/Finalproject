@@ -16,9 +16,15 @@ from backend.api.views.auth_views import (
     forgot_password_verify_otp,
     forgot_password_reset,
     forgot_password_resend_otp,
-    payment_success_mock,
-    stripe_webhook
+
     
+)
+from backend.api.views.payment_views import (
+    payment_success_mock,
+    stripe_webhook,
+    create_checkout_session,
+    get_billing_info,
+    save_billing_info,
 )
 
 from backend.api.views.weather_views import (
@@ -95,5 +101,12 @@ urlpatterns = [
     stripe_webhook,
     name='stripe_webhook'
     ),
+    path(
+    'api/stripe/create-checkout-session/',
+    create_checkout_session,
+    name='create_checkout_session'
+    ),
+    path('api/billing-info/', get_billing_info, name='get_billing_info'),
+    path('api/billing-info/save/', save_billing_info, name='save_billing_info'),
 
 ]

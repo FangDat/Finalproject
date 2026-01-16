@@ -165,9 +165,15 @@
 }
 
 .warning-text {
-  font-size: 14px; /* nhỏ hơn tiêu đề */
-  color: #d9534f; /* đỏ cảnh báo */
-  margin-top: 4px;
-  font-weight: 500;
+  font-size: 16px;          /* 🔥 to hơn rõ ràng */
+  color: #d32f2f;           /* đỏ đậm hơn */
+  margin-top: 2px;          /* 🔥 sát input */
+  font-weight: 600;
+  line-height: 1.2;
 }
 
+
+/* 🔥 Make inputs in form-row stretch full width */
+.form-row .form-group {
+  flex: 1;
+}

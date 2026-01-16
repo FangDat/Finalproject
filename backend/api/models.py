@@ -14,6 +14,19 @@ class User(models.Model):
     # ✅ DÙNG TIMESTAMP (SECONDS)
     premium_started_at_ts = models.BigIntegerField(null=True, blank=True)
     premium_expires_at_ts = models.BigIntegerField(null=True, blank=True)
+    
+    # =========================
+    # BILLING INFORMATION (INTERNAL)
+    # =========================
+    billing_first_name = models.CharField(max_length=100, null=True, blank=True)
+    billing_last_name = models.CharField(max_length=100, null=True, blank=True)
+    billing_address_line1 = models.CharField(max_length=255, null=True, blank=True)
+    billing_city = models.CharField(max_length=100, null=True, blank=True)
+    billing_postal_code = models.CharField(max_length=20, null=True, blank=True)
+    billing_phone = models.CharField(max_length=30, null=True, blank=True)
+
+    billing_completed = models.BooleanField(default=False)
+
 
     def save(self, *args, **kwargs):
         if self.password and not self.password.startswith("pbkdf2_"):

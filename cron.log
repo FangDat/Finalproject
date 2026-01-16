@@ -14,3 +14,15 @@ Matched: 1, Modified: 1
 [2026-01-14 14:36:01,684] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
 Expired users matched: 1
 Matched: 1, Modified: 1
+[2026-01-14 17:00:02,431] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-14 17:00:02,608] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 1
+Matched: 1, Modified: 1
+[2026-01-14 17:05:01,544] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-14 17:05:01,718] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 1
+Matched: 1, Modified: 1
+[2026-01-15 17:00:04,852] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-15 17:00:05,030] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 0
+No expired users found.

@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import TermsAndConditions from "../views/TermsAndConditions.vue";
-import CreditCard from "../views/CreditCard.vue";
+import Billing from "../views/Billing.vue";
 import MapPage from "../views/Map.vue";
 import Chatbot from "../views/Chatbot.vue";
 import Profile from "../views/Profile.vue";
@@ -22,7 +22,7 @@ const routes = [
     component: () => import("@/views/Settings.vue"),
   },
   { path: "/terms", name: "Terms", component: TermsAndConditions },
-  { path: "/credit-card", name: "CreditCard", component: CreditCard },
+  { path: "/billing", name: "Billing", component: Billing },
   { path: "/map", name: "Map", component: MapPage },
   { 
     path: "/chatbot", 

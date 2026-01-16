@@ -264,6 +264,8 @@ def analyze_intent(request):
         # ---------------------
         # NEW FEATURE: detect disaster intent
         # ---------------------
+        msg_lower, tokens = normalize_and_tokenize(user_message)
+
         disaster_keywords = [
             "typhoon", "storm", "super typhoon", "hurricane", "cyclone",
             "flood", "tsunami", "tornado", "earthquake",
@@ -271,10 +273,9 @@ def analyze_intent(request):
             "extreme weather", "natural disaster", "disaster"
         ]
 
-        msg_lower = user_message.lower()
         intents = result.get("intent", [])
 
-        if any(keyword in msg_lower for keyword in disaster_keywords):
+        if match_keywords_exact(msg_lower, tokens, disaster_keywords):
             if "disaster" not in intents:
                 intents.append("disaster")
 
@@ -283,18 +284,26 @@ def analyze_intent(request):
         # ---------------------
         # NEW FEATURE: detect air pollution intent
         # ---------------------
+        msg_lower, tokens = normalize_and_tokenize(user_message)
+
         air_pollution_keywords = [
-            "air quality", "air pollution", "pollution",
-            "aqi", "pm2.5", "pm10",
-            "smog", "haze", "dust",
-            "fine particles", "air condition",
-            "breathing", "respiratory"
+            "air quality",
+            "air pollution",
+            "pollution",
+            "aqi",
+            "pm2.5",
+            "pm10",
+            "smog",
+            "haze",
+            "fine particles",
+            "dust storm",
+            "respiratory problem",
+            "breathing problem"
         ]
 
-        msg_lower = user_message.lower()
         intents = result.get("intent", [])
 
-        if any(keyword in msg_lower for keyword in air_pollution_keywords):
+        if match_keywords_exact(msg_lower, tokens, air_pollution_keywords):
             if "air_pollution" not in intents:
                 intents.append("air_pollution")
 
@@ -303,25 +312,28 @@ def analyze_intent(request):
         # ---------------------
         # NEW FEATURE: detect healthcare intent
         # ---------------------
+        msg_lower, tokens = normalize_and_tokenize(user_message)
+
         healthcare_keywords = [
             "fever", "sick", "ill", "illness",
             "headache", "cold", "flu",
             "cough", "sore throat", "runny nose",
             "fatigue", "tired", "weak",
             "nausea", "vomit", "dizzy", "dizziness",
-            "health", "healthcare", "medical"
+            "medical advice",
+            "health problem",
+            "healthcare advice"
         ]
 
-        msg_lower = user_message.lower()
         intents = result.get("intent", [])
 
-        if any(keyword in msg_lower for keyword in healthcare_keywords):
+        if match_keywords_exact(msg_lower, tokens, healthcare_keywords):
             if "healthcare" not in intents:
                 intents.append("healthcare")
 
         result["intent"] = intents
 
-                # ------------------------------------------
+        # ------------------------------------------
         # 3.1 FIX QUAN TRỌNG: ĐÚNG NGÀY "TODAY"
         # ------------------------------------------
         msg_lower, tokens = normalize_and_tokenize(user_message)

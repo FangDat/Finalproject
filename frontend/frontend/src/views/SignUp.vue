@@ -258,7 +258,7 @@ export default {
           this.showOtpModal = false;
           this.alertMessage = "Verification successful! Redirecting...";
           this.alertType = "success";
-          setTimeout(() => this.$router.push("/credit-card"), 3500);
+          setTimeout(() => this.$router.push("/billing"), 3500);
         }
       } catch (err) {
         this.otpError =

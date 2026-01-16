@@ -17,6 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from bson import ObjectId
 
 
 from ..permissions import IsPremiumUser
@@ -423,88 +424,3 @@ def forgot_password_reset(request):
 def forgot_password_resend_otp(request):
     from .verifyotp_views import resend_forgot_password_otp_logic
     return resend_forgot_password_otp_logic(request.data.get("email"))
-
-# ============================
-# MOCK PAYMENT SUCCESS
-# ============================
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def payment_success_mock(request):
-    """
-    Tạm thời dùng để giả lập Stripe payment success
-    Sau này Stripe webhook chỉ cần gọi lại logic này
-    """
-    user = request.user
-
-    # Activate premium 30 days
-    user.activate_premium(days=30)
-
-    return Response({
-        "message": "Payment successful. Premium activated.",
-        "is_premium": True,
-        "premium_expires_at_ts": user.premium_expires_at_ts
-    }, status=200)
-
-@csrf_exempt
-@api_view(['POST'])
-@permission_classes([AllowAny])  # Stripe không dùng JWT
-def stripe_webhook(request):
-    payload = request.body
-    sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
-    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
-
-    # ----------------------------
-    # 1. Verify signature
-    # ----------------------------
-    try:
-        event = stripe.Webhook.construct_event(
-            payload=payload,
-            sig_header=sig_header,
-            secret=endpoint_secret,
-        )
-    except ValueError as e:
-        logger.error("Stripe webhook invalid payload")
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError:
-        logger.error("Stripe webhook invalid signature")
-        return HttpResponse(status=400)
-
-    event_type = event["type"]
-    logger.info(f"[Stripe Webhook] Event received: {event_type}")
-
-    # ----------------------------
-    # 2. Handle event SAFELY
-    # ----------------------------
-
-    # ✅ CHỈ HANDLE CHECKOUT
-    if event_type == "checkout.session.completed":
-        session = event["data"]["object"]
-
-        user_id = session.get("client_reference_id")
-        logger.info(f"Checkout completed for user_id={user_id}")
-
-        if user_id:
-            try:
-                user = User.objects.get(_id=user_id)
-                user.activate_premium(days=30)
-                logger.info(f"Premium activated for user {user.username}")
-            except User.DoesNotExist:
-                logger.warning(f"User not found for id={user_id}")
-
-    # 🟡 LOG NHƯNG KHÔNG XỬ LÝ
-    elif event_type in [
-        "payment_intent.created",
-        "payment_intent.succeeded",
-        "charge.succeeded",
-        "charge.updated",
-    ]:
-        logger.debug(f"Ignored Stripe event: {event_type}")
-
-    # 🟡 EVENT KHÁC → BỎ QUA
-    else:
-        logger.debug(f"Unhandled Stripe event: {event_type}")
-
-    # ----------------------------
-    # 3. ACK STRIPE
-    # ----------------------------
-    return HttpResponse(status=200)
