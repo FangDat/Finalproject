@@ -30,6 +30,34 @@ logger.setLevel(logging.DEBUG)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+def get_or_create_stripe_customer(user: User):
+    """
+    OpenWeather-style:
+    - 1 user = 1 Stripe customer
+    """
+    if user.stripe_customer_id:
+        return user.stripe_customer_id
+
+    customer = stripe.Customer.create(
+        email=user.email,
+        name=f"{user.billing_first_name} {user.billing_last_name}",
+        phone=user.billing_phone,
+        address={
+            "line1": user.billing_address_line1,
+            "city": user.billing_city,
+            "postal_code": user.billing_postal_code,
+        },
+        metadata={
+            "user_id": str(user._id),
+            "username": user.username,
+        }
+    )
+
+    user.stripe_customer_id = customer.id
+    user.save(update_fields=["stripe_customer_id"])
+
+    return customer.id
+
 
 # ============================
 # MOCK PAYMENT SUCCESS
@@ -56,8 +84,14 @@ def payment_success_mock(request):
 @permission_classes([IsAuthenticated])
 def create_checkout_session(request):
     user = request.user
-    
-    
+
+    # 🔒 BLOCK ACTIVE PREMIUM USER
+    if getattr(user, "is_premium", False):
+        return Response(
+            {"error": "You are not due for the next payment yet."},
+            status=400
+        )
+
     # 🔒 HARD CHECK BILLING INFO
     if not getattr(user, "billing_completed", False):
         return Response(
@@ -66,34 +100,38 @@ def create_checkout_session(request):
         )
 
     try:
+        # 1️⃣ Ensure Stripe Customer
+        stripe_customer_id = get_or_create_stripe_customer(user)
+
+        # 2️⃣ Create Checkout Session WITH INVOICE
         session = stripe.checkout.Session.create(
             mode="payment",
+            customer=stripe_customer_id,
             payment_method_types=["card"],
+            invoice_creation={"enabled": True},  # 🔥 KEY POINT
             line_items=[{
                 "price_data": {
                     "currency": "usd",
                     "product_data": {
                         "name": "VietCloud Premium (30 days)",
                     },
-                    "unit_amount": 696,  # $5.00 test
+                    "unit_amount": 696,  # $6.96
                 },
                 "quantity": 1,
             }],
-            success_url="http://localhost:8080/#/",
+            success_url="http://localhost:8080/#/?payment=success",
             cancel_url="http://localhost:8080/#/",
-            client_reference_id=str(user._id),  # 🔥 QUAN TRỌNG NHẤT
+            client_reference_id=str(user._id),
         )
 
         return Response({
             "checkout_url": session.url
-        })
+        }, status=200)
 
     except Exception as e:
         logger.exception("Create checkout session failed")
-        return Response(
-            {"error": str(e)},
-            status=500
-        )
+        return Response({"error": str(e)}, status=500)
+
 
 
 @csrf_exempt
@@ -247,3 +285,37 @@ def save_billing_info(request):
         {"message": "Billing information saved"},
         status=200
     )
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_stripe_invoices(request):
+    user = request.user
+
+    if not user.stripe_customer_id:
+        return Response([], status=200)
+
+    try:
+        invoices = stripe.Invoice.list(
+            customer=user.stripe_customer_id,
+            limit=20
+        )
+
+        result = []
+
+        for inv in invoices.auto_paging_iter():
+            result.append({
+                "invoice_number": inv.number,
+                "amount": f"{inv.amount_paid / 100:.2f} {inv.currency.upper()}",
+                "created_at": datetime.datetime.utcfromtimestamp(
+                    inv.created
+                ).strftime("%H:%M:%S %b %d, %Y UTC"),
+                "hosted_invoice_url": inv.hosted_invoice_url,
+                "status": inv.status,
+            })
+
+        return Response(result, status=200)
+
+    except Exception as e:
+        logger.exception("List invoice failed")
+        return Response({"error": str(e)}, status=500)
+

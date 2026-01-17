@@ -25,6 +25,7 @@ from backend.api.views.payment_views import (
     create_checkout_session,
     get_billing_info,
     save_billing_info,
+    list_stripe_invoices,
 )
 
 from backend.api.views.weather_views import (
@@ -108,5 +109,11 @@ urlpatterns = [
     ),
     path('api/billing-info/', get_billing_info, name='get_billing_info'),
     path('api/billing-info/save/', save_billing_info, name='save_billing_info'),
+    path(
+    'api/stripe/invoices/',
+    list_stripe_invoices,
+    name='list_stripe_invoices'
+    ),
+
 
 ]

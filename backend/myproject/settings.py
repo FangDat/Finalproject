@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG_INTENT_LOG_FILE = BASE_DIR / 'checkjson.log'
 SECRET_KEY = 'django-insecure-#-q_^(f#_-$e73z^0$-@r3duc9!y_^b*re3*&6cinnfzz&p6c!'
+# STRIPE_PREMIUM_PRICE_ID = "price_1SqV5EFDCAdx0wmRYACLZs98"
 
 DEBUG = True
 load_dotenv() 

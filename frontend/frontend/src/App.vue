@@ -18,6 +18,20 @@
     </header>
 
     <router-view />
+    <!-- ✅ PAYMENT SUCCESS POPUP -->
+    <div v-if="showPaymentSuccessPopup" class="premium-popup-overlay">
+      <div class="premium-popup">
+        <h2>🎉 Payment Successful</h2>
+        <p>
+          Your payment has been completed successfully.<br /><br />
+           Invoice details are available in your <b>Profile</b>.<br />
+           Please refresh the page for the best experience.
+        </p>
+        <button @click="handlePaymentPopupConfirm">
+          Got it
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -32,12 +46,14 @@ export default {
     lastActiveTime: Date.now(),
     wakeHandlerBound: null,
 
+    showPaymentSuccessPopup: false,
+
     };
   },
   computed: {
     showHeader() {
       const path = this.$route.path;
-      return !(path === "/login" || path === "/signup" || path === "/Billing");
+      return !(path === "/login" || path === "/signup" || path === "/Billing" || path === "/billing");
     },
   },
   methods: {
@@ -45,6 +61,17 @@ export default {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
     },
+  handlePaymentPopupConfirm() {
+    this.showPaymentSuccessPopup = false;
+
+    // 🔥 XOÁ payment=success KHỎI HASH
+    this.$router.replace({ path: this.$route.path });
+
+    // 🔄 reload sau khi URL sạch
+    setTimeout(() => {
+      window.location.reload();
+    }, 50);
+  }, 
 
       // 🆕 HANDLE WAKE FROM SLEEP
     handleWakeUp() {
@@ -172,6 +199,14 @@ export default {
   },
   mounted() {
     this.syncAuthSafe();
+        // ✅ DETECT STRIPE PAYMENT SUCCESS
+    const hash = window.location.hash; // "#/?payment=success"
+    const queryString = hash.includes("?") ? hash.split("?")[1] : "";
+    const params = new URLSearchParams(queryString);
+
+    if (params.get("payment") === "success") {
+      this.showPaymentSuccessPopup = true;
+    }
 
     if (this.username) this.refreshToken();
     // Đồng bộ cookie username mỗi giây để update UI
@@ -292,5 +327,44 @@ export default {
   background: #d32f2f;
 }
 
+.premium-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.premium-popup {
+  background: white;
+  padding: 30px 35px;
+  border-radius: 18px;
+  text-align: center;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.premium-popup h2 {
+  color: #007bff;
+  margin-bottom: 12px;
+}
+
+.premium-popup p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+.premium-popup button {
+  padding: 12px 26px;
+  border: none;
+  border-radius: 25px;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
 
 </style>

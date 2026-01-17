@@ -5,7 +5,7 @@
       <button class="back-btn" @click="goBack">← Return to VietCloud</button>
 
       <div class="pricing-box">
-        <h2 class="price">$6.96 <span class="vat">inc. VAT</span></h2>
+        <h2 class="price">$6.96 <span class="vat">inc. VAT (per month)</span></h2>
         <p class="billing-cycle">Billed monthly</p>
         <p class="note">Secure payment via Stripe</p>
 
@@ -99,6 +99,20 @@
       </div>
     </div>
   </div>
+    <!-- 🔒 PREMIUM INFO POPUP -->
+  <div v-if="showPremiumPopup" class="premium-popup-overlay">
+    <div class="premium-popup">
+      <h2>✨ VietCloud Premium</h2>
+      <p>
+        You are not due for the next payment yet.<br />
+        Please enjoy your exclusive VietCloud Premium features.
+      </p>
+      <button @click="showPremiumPopup = false">
+        Got it
+      </button>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -111,6 +125,10 @@ export default {
       loading: false,
       error: "",
       submitted: false,
+          // 🆕 PREMIUM STATE
+      is_premium: false,
+      showPremiumPopup: false,
+
       form: {
         first_name: "",
         last_name: "",
@@ -133,12 +151,16 @@ export default {
         this.$router.push("/");
         return;
       }
+
+      const data = await res.json();
+      this.is_premium = data.is_premium || false;
+
     } catch {
       this.$router.push("/");
       return;
     }
 
-    // Load existing billing info
+    // Load existing billing info (GIỮ NGUYÊN)
     try {
       const res = await axios.get(
         "http://localhost:8000/api/billing-info/",
@@ -150,7 +172,13 @@ export default {
 
     methods: {
     async handleSubmit() {
-      this.submitted = true; // 🔥 bật hiển thị lỗi
+      this.submitted = true;
+
+      // 🔒 BLOCK PREMIUM USER (GIỐNG CHATBOT)
+      if (this.is_premium) {
+        this.showPremiumPopup = true;
+        return;
+      }
 
       if (this.hasAnyError) return;
 
@@ -170,8 +198,8 @@ export default {
         );
 
         window.location.href = res.data.checkout_url;
-        } catch (err) {
-        // ✅ HIỂN THỊ LỖI TỪ BACKEND (400)
+
+      } catch (err) {
         this.error =
           err.response?.data?.error ||
           "Billing submission failed";
@@ -179,7 +207,6 @@ export default {
         this.loading = false;
       }
     },
-
 
     goBack() {
       this.$router.push("/");
