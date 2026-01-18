@@ -73,27 +73,72 @@
         </div>
       </section>
 
-      <!-- Subscriptions -->
+      <!-- Billing & Invoices -->
       <section class="card" id="subscriptions">
-        <h2 class="sub-title">Subscriptions</h2>
-        <div class="payment-method">
-          <p>Payment cards added and available:</p>
-          <div class="card-row">
-            <span>💳 XXXX XXXX XXXX XX69</span>
-            <button class="btn-danger small" @click="handleAction('remove-card')">Remove</button>
-          </div>
-        </div>
-        <div class="card-actions">
-          <button class="btn-primary" @click="handleAction('add-card')">Add card</button>
+        <h2 class="sub-title">Billing history</h2>
+
+        <table class="invoice-table" v-if="invoices.length">
+          <thead>
+            <tr>
+              <th>Invoice ID</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th></th>
+            </tr>
+          </thead>
+            <tbody is="transition-group" name="invoice">
+              <tr
+                v-for="inv in visibleInvoices"
+                :key="inv.invoice_number"
+              >
+                <td>Invoice #{{ inv.invoice_number }}</td>
+                <td>{{ inv.created_at }}</td>
+                <td>{{ inv.amount }}</td>
+                <td>
+                  <button class="btn-link" @click="openInvoice(inv.hosted_invoice_url)">
+                    View
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+
+        <p v-if="!invoices.length" class="note">
+          No invoices found.
+        </p>
+
+        <div class="card-actions" v-if="invoices.length > 3">
+          <button class="show-more-btn" @click="toggleInvoices">
+            {{ showAllInvoices ? "− Show less" : "+ Show more" }}
+          </button>
         </div>
       </section>
 
       <!-- Premium -->
       <section class="card">
         <h2 class="sub-title">Premium</h2>
-        <p>Your premium package has expired, please click the "Renew" button to continue using VietCloud's exclusive features.</p>
+
+        <!-- ✅ PREMIUM ACTIVE -->
+        <p v-if="is_premium">
+          🎉 Your <strong>VietCloud Premium</strong> subscription is active.<br />
+          You have <strong>{{ premiumDaysLeft }}</strong> day<span v-if="premiumDaysLeft > 1">s</span> remaining.
+          Enjoy all exclusive features without limits.
+        </p>
+
+        <!-- ❌ PREMIUM INACTIVE -->
+        <p v-else>
+          🚫 Your <strong>VietCloud Premium</strong> subscription is not active.<br />
+          Please click the <strong>"Renew"</strong> button to purchase and unlock premium features.
+        </p>
+
         <div class="card-actions">
-          <button class="btn-primary" @click="handleAction('renew')">Renew</button>
+          <button
+            class="btn-primary"
+            :disabled="is_premium"
+            @click="goToBilling"
+          >
+            {{ is_premium ? "Premium Active" : "Renew" }}
+          </button>
         </div>
       </section>
 
@@ -325,6 +370,10 @@ export default {
   name: "Profile",
   data() {
     return {
+      invoices: [],
+      showAllInvoices: false,
+      is_premium: false,
+      premium_expires_at_ts: null,
       activeTab: "basic",
       showChangePassword: false,
       showWarning: false,
@@ -384,6 +433,35 @@ export default {
     this.username = getCookie("username");
     this.email = getCookie("email");
     if (!this.username) this.$router.push("/");
+    this.fetchInvoices();
+    this.fetchUserInfo();
+  },
+      computed: {
+        visibleInvoices() {
+          return this.showAllInvoices
+            ? this.invoices
+            : this.invoices.slice(0, 3);
+        },
+        premiumDaysLeft() {
+      if (!this.is_premium || !this.premium_expires_at_ts) return 0;
+
+      // 🔥 ÉP KIỂU LẦN CUỐI – HARD SAFETY
+      let expiresTs = Number(this.premium_expires_at_ts);
+
+      if (!Number.isFinite(expiresTs)) return 0;
+
+      // ms → s
+      if (expiresTs > 1e12) {
+        expiresTs = Math.floor(expiresTs / 1000);
+      }
+
+      const nowTs = Math.floor(Date.now() / 1000);
+      const diffSeconds = expiresTs - nowTs;
+
+      if (diffSeconds <= 0) return 0;
+
+      return Math.max(1, Math.ceil(diffSeconds / 86400));
+    },
   },
   methods: {
     scrollTo(section) {
@@ -392,6 +470,9 @@ export default {
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+    },
+    goToBilling() {
+      window.location.href = "http://localhost:8080/#/Billing";
     },
 
     handleAction(action) { /* giữ nguyên */ },
@@ -411,7 +492,28 @@ export default {
     // reset OTP state nếu user đóng giữa chừng
     this.otpDigits = ["", "", "", "", "", ""];
     this.otpError = null;
+    
   },
+
+    async fetchUserInfo() {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/api/user-info/",
+          { withCredentials: true }
+        );
+
+        this.is_premium = !!res.data.is_premium;
+
+        // 🔥 FIX CỐT LÕI: ép Number
+        this.premium_expires_at_ts = res.data.premium_expires_at_ts
+          ? Number(res.data.premium_expires_at_ts)
+          : null;
+
+      } catch (err) {
+        this.is_premium = false;
+        this.premium_expires_at_ts = null;
+      }
+    },
 
     async handleChangeEmail() {
     this.changeEmailAlert = "";
@@ -670,7 +772,28 @@ focusPrev(index, event) {
         this.popupSuccess = false;
         this.showPopup = true;
       }
-    }
+    },
+    async fetchInvoices() {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/api/stripe/invoices/",
+          { withCredentials: true }
+        );
+        this.invoices = res.data || [];
+      } catch (err) {
+        console.error("Failed to load invoices", err);
+        this.invoices = [];
+      }
+    },
+
+    toggleInvoices() {
+      this.showAllInvoices = !this.showAllInvoices;
+    },
+
+    openInvoice(url) {
+      if (!url) return;
+      window.open(url, "_blank", "noopener");
+    },
   }
 };
 </script>

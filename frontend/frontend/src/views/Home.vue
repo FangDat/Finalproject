@@ -460,9 +460,24 @@
         <p v-if="!is_premium" class="premium-text">
           Want forecast for 7 days? Upgrade for VietCloud premium now!
         </p>
-        <router-link v-if="!username" to="/signup" class="btn-signup"
-          >Sign up</router-link
+
+        <!-- Chưa login -->
+        <router-link
+          v-if="!username"
+          to="/signup"
+          class="btn-signup"
         >
+          Sign up
+        </router-link>
+
+        <!-- Đã login nhưng chưa premium -->
+        <button
+          v-else-if="username && !is_premium"
+          class="btn-signup"
+          @click="goToBilling"
+        >
+          Upgrade
+        </button>
 
         <!-- Chatbot shortcut -->
         <div
@@ -682,6 +697,9 @@ export default {
     },
     toggleAir(key) {
       this.airOpen[key] = !this.airOpen[key];
+    },
+    goToBilling() {
+      this.$router.push("/billing");
     },
 
     formatAvgValue(type, points) {

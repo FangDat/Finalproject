@@ -96,16 +96,40 @@
     </main>
 
     <!-- Sidebar phải -->
-    <!-- <aside class="settings-sidebar-right" v-if="!username"> -->
-    <aside class="settings-sidebar-right" v-if="!username || (username && !is_premium)">
+    <aside
+      class="settings-sidebar-right"
+      v-if="!username || (username && !is_premium)"
+    >
       <h3 class="settings-section-title">Advanced</h3>
+
       <h4><strong>Try now to experience exclusive features</strong></h4>
-      <p>* Chat bot<br />* 7 days Forecast<br />* Search History</p>
+      <p>
+        * Chat bot<br />
+        * 7 days Forecast<br />
+        * Search History
+      </p>
+
       <div class="settings-pricing-box">
         <p><strong>Register now VietCloud with attractive price</strong></p>
         <p>$6.96 / month</p>
-        <!-- Nút signup chỉ hiện nếu chưa login -->
-        <router-link v-if="!username" to="/signup" class="settings-btn-signup">Sign up</router-link>
+
+        <!-- 🔹 Chưa login → Sign up -->
+        <router-link
+          v-if="!username"
+          to="/signup"
+          class="settings-btn-signup"
+        >
+          Sign up
+        </router-link>
+
+        <!-- 🔹 Đã login nhưng chưa premium → Upgrade -->
+        <router-link
+          v-else-if="username && !is_premium"
+          to="/billing"
+          class="settings-btn-signup"
+        >
+          Upgrade
+        </router-link>
       </div>
     </aside>
 

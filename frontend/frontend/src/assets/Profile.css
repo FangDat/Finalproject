@@ -496,3 +496,92 @@ button[disabled] {
   font-weight: 500;
   margin-top: 10px;
 }
+/* Invoice table */
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.invoice-table th {
+  font-weight: bold;
+  color: #555;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #2196f3;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+/* ===== Invoice expand / collapse animation ===== */
+
+/* Khi item xuất hiện */
+.invoice-enter-active {
+  transition: all 0.35s ease;
+}
+
+/* Khi item biến mất */
+.invoice-leave-active {
+  transition: all 0.25s ease;
+  position: absolute; /* tránh giật layout */
+}
+
+/* Trạng thái bắt đầu enter */
+.invoice-enter-from {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Trạng thái kết thúc leave */
+.invoice-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Di chuyển các row còn lại (FLIP animation) */
+.invoice-move {
+  transition: transform 0.35s ease;
+}
+.btn-secondary {
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.show-more-btn {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 14px;
+  cursor: pointer;
+  color: #0056d2;
+  background: none;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.show-more-btn:hover {
+  background: rgba(0, 86, 210, 0.08);
+  transform: translateY(-1px);
+}
+button[disabled] {
+  background: #bdbdbd !important;
+  cursor: not-allowed;
+}
+

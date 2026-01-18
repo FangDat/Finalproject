@@ -291,7 +291,13 @@ def user_info(request):
         "username": request.user.username,
         "email": request.user.email,
         "is_premium": bool(getattr(request.user, 'is_premium', False)),
-        "user_id": str(request.user.id)
+        "user_id": str(request.user.id),
+        "premium_started_at_ts": int(request.user.premium_started_at_ts)
+        if getattr(request.user, "premium_started_at_ts", None)
+        else None,
+        "premium_expires_at_ts": int(request.user.premium_expires_at_ts)
+        if getattr(request.user, "premium_expires_at_ts", None)
+        else None,
     })
 
 # ---------------------------
