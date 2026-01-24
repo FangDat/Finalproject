@@ -434,9 +434,15 @@ export default {
             this.errors.password = "Incorrect password.";
             this.alertMessage = "Incorrect password.";
             this.alertType = "warning";
-          } else {
-            this.alertMessage = data?.error || "Login failed. Please try again.";
-            this.alertType = "error";
+          } else if (
+            status === 403 &&
+            data?.error?.toLowerCase().includes("suspend")
+          ) {
+            this.alertMessage =
+              "Your account has been temporarily suspended. Please contact support.";
+            this.errors.password = "Your account has been temporarily suspended. Please contact support.";
+            this.alertMessage = "Your account has been temporarily suspended. Please contact support.";
+            this.alertType = "warning";
           }
         } else {
           this.alertMessage = "Cannot connect to server. Please try again.";

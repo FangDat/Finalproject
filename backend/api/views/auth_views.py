@@ -101,6 +101,13 @@ def login(request):
 
     try:
         user = User.objects.get(username=username)
+        if not user.is_active:
+            return Response(
+                {
+                    "error": "Account is temporarily suspended. Please contact support."
+                },
+                status=403
+            )
         if not check_password(password, user.password):
             return Response({"error": "Invalid password"}, status=400)
 
@@ -116,6 +123,9 @@ def login(request):
             "is_premium": bool(getattr(user, 'is_premium', False)),
             "user_id": str(user._id)
         })
+        user.last_login_at = int(datetime.datetime.now().timestamp())
+        user.save(update_fields=["last_login_at"])
+
 
         # Set cookies HttpOnly
         resp.set_cookie(
@@ -170,6 +180,14 @@ def refresh_token(request):
 
     try:
         refresh = RefreshToken(refresh_token_cookie)
+        user_id = refresh.get("user_id")
+
+        user = User.objects.get(_id=ObjectId(user_id))
+        if not user.is_active:
+            return Response(
+                {"error": "Account is suspended"},
+                status=403
+                )
         # Tạo access token mới từ refresh
         new_access = refresh.access_token
         new_access['user_id'] = refresh.get("user_id")
@@ -291,6 +309,7 @@ def user_info(request):
         "username": request.user.username,
         "email": request.user.email,
         "is_premium": bool(getattr(request.user, 'is_premium', False)),
+        "is_active": bool(getattr(request.user, "is_active", True)), 
         "user_id": str(request.user.id),
         "premium_started_at_ts": int(request.user.premium_started_at_ts)
         if getattr(request.user, "premium_started_at_ts", None)

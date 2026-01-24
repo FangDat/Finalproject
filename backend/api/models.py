@@ -2,6 +2,9 @@ from djongo import models
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
+from django.utils import timezone
+import time
+
 
 
 class User(models.Model):
@@ -10,6 +13,24 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     is_premium = models.BooleanField(default=False)
+    
+    role = models.CharField(
+        max_length=20,
+        default="user"   # user | admin
+    )
+
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.BigIntegerField(
+        default=lambda: int(time.time())
+    )
+
+    last_login_at = models.BigIntegerField(
+        null=True,
+        blank=True
+    )
+    
+    
 
     # ✅ DÙNG TIMESTAMP (SECONDS)
     premium_started_at_ts = models.BigIntegerField(null=True, blank=True)
@@ -99,3 +120,15 @@ class SearchHistory(models.Model):
 
     def __str__(self):
         return f"{self.city_name} ({self.lat},{self.lon}) for {self.user_id}"
+
+class AdminAuditLog(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    admin_id = models.CharField(max_length=200)
+    action = models.CharField(max_length=100)
+    target_user_id = models.CharField(max_length=200, null=True, blank=True)
+    created_at = models.BigIntegerField(
+        default=lambda: int(time.time())
+    )
+
+    def __str__(self):
+        return f"{self.action} by {self.admin_id}"

@@ -89,6 +89,14 @@ class CustomJWTAuthentication(JWTAuthentication):
         except User.DoesNotExist:
             logger.debug(f"Không tìm thấy user với _id={oid}")
             raise AuthenticationFailed("User not found", code="user_not_found")
+        
+        # # 🚫 BLOCK INACTIVE USER (BANNED / DEACTIVATED)
+        # if hasattr(user, "is_active") and not user.is_active:
+        #     logger.debug(f"User {user.username} is inactive - blocked by auth")
+        #     raise AuthenticationFailed(
+        #         "User account is deactivated",
+        #         code="user_inactive"
+        #     )
 
         logger.debug(f"Đã tìm thấy user: {user.username}")
         return user

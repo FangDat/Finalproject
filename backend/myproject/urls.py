@@ -4,6 +4,16 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from backend.api.views.verifyotp_views import send_otp, verify_otp, resend_otp
 from backend.api.views.chatbot_views import analyze_intent
 from backend.api.views.map_views import get_weather_map, proxy_tile
+from backend.api.views.admin.admin_audit_log_views import admin_audit_log_list
+
+from backend.api.views.admin.admin_user_views import (
+    admin_list_users,
+    admin_user_detail,
+    admin_ban_user,
+    admin_update_premium,
+    admin_delete_user, 
+)
+
 # import các view đã tách
 from backend.api.views.auth_views import (
     signup, login, logout, refresh_token,
@@ -114,6 +124,15 @@ urlpatterns = [
     list_stripe_invoices,
     name='list_stripe_invoices'
     ),
-
+    
+    # ============================
+    # ADMIN API
+    # ============================
+    path("api/admin/users/", admin_list_users),
+    path("api/admin/users/<str:user_id>/", admin_user_detail),
+    path("api/admin/users/<str:user_id>/ban/", admin_ban_user),
+    path("api/admin/users/<str:user_id>/premium/", admin_update_premium),
+    path("api/admin/users/<str:user_id>/delete/", admin_delete_user),
+    path("api/admin/audit-logs/", admin_audit_log_list),
 
 ]
