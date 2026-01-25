@@ -61,6 +61,19 @@ export default {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
     },
+    stopAppAndRedirect() {
+      console.warn("🛑 Account inactive → stop app");
+
+      // 1️⃣ clear ALL intervals
+      if (this.refreshInterval) clearInterval(this.refreshInterval);
+      if (this.cookieCheckInterval) clearInterval(this.cookieCheckInterval);
+
+      // 2️⃣ clear local state
+      this.username = "";
+
+      // 3️⃣ redirect sang trang reload
+      this.$router.replace("/reload");
+    },
   handlePaymentPopupConfirm() {
     this.showPaymentSuccessPopup = false;
 
@@ -132,7 +145,11 @@ export default {
         }
 
         const data = await userRes.json();
-
+            // 🔥 🔥 🔥 ĐIỂM MỚI
+        if (data.is_active === false) {
+          this.stopAppAndRedirect();
+          return;
+        }
         // 3️⃣ Update UI + cookie
         this.username = data.username;
 
@@ -168,6 +185,7 @@ export default {
         
         document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         this.username = "";
         this.$router.push("/");
         window.location.reload();

@@ -404,6 +404,8 @@ export default {
         // Backend trả về thông tin user (nếu cần)
         const user = res.data?.user || this.username;
         const email = res.data?.email || "";
+        const role = res.data?.role || "user";
+        Cookies.set("role", role, { expires: 7 });
 
         // Chỉ lưu vào cookie, không lưu localStorage
         Cookies.set("username", user, { expires: 7 });
@@ -412,9 +414,12 @@ export default {
         this.alertMessage = "Login successful! Redirecting...";
         this.alertType = "success";
 
-        // Điều hướng về Home
         setTimeout(() => {
-          this.$router.push("/");
+          if (role === "admin") {
+            this.$router.push("/admin");
+          } else {
+            this.$router.push("/");
+          }
         }, 800);
       } catch (err) {
         if (err.response) {

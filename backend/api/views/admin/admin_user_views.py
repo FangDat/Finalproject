@@ -24,7 +24,18 @@ logger = logging.getLogger(__name__)
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def admin_list_users(request):
-    users = User.objects.all()
+    """
+    GET /api/admin/users/
+    Optional query:
+      ?q=keyword   -> search by username (case-insensitive)
+    """
+
+    query = request.GET.get("q", "").strip()
+
+    if query:
+        users = User.objects.filter(username__icontains=query)
+    else:
+        users = User.objects.all()
 
     data = []
     for u in users:
@@ -40,6 +51,7 @@ def admin_list_users(request):
         })
 
     return Response(data)
+
 
 
 # ---------------------------
@@ -83,8 +95,10 @@ def admin_ban_user(request, user_id):
 
     AdminAuditLog.objects.create(
         admin_id=str(request.user._id),
+        admin_username=request.user.username,    
         action="BAN_USER" if not user.is_active else "UNBAN_USER",
-        target_user_id=str(user._id)
+        target_user_id=str(user._id),
+        target_username=user.username    
     )
 
     return Response({
@@ -110,8 +124,10 @@ def admin_update_premium(request, user_id):
 
     AdminAuditLog.objects.create(
         admin_id=str(request.user._id),
+        admin_username=request.user.username,  
         action="UPDATE_PREMIUM",
-        target_user_id=str(user._id)
+        target_user_id=str(user._id),
+        target_username=user.username    
     )
 
     return Response({
@@ -154,8 +170,10 @@ def admin_delete_user(request, user_id):
     # Ghi audit log
     AdminAuditLog.objects.create(
         admin_id=str(admin_user._id),
+        admin_username=admin_user.username, 
         action="DELETE_USER",
         target_user_id=str(target_user._id),
+        target_username=target_username  
         # metadata={
         #     "username": target_username,
         #     "email": target_email,

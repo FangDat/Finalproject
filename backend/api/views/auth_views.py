@@ -120,6 +120,7 @@ def login(request):
             "message": "Login successful",
             "username": user.username,
             "email": getattr(user, "email", ""),
+            "role": user.role,  
             "is_premium": bool(getattr(user, 'is_premium', False)),
             "user_id": str(user._id)
         })

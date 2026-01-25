@@ -22,6 +22,9 @@ def admin_audit_log_list(request):
             "action": log.action,
             "target_user_id": log.target_user_id,
             "created_at": log.created_at,
+            "admin_username": log.admin_username or log.admin_id,
+            "target_username": log.target_username,
+            "created_at_ts": log.created_at,
         })
 
     return Response(data)

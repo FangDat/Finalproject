@@ -124,8 +124,10 @@ class SearchHistory(models.Model):
 class AdminAuditLog(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     admin_id = models.CharField(max_length=200)
+    admin_username = models.CharField(max_length=150, null=True, blank=True) 
     action = models.CharField(max_length=100)
     target_user_id = models.CharField(max_length=200, null=True, blank=True)
+    target_username = models.CharField(max_length=150, null=True, blank=True)
     created_at = models.BigIntegerField(
         default=lambda: int(time.time())
     )
