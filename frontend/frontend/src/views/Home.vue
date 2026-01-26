@@ -498,6 +498,7 @@ import { cToF, msToKmh, msToMph, kmToMiles, mToKm, mToMiles } from "@/utils.js";
 import WeatherError from "@/components/WeatherError.vue";
 import DynamicBackground from "@/components/DynamicBackground.vue";
 import SparklineChart from "@/components/SparklineChart.vue";
+import { apiFetch } from "@/services/apiClient";
 
 export default {
   name: "Home",
@@ -801,18 +802,17 @@ export default {
     },
     async fetchUserInfo() {
       try {
-        const res = await fetch("http://localhost:8000/api/user-info/", {
-          method: "GET",
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("Not logged in");
+        const res = await apiFetch("http://localhost:8000/api/user-info/");
         const data = await res.json();
+
         this.username = data.username || "";
         this.is_premium = data.is_premium || false;
+
         if (this.is_premium) {
           this.fetchSearchHistory();
         }
       } catch (err) {
+        // ⛔ Nếu 401/403 → apiFetch đã forceLogout()
         this.username = "";
         this.is_premium = false;
         this.searchHistory = [];
@@ -821,20 +821,12 @@ export default {
     async fetchSearchHistory() {
       if (!this.is_premium) return;
       try {
-        const res = await fetch(
-          "http://localhost:8000/api/search-history/list/",
-          {
-            credentials: "include",
-          }
+        const res = await apiFetch(
+          "http://localhost:8000/api/search-history/list/"
         );
         const data = await res.json();
-        if (Array.isArray(data)) {
-          this.searchHistory = data;
-        } else {
-          this.searchHistory = [];
-        }
+        this.searchHistory = Array.isArray(data) ? data : [];
       } catch (err) {
-        console.error("fetchSearchHistory error", err);
         this.searchHistory = [];
       }
     },
@@ -846,15 +838,16 @@ export default {
           lat: cityObj.lat,
           lon: cityObj.lon,
         };
-        const res = await fetch(
+
+        const res = await apiFetch(
           "http://localhost:8000/api/search-history/add/",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            credentials: "include",
             body: JSON.stringify(payload),
           }
         );
+
         if (res.ok) {
           this.searchHistory = this.searchHistory.filter(
             (h) => h.city_name !== cityObj.name
@@ -871,39 +864,33 @@ export default {
         console.error("addSearchHistory error", err);
       }
     },
+
     async deleteHistory(historyItem) {
       if (!historyItem) return;
       const id = historyItem.id;
+
       if (!id) {
-        this.searchHistory = this.searchHistory.filter(
-          (h) => h !== historyItem
-        );
+        this.searchHistory = this.searchHistory.filter((h) => h !== historyItem);
         return;
       }
+
       const prev = [...this.searchHistory];
       this.searchHistory = this.searchHistory.filter((h) => h.id !== id);
+
       try {
-        const res = await fetch(
-          `http://localhost:8000/api/search-history/clear/${encodeURIComponent(
-            id
-          )}/`,
-          {
-            method: "DELETE",
-            credentials: "include",
-          }
+        const res = await apiFetch(
+          `http://localhost:8000/api/search-history/clear/${encodeURIComponent(id)}/`,
+          { method: "DELETE" }
         );
+
         if (!res.ok) {
           this.searchHistory = prev;
-          const errBody = await res.text().catch(() => null);
-          console.warn("deleteHistory failed:", res.status, errBody);
-        } else {
-          if (!this.searchHistory.length) this.showHistory = false;
         }
       } catch (err) {
         this.searchHistory = prev;
-        console.error("deleteHistory error", err);
       }
     },
+
     selectHistory(h) {
       this.searchQuery = h.name;
       this.showHistory = false;
@@ -972,54 +959,42 @@ export default {
         this.showHistory = true;
       }
     },
-    async fetchWeather(city = "") {
-      try {
-        let url = city
-          ? `http://localhost:8000/api/weather/?city=${encodeURIComponent(
-              city
-            )}`
-          : "http://localhost:8000/api/weather/";
-        const response = await fetch(url, { credentials: "include" });
-        const data = await response.json();
-        if (response.ok) {
-          this.errorMessage = "";
-          this.errorGif = "";
-          this.applyWeatherData(data);
-          this.showSuggestions = false;
-        } else {
-          this.errorMessage = `Location '${city}' not found\nTry searching another location`;
-          this.errorGif = "";
-        }
-      } catch (err) {
-        this.errorMessage = `Location '${city}' not found\nTry searching another location`;
-        this.errorGif = "";
-        console.error(err);
-      }
-    },
-    getWeatherByLocation(lat, lon, name = null) {
-      let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(
-        lat
-      )}&lon=${encodeURIComponent(lon)}`;
+   async fetchWeather(city = "") {
+    try {
+      let url = city
+        ? `http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`
+        : "http://localhost:8000/api/weather/";
+
+      const response = await apiFetch(url);
+      const data = await response.json();
+
+      this.errorMessage = "";
+      this.errorGif = "";
+      this.applyWeatherData(data);
+      this.showSuggestions = false;
+    } catch (err) {
+      // ⛔ Nếu bị ban → đã logout
+      this.errorMessage = `Location '${city}' not found\nTry searching another location`;
+      this.errorGif = "";
+    }
+  },
+  async getWeatherByLocation(lat, lon, name = null) {
+    try {
+      let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
       if (name) url += `&name=${encodeURIComponent(name)}`;
-      fetch(url, { credentials: "include" })
-        .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
-        .then(({ ok, data }) => {
-          if (!ok || data.error) {
-            this.errorMessage = `Location '${this.searchQuery}' not found\nTry searching another location`;
-            this.errorGif = "";
-            return;
-          }
-          this.errorMessage = "";
-          this.errorGif = "";
-          this.applyWeatherData(data);
-          this.showSuggestions = false;
-        })
-        .catch((err) => {
-          this.errorMessage = `Location '${this.searchQuery}' not found\nTry searching another location`;
-          this.errorGif = "";
-          console.error("Error location weather:", err);
-        });
-    },
+
+      const res = await apiFetch(url);
+      const data = await res.json();
+
+      this.errorMessage = "";
+      this.errorGif = "";
+      this.applyWeatherData(data);
+      this.showSuggestions = false;
+    } catch (err) {
+      this.errorMessage = `Location '${this.searchQuery}' not found\nTry searching another location`;
+      this.errorGif = "";
+    }
+  },
     applyWeatherData(data) {
       this.city = data.location || this.searchQuery;
       this.temperature = data.temperature;

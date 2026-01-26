@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { apiFetch } from "@/services/apiClient";
 if (!window.__vietcloudChatPending) {
   window.__vietcloudChatPending = {
     pending: false,
@@ -145,13 +146,9 @@ export default {
     // ✅ Giống Home.vue (GIỮ NGUYÊN)
     async fetchUserInfo() {
       try {
-        const res = await fetch("http://localhost:8000/api/user-info/", {
-          method: "GET",
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("Not logged in");
-
+        const res = await apiFetch("http://localhost:8000/api/user-info/");
         const data = await res.json();
+
         this.username = data.username || "";
         this.is_premium = data.is_premium || false;
       } catch {
@@ -260,43 +257,47 @@ export default {
         window.__vietcloudChatPending.answer = null;
         localStorage.setItem("vietcloud_chat_pending", "1");
 
-        const fetchPromise = fetch(
-          "http://localhost:8000/api/chatbot/intent/",
-          {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text }),
+      const fetchPromise = apiFetch(
+        "http://localhost:8000/api/chatbot/intent/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text }),
+        }
+      )
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          let botText = "";
+
+          if (res.status === 200) {
+            botText =
+              data.answer ||
+              "The VietCloud system is overloaded. Please try again later.";
+          } else if (res.status === 400) {
+            botText =
+              "Sorry, your question must be in English and related to weather.";
+          } else {
+            botText = "Something went wrong. Please try again later.";
           }
-        )
-          .then(async (res) => {
-            const data = await res.json().catch(() => ({}));
-            let botText = "";
 
-            if (res.status === 200) {
-              botText =
-                data.answer ||
-                "The VietCloud system is overloaded. Please try again later.";
-            } else if ([400, 401, 403].includes(res.status)) {
-              botText =
-                "Sorry, your question must be in English and related to weather.";
-            } else {
-              botText = "Something went wrong. Please try again later.";
-            }
+          window.__vietcloudChatPending.answer = botText;
+          return botText;
+        })
+        .catch((err) => {
+          // ⚠️ Nếu là Unauthorized → apiFetch đã logout rồi
+          if (err.message === "Unauthorized") {
+            return;
+          }
 
-            window.__vietcloudChatPending.answer = botText;
-            return botText;
-          })
-          .catch(() => {
-            const errText =
-              "Unable to connect to VietCloud server. Please try again.";
-            window.__vietcloudChatPending.answer = errText;
-            return errText;
-          })
-          .finally(() => {
-            window.__vietcloudChatPending.pending = false;
-            localStorage.removeItem("vietcloud_chat_pending");
-          });
+          const errText =
+            "Unable to connect to VietCloud server. Please try again.";
+          window.__vietcloudChatPending.answer = errText;
+          return errText;
+        })
+        .finally(() => {
+          window.__vietcloudChatPending.pending = false;
+          localStorage.removeItem("vietcloud_chat_pending");
+        });
 
         window.__vietcloudChatPending.promise = fetchPromise;
 

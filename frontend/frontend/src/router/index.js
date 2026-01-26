@@ -9,7 +9,7 @@ import MapPage from "../views/Map.vue";
 import Chatbot from "../views/Chatbot.vue";
 import Profile from "../views/Profile.vue";
 import PrivacyPolicy from "../views/PrivacyPolicy.vue";
-import ReloadPage from "@/views/ReloadPage.vue";
+
 
 // Admin views
 import AdminDashboard from "@/views/admin/AdminDashboard.vue";
@@ -59,12 +59,6 @@ const routes = [
     name: "Profile",
     component: Profile,
     meta: { requiresAuth: true },
-  },
-
-  {
-    path: "/reload",
-    name: "ReloadPage",
-    component: ReloadPage,
   },
 
   { path: "/privacy", name: "Privacy", component: PrivacyPolicy },

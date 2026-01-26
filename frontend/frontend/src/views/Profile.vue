@@ -365,7 +365,7 @@
 
 <script>
 import axios from "axios";
-
+import { apiFetch } from "@/services/apiClient";
 export default {
   name: "Profile",
   data() {
@@ -495,25 +495,25 @@ export default {
     
   },
 
-    async fetchUserInfo() {
-      try {
-        const res = await axios.get(
-          "http://localhost:8000/api/user-info/",
-          { withCredentials: true }
-        );
+  async fetchUserInfo() {
+    try {
+      const res = await apiFetch("http://localhost:8000/api/user-info/");
+      const data = await res.json();
 
-        this.is_premium = !!res.data.is_premium;
+      this.is_premium = !!data.is_premium;
+      this.premium_expires_at_ts = data.premium_expires_at_ts
+        ? Number(data.premium_expires_at_ts)
+        : null;
+    } catch (err) {
+      // ✅ Unauthorized đã được forceLogout → chỉ cần im lặng
+      if (err.message === "Unauthorized") return;
 
-        // 🔥 FIX CỐT LÕI: ép Number
-        this.premium_expires_at_ts = res.data.premium_expires_at_ts
-          ? Number(res.data.premium_expires_at_ts)
-          : null;
+      // ❌ lỗi khác thì vẫn log
+      console.error("fetchUserInfo failed:", err);
+    }
+  },
 
-      } catch (err) {
-        this.is_premium = false;
-        this.premium_expires_at_ts = null;
-      }
-    },
+
 
     async handleChangeEmail() {
     this.changeEmailAlert = "";

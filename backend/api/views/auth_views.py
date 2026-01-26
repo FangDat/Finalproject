@@ -18,6 +18,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from bson import ObjectId
+from rest_framework.exceptions import PermissionDenied
 
 
 from ..permissions import IsPremiumUser
@@ -306,11 +307,14 @@ def check_premium(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_info(request):
+    if not getattr(request.user, "is_active", True):
+        raise PermissionDenied("User account has been disabled")
+    
     return Response({
         "username": request.user.username,
         "email": request.user.email,
         "is_premium": bool(getattr(request.user, 'is_premium', False)),
-        "is_active": bool(getattr(request.user, "is_active", True)), 
+        "is_active": True, 
         "user_id": str(request.user.id),
         "premium_started_at_ts": int(request.user.premium_started_at_ts)
         if getattr(request.user, "premium_started_at_ts", None)

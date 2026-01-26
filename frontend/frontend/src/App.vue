@@ -35,6 +35,7 @@
   </div>
 </template>
 <script>
+import { forceLogout } from "@/services/authService";
 export default {
   name: "App",
   data() {
@@ -53,7 +54,7 @@ export default {
   computed: {
     showHeader() {
       const path = this.$route.path;
-      return !(path === "/login" || path === "/signup" || path === "/Billing" || path === "/billing");
+      return !(path === "/login" || path === "/signup" || path === "/Billing" || path === "/billing" || path === "/terms" || path === "/privacy");
     },
   },
   methods: {
@@ -117,6 +118,9 @@ export default {
            this.lastActiveTime = Date.now();
         });
     },
+    async logout() {
+  await forceLogout("", "manual");
+    },
 
     async syncAuthSafe() {
       try {
@@ -163,34 +167,34 @@ export default {
       }
     },
 
-    async logout() {
-      try {
-        const res = await fetch("http://localhost:8000/api/logout/", {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({}),
-        });
+    // async logout() {
+    //   try {
+    //     const res = await fetch("http://localhost:8000/api/logout/", {
+    //       method: "POST",
+    //       credentials: "include",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({}),
+    //     });
 
-        document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        this.username = "";
-        this.$router.push("/");
-        window.location.reload();
-      } catch (err) {
-        console.error("Logout failed", err);
-         } finally {
-    // 🧹 XOÁ CHAT LOCALSTORAGE
-        localStorage.removeItem("vietcloud_chat");
+    //     document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //     document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //     this.username = "";
+    //     this.$router.push("/");
+    //     window.location.reload();
+    //   } catch (err) {
+    //     console.error("Logout failed", err);
+    //      } finally {
+    // // 🧹 XOÁ CHAT LOCALSTORAGE
+    //     localStorage.removeItem("vietcloud_chat");
         
-        document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        this.username = "";
-        this.$router.push("/");
-        window.location.reload();
-      }
-    },
+    //     document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //     document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //     document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //     this.username = "";
+    //     this.$router.push("/");
+    //     window.location.reload();
+    //   }
+    // },
 
     // -------------------------------
     // 🔄 Refresh token tự động
@@ -216,11 +220,14 @@ export default {
     },
   },
   mounted() {
+    // sessionStorage.removeItem("vietcloud_force_logged_out");
+    // sessionStorage.removeItem("vietcloud_manual_logout");
     this.syncAuthSafe();
         // ✅ DETECT STRIPE PAYMENT SUCCESS
     const hash = window.location.hash; // "#/?payment=success"
     const queryString = hash.includes("?") ? hash.split("?")[1] : "";
     const params = new URLSearchParams(queryString);
+    
 
     if (params.get("payment") === "success") {
       this.showPaymentSuccessPopup = true;

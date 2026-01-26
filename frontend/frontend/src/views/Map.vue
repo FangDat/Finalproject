@@ -151,7 +151,7 @@ import {
   mToKm,
   mToMiles
 } from "@/utils.js";
-
+import { apiFetch } from "@/services/apiClient";
 export default {
   name: "Map",
   components: { WeatherError },
@@ -512,33 +512,32 @@ export default {
     /* ======================================================
         ⭐⭐ FETCH USER INFO + HISTORY
        ====================================================== */
-    async fetchUserInfo() {
-      try {
-        const res = await fetch("http://localhost:8000/api/user-info/", {
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error();
+      async fetchUserInfo() {
+        try {
+          const res = await apiFetch("http://localhost:8000/api/user-info/");
+          const data = await res.json();
 
-        const data = await res.json();
-        this.username = data.username || "";
-        this.is_premium = data.is_premium || false;
+          this.username = data.username || "";
+          this.is_premium = data.is_premium || false;
 
-        if (this.is_premium) {
-          await this.fetchSearchHistory();
+          if (this.is_premium) {
+            await this.fetchSearchHistory();
+          }
+        } catch {
+          this.username = "";
+          this.is_premium = false;
+          this.searchHistory = [];
         }
-      } catch {
-        this.username = "";
-        this.is_premium = false;
-        this.searchHistory = [];
-      }
-    },
+      },
+
 
     async fetchSearchHistory() {
       if (!this.is_premium) return;
+
       try {
-        const res = await fetch("http://localhost:8000/api/search-history/list/", {
-          credentials: "include",
-        });
+        const res = await apiFetch(
+          "http://localhost:8000/api/search-history/list/"
+        );
         const data = await res.json();
         this.searchHistory = Array.isArray(data) ? data : [];
       } catch (err) {
@@ -560,15 +559,16 @@ export default {
           lon: cityObj.lon,
         };
 
-        const res = await fetch("http://localhost:8000/api/search-history/add/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(payload)
-        });
+        const res = await apiFetch(
+          "http://localhost:8000/api/search-history/add/",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }
+        );
 
         if (res.ok) {
-          // realtime UI update
           this.searchHistory = this.searchHistory.filter(
             h => h.city_name !== cityObj.name
           );
@@ -602,9 +602,9 @@ export default {
       this.searchHistory = this.searchHistory.filter(h => h.id !== id);
 
       try {
-        const res = await fetch(
+        const res = await apiFetch(
           `http://localhost:8000/api/search-history/clear/${encodeURIComponent(id)}/`,
-          { method: "DELETE", credentials: "include" }
+          { method: "DELETE" }
         );
 
         if (!res.ok) this.searchHistory = prev;

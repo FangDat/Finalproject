@@ -141,6 +141,7 @@
 </template>
 
 <script>
+import { apiFetch } from "@/services/apiClient";
 export default {
   name: "Settings",
   data() {
@@ -159,25 +160,46 @@ export default {
     getCookie(name) {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
-    },
-        fetchUserInfo() {
-      // ⚡ Gọi backend API để lấy username + is_premium
-      fetch("http://localhost:8000/api/user-info/", {
-        credentials: "include", // quan trọng để gửi cookie
+    },fetchUserInfo() {
+    apiFetch("http://localhost:8000/api/user-info/")
+      .then(res => res.json())
+      .then(data => {
+        this.username = data.username || "";
+        this.is_premium = data.is_premium || false;
       })
-        .then(res => {
-          if (!res.ok) throw new Error("Not logged in");
-          return res.json();
-        })
-        .then(data => {
-          this.username = data.username || "";
-          this.is_premium = data.is_premium || false;
-        })
-        .catch(() => {
-          this.username = "";
-          this.is_premium = false;
-        });
-    },
+      .catch(() => {
+        this.username = "";
+        this.is_premium = false;
+      });
+  },
+
+    // async forceLogout() {
+    //   alert("🚫 Your account has been disabled by administrator.");
+
+    //   try {
+    //     // 🔥 QUAN TRỌNG: gọi backend để xoá HttpOnly cookies
+    //     await fetch("http://localhost:8000/api/logout/", {
+    //       method: "POST",
+    //       credentials: "include",
+    //     });
+    //   } catch (err) {
+    //     console.warn("Logout API failed, continue cleanup", err);
+    //   } finally {
+    //     // 🧹 clear localStorage
+    //     localStorage.clear();
+
+    //     // 🧹 clear NON-HttpOnly cookies
+    //     document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //     document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //     document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+    //     this.username = "";
+
+    //     // 🔄 redirect giống App.vue
+    //     window.location.href = "/login";
+    //   }
+    // },
+
     saveSettings() {
       // lưu settings
       const settings = {
