@@ -5,6 +5,10 @@
   background: linear-gradient(to bottom right, #cce7ff, #ffd9a8);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+/* ❌ Ẩn nút ☰ mặc định (DESKTOP) */
+.sidebar-toggle {
+  display: none;
+}
 
 /* Sidebar trái */
 .sidebar-left {
@@ -457,3 +461,128 @@ button:hover {
   color: #ff1a1a;
   transform: scale(1.1);
 }
+/* ===============================
+   📱 MOBILE LAYOUT
+================================ */
+@media (max-width: 768px) {
+  .map-container {
+    flex-direction: column;
+    overflow-x: hidden; /* 🔥 CHỐNG TRÀN VIỀN */
+  }
+
+  /* Sidebar */
+  .sidebar-left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1200;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-radius: 0 20px 20px 0;
+  }
+
+  .sidebar-left.open {
+    transform: translateX(0);
+  }
+
+  /* Overlay */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1100;
+  }
+
+  /* Toggle button */
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1300;
+    font-size: 22px;
+    background: white;
+    border-radius: 10px;
+    padding: 6px 10px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+
+  /* MAIN CONTENT */
+  .map-main {
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* SEARCH */
+  .search-container {
+    width: 100%;
+  }
+
+  .search-icon {
+    right: -36x; /* 🔥 bỏ âm */
+  }
+
+  /* CITY LIST */
+  .city-weather-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* MAP */
+  .map-box {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .leaflet-map {
+    width: 100%;
+    height: 60vh; /* mobile hợp lý */
+  }
+
+  .overlay-panel {
+    right: 8px;
+    top: 8px;
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* ⚙️ Weather Layer Panel */
+  .overlay-panel {
+    font-size: 0.7rem;        /* 🔥 giảm mạnh */
+    padding: 8px 10px;
+    max-width: 120px;          /* 🔥 nhỏ hơn nhiều */
+    border-radius: 12px;
+  }
+
+  .overlay-panel h4 {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+
+  .overlay-panel h5 {
+    font-size: 0.7rem;
+    margin: 6px 0 4px;
+  }
+
+  .overlay-panel label {
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* 🧭 Legend */
+  .legend-box {
+    margin-top: 6px;
+  }
+
+  .legend-img {
+    width: 100%;
+    max-width: 80px;      /* 🔥 nhỏ hơn ~50–60% */
+  }
+}
+

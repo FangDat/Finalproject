@@ -216,3 +216,88 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+/* ================= MOBILE RESPONSIVE BILLING ================= */
+@media (max-width: 768px) {
+
+  /* Tổng thể: chuyển sang 1 cột */
+  .checkout-container {
+    flex-direction: column;
+    margin: 20px 14px;
+    gap: 24px;
+  }
+
+  /* LEFT & RIGHT đều full width */
+  .checkout-left,
+  .checkout-right {
+    width: 100%;
+  }
+
+  /* Return button lên đầu, dễ bấm */
+  .back-btn {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  /* Pricing box nằm ngay dưới Return */
+  .pricing-box {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .price {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .vat {
+    display: block;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  .billing-cycle,
+  .note {
+    text-align: center;
+  }
+
+  /* Logo thẻ căn giữa */
+  .card-logos {
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .card-logos img {
+    height: 34px;
+  }
+
+  /* Billing form box */
+  .credit-card-box {
+    padding: 22px;
+    border-radius: 18px;
+  }
+
+  .billing-title {
+    text-align: center;
+  }
+
+  /* 🔥 FORM ROW: 1 cột / 1 dòng */
+  .form-row {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* Input dễ bấm hơn trên mobile */
+  .credit-card-form input {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  /* Nút submit full width, dễ tap */
+  .btn-submit {
+    padding: 18px;
+    font-size: 16px;
+    border-radius: 14px;
+  }
+}

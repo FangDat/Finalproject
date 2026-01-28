@@ -392,4 +392,47 @@ export default {
   cursor: pointer;
 }
 
+/* ================= MOBILE RESPONSIVE HEADER ================= */
+@media (max-width: 768px) {
+
+  /* Header gọn lại */
+  .app-header {
+    padding: 4px 6px;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  /* Logo VietCloud nhỏ hơn */
+  .logo-title {
+    font-size: 1.3rem;   /* từ 2rem → 1.3rem */
+  }
+
+  /* Hello text nhỏ hơn */
+  .hello-text {
+    font-size: 1.1rem;   /* từ 2rem → 1.1rem */
+  }
+
+  /* Wrapper auth sát hơn, không đẩy quá xa */
+  .auth-wrapper {
+    gap: 6px;
+    margin-right: 10px;  /* từ 42px → 10px */
+  }
+
+  /* Nút login / logout nhỏ lại RÕ RỆT */
+  .btn-login,
+  .btn-logout {
+    width: auto;          /* bỏ fixed 180px */
+    min-width: 80px;
+    padding: 5px 12px;    /* nhỏ hơn nhiều */
+    font-size: 0.8rem;    /* chữ nhỏ */
+    border-radius: 20px;
+  }
+
+  /* Wrapper nút không bị tràn */
+  .auth-btn {
+    gap: 6px;
+  }
+}
+
+
 </style>

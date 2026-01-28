@@ -1,14 +1,28 @@
 <template>
   <div class="map-container">
+    <!-- Mobile: Toggle sidebar button -->
+      <button
+        class="sidebar-toggle"
+        @click="toggleSidebar"
+      >
+        ☰
+      </button>
+
+      <!-- Mobile overlay -->
+      <div
+        v-if="showSidebar"
+        class="sidebar-overlay"
+        @click="closeSidebar"
+      ></div>
     <!-- Sidebar trái -->
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" :class="{ open: showSidebar }">
       <h2 class="logo">🌤 VietCloud</h2>
       <nav class="nav-menu">
-        <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
-        <router-link to="/map" class="nav-btn active">🗺️ Maps</router-link>
-        <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
-        <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-        <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
+        <router-link to="/" exact class="nav-btn" @click.native="closeSidebar">☁️ Weather</router-link>
+        <router-link to="/map" class="nav-btn active" @click.native="closeSidebar">🗺️ Maps</router-link>
+        <router-link v-if="username" to="/chatbot" class="nav-btn" @click.native="closeSidebar">🤖 Chatbot</router-link>
+        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link>
+        <router-link v-if="username" to="/profile" class="nav-btn" @click.native="closeSidebar">👤 Profile</router-link>
       </nav>
     </aside>
 
@@ -160,6 +174,7 @@ export default {
       username: this.getCookie("username") || "",
       is_premium: false,
       searchHistory: [], 
+      showSidebar: false,
       showHistory: false,
       searchQuery: "",
       suggestions: [],
@@ -266,6 +281,17 @@ export default {
           // ignore
         }
       }
+    },
+
+    /* ===============================
+   📱 MOBILE SIDEBAR (GIỐNG PROFILE)
+================================ */
+    toggleSidebar() {
+      this.showSidebar = !this.showSidebar;
+    },
+
+    closeSidebar() {
+      this.showSidebar = false;
     },
 
     /* ======================================================
@@ -811,6 +837,12 @@ export default {
     onClickSearch() {
       this.onEnterSearch();
     },
+  },
+
+    watch: {
+    $route() {
+      this.showSidebar = false;
+    }
   },
 
 

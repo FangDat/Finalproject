@@ -1,18 +1,39 @@
 <template>
   <div class="chatbot-container">
+    <!-- Mobile: Toggle sidebar button -->
+    <button
+      class="sidebar-toggle"
+      @click="toggleSidebar"
+    >
+      ☰
+    </button>
+
+    <!-- Mobile overlay -->
+    <div
+      v-if="showSidebar"
+      class="sidebar-overlay"
+      @click="closeSidebar"
+    ></div>
     <!-- Sidebar trái -->
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" :class="{ open: showSidebar }">
       <h2 class="logo">
         <router-link to="/">🌤 VietCloud</router-link>
       </h2>
       <nav class="nav-menu">
-        <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
-        <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
-        <router-link v-if="username" to="/chatbot" class="nav-btn router-link-active">
+        <router-link
+          to="/"
+          exact
+          class="nav-btn"
+          @click.native="closeSidebar"
+        >
+          ☁️ Weather
+        </router-link>
+        <router-link to="/map" class="nav-btn" @click.native="closeSidebar">🗺️ Maps</router-link>
+        <router-link v-if="username" to="/chatbot" class="nav-btn router-link-active" @click.native="closeSidebar">
           🤖 Chatbot
         </router-link>
-        <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-        <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
+        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link>
+        <router-link v-if="username" to="/profile" class="nav-btn" @click.native="closeSidebar">👤 Profile</router-link>
       </nav>
     </aside>
 
@@ -99,7 +120,7 @@ export default {
     return {
       username: this.getCookie("username") || "",
       is_premium: false,
-
+      showSidebar: false,
       // 🆕 CHAT STATE
       userInput: "",
       messages: [],
@@ -113,6 +134,11 @@ export default {
       welcomeMessage:
         "Hello! I'm VietCloud AI Assistant. Feel free to ask me about the weather anywhere in the world, get weather-related recommendations.",
     };
+  },
+  watch: {
+    $route() {
+      this.showSidebar = false;
+    }
   },
 
   methods: {
@@ -141,6 +167,14 @@ export default {
         this.thinkingTimer = null;
       }
       this.thinkingText = "VietCloud is thinking";
+    },
+      // ===== MOBILE SIDEBAR =====
+    toggleSidebar() {
+      this.showSidebar = !this.showSidebar;
+    },
+
+    closeSidebar() {
+      this.showSidebar = false;
     },
 
     // ✅ Giống Home.vue (GIỮ NGUYÊN)

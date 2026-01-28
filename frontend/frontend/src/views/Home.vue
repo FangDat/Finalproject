@@ -1,17 +1,32 @@
 <template>
   <DynamicBackground :icon-code="currentIcon">
     <div class="home-container">
+
+          <!-- Mobile: Toggle sidebar button -->
+      <button
+        class="sidebar-toggle"
+        @click="toggleSidebar"
+      >
+        ☰
+      </button>
+
+      <!-- Mobile overlay -->
+      <div
+        v-if="showSidebar"
+        class="sidebar-overlay"
+        @click="closeSidebar"
+      ></div>
       <!-- Sidebar trái -->
-      <aside class="sidebar-left">
+    <aside class="sidebar-left" :class="{ open: showSidebar }">
         <h2 class="logo">🌤 VietCloud</h2>
         <nav class="nav-menu">
-          <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
-          <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
-          <router-link v-if="username" to="/chatbot" class="nav-btn"
+          <router-link to="/" exact class="nav-btn" @click.native="closeSidebar">☁️ Weather</router-link>
+          <router-link to="/map" class="nav-btn" @click.native="closeSidebar">🗺️ Maps</router-link>
+          <router-link v-if="username" to="/chatbot" class="nav-btn" @click.native="closeSidebar"
             >🤖 Chatbot</router-link
           >
-          <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-          <router-link v-if="username" to="/profile" class="nav-btn"
+          <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link>
+          <router-link v-if="username" to="/profile" class="nav-btn" @click.native="closeSidebar"
             >👤 Profile</router-link
           >
         </nav>
@@ -458,7 +473,8 @@
             </div>
         </div>
         <p v-if="!is_premium" class="premium-text">
-          Want forecast for 7 days? Upgrade for VietCloud premium now!
+          <strong>Don’t let the weather surprise you!</strong><br>
+          Get 7-day detailed forecasts with VietCloud Premium — powered by AI for smarter travel and daily planning.
         </p>
 
         <!-- Chưa login -->
@@ -512,6 +528,7 @@ export default {
       username: this.getCookie("username") || "",
       is_premium: false,
       searchHistory: [],
+      showSidebar: false, // ⭐ NEW: mobile sidebar toggle
       showHistory: false,
       searchQuery: "",
       suggestions: [],
@@ -756,7 +773,19 @@ export default {
         return rawValue;
     }
   },
+     toggleSidebar() {
+        this.showSidebar = !this.showSidebar;
+      },
 
+      // ✅ ADD – giống Profile.vue
+      closeSidebar() {
+        this.showSidebar = false;
+      },
+
+      // ⛔ GIỮ NGUYÊN – không xoá
+      closeSidebarLeft() {
+        this.showSidebar = false;
+      },
 
     getIconSrc(iconCode) {
       try {

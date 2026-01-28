@@ -284,3 +284,119 @@ a,
     transform: translate(-50%, -20px);
   }
 }
+.premium-features {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+.premium-features h4 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #272525;
+}
+
+.premium-desc {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #232426;
+  margin-bottom: 14px;
+}
+
+.premium-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.premium-list li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  font-size: 14.5px;
+  color: #313235;
+}
+
+.premium-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+/* ================= MOBILE SIDEBAR ================= */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 18px;
+  z-index: 1500;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 22px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+/* Overlay khi mở sidebar */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1200;
+}
+
+@media (max-width: 768px) {
+
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .sidebar-left {
+    position: fixed;
+    top: 0;
+    left: -240px;
+    height: 100%;
+    width: 220px;
+    z-index: 1300;
+    transition: left 0.3s ease;
+    border-radius: 0 20px 20px 0;
+  }
+
+  .sidebar-left.open {
+    left: 0;
+  }
+}
+
+/* ================= MOBILE: MOVE RIGHT SIDEBAR BELOW DONE ================= */
+@media (max-width: 768px) {
+
+  /* Container xếp theo chiều dọc */
+  .settings-container {
+    flex-direction: column;
+  }
+
+  /* Nội dung chính lên trước */
+  .settings-main {
+    order: 1;
+    padding: 20px;
+  }
+
+  /* Sidebar phải xuống dưới nút Done */
+  .settings-sidebar-right {
+    order: 2;
+    width: 100%;
+    margin: 20px auto 0;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Sidebar phải không bị dính mép */
+  .settings-sidebar-right {
+    max-width: 95%;
+  }
+}

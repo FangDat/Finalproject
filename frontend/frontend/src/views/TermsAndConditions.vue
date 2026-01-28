@@ -27,7 +27,7 @@ export default {
         <h2>1. Introduction</h2>
         <p>
           Welcome to <b>VietCloud</b> – a real-time weather forecasting application offering global forecasts, 
-          travel tips, and premium features like chatbot and 10-day outlooks.
+          travel tips by premium features like chatbot and up to 14-day outlooks.
         </p>
         <p>
           By using VietCloud, you agree to follow these Terms. If you do not agree, you must stop using our services.
@@ -37,24 +37,22 @@ export default {
         <p><b>Free Users</b> may:</p>
         <ul>
           <li>Check weather forecasts up to 3 days</li>
-          <li>Access maps, charts, and public travel suggestions</li>
+          <li>Access maps, charts </li>
+          <li>You are allowed to customize the weather unit settings.</li>
+
         </ul>
         <p><b>Premium Users</b> gain extra features:</p>
         <ul>
-          <li>10-day forecast</li>
-          <li>AI chatbot for travel advice</li>
+          <li>14-day forecast</li>
+          <li>AI chatbot for weather, travel advice</li>
           <li>Personal search history</li>
           <li>Payment & subscription management</li>
         </ul>
 
         <h2>3. Payments & Subscriptions</h2>
         <p>
-          Premium features require a subscription (monthly or annual). Payments are processed securely through 
+          Premium features require a subscription (monthly). Payments are processed securely through 
           third-party providers.
-        </p>
-        <p>
-          Subscriptions renew automatically unless cancelled at least 48 hours before renewal. Refunds are not provided 
-          for unused time.
         </p>
 
         <h2>4. Acceptable Use</h2>
@@ -103,7 +101,7 @@ export default {
 
         <h2>10. Contact Us</h2>
         <p>
-          Questions? Contact us at <a href="mailto:support@vietcloud.app">support@vietcloud.app</a>
+          Questions? Contact us at <a href="mailto:skyfall20192k4@gmail.com">skyfall20192k4@gmail.com</a>
         </p>
       `,
     };

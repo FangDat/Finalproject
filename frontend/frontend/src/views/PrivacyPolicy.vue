@@ -95,7 +95,7 @@ export default {
         </ul>
         <p>
           To exercise these rights, please contact us at 
-          <a href="mailto:privacy@vietcloud.app">privacy@vietcloud.app</a>.
+          <a href="mailto:skyfall20192k4@gmail.com">skyfall20192k4@gmail.com</a>.
         </p>
 
         <h2>8. International Users</h2>
@@ -114,7 +114,7 @@ export default {
 
         <h2>10. Service Integrations & Third-Party Links</h2>
         <p>
-          VietCloud integrates APIs and services such as OpenWeather, WeatherAPI, and OpenCage. 
+          VietCloud integrates APIs and services such as OpenWeather, Stripe, and OpenCage. 
           These providers may collect data subject to their own privacy policies. VietCloud is not 
           responsible for the practices of external websites linked within the app.
         </p>
@@ -129,7 +129,7 @@ export default {
         <h2>12. Contact Us</h2>
         <p>
           If you have questions, concerns, or privacy-related requests, please contact us at: 
-          <a href="mailto:privacy@vietcloud.app">privacy@vietcloud.app</a>
+          <a href="mailto:skyfall20192k4@gmail.com">skyfall20192k4@gmail.com</a>
         </p>
       `,
     };

@@ -300,3 +300,50 @@ a,
   font-weight: 600;
 }
 
+/* ================= MOBILE SIDEBAR ================= */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 18px;
+  z-index: 1500;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 22px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+/* Overlay khi mở sidebar */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1200;
+}
+
+@media (max-width: 768px) {
+
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .sidebar-left {
+    position: fixed;
+    top: 0;
+    left: -240px;
+    height: 100%;
+    width: 220px;
+    z-index: 1300;
+    transition: left 0.3s ease;
+    border-radius: 0 20px 20px 0;
+  }
+
+  .sidebar-left.open {
+    left: 0;
+  }
+}
+
+

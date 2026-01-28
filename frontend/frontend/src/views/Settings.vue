@@ -1,16 +1,37 @@
 <template>
   <div class="settings-container">
+    <!-- Mobile: Toggle sidebar button -->
+      <button
+        class="sidebar-toggle"
+        @click="toggleSidebar"
+      >
+        ☰
+      </button>
+
+      <!-- Mobile overlay -->
+      <div
+        v-if="showSidebar"
+        class="sidebar-overlay"
+        @click="closeSidebar"
+      ></div>
     <!-- Sidebar trái -->
-    <aside class="sidebar-left">
+    <<aside class="sidebar-left" :class="{ open: showSidebar }">
       <h2 class="logo">
         <router-link to="/">🌤 VietCloud</router-link>
       </h2>
       <nav class="nav-menu">
-        <router-link to="/" exact class="nav-btn">☁️ Weather</router-link>
-        <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
-        <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
-        <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-        <router-link v-if="username" to="/profile" class="nav-btn">👤 Profile</router-link>
+        <router-link
+          to="/"
+          exact
+          class="nav-btn"
+          @click.native="closeSidebar"
+        >
+          ☁️ Weather
+        </router-link>
+        <router-link to="/map" class="nav-btn" @click.native="closeSidebar">🗺️ Maps</router-link>
+        <router-link v-if="username" to="/chatbot" class="nav-btn" @click.native="closeSidebar">🤖 Chatbot</router-link>
+        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link>
+        <router-link v-if="username" to="/profile" class="nav-btn" @click.native="closeSidebar">👤 Profile</router-link>
       </nav>
     </aside>
 
@@ -71,24 +92,6 @@
         </div>
       </section>
 
-      <!-- Notifications -->
-      <section class="settings-card">
-        <h3 class="settings-section-title">Notifications</h3>
-        <div class="settings-toggle-item" @click="notifications = !notifications">
-          <span>Be aware of the weather</span>
-          <span class="settings-check" v-if="notifications">✔</span>
-        </div>
-      </section>
-
-      <!-- General -->
-      <section class="settings-card">
-        <h3 class="settings-section-title">General</h3>
-        <div class="settings-toggle-item" @click="generalLocation = !generalLocation">
-          <span>Get weather of your location</span>
-          <span class="settings-check" v-if="generalLocation">✔</span>
-        </div>
-      </section>
-
       <!-- Nút Done -->
       <div class="settings-done-box">
         <button class="settings-done-btn" @click="saveSettings">Done</button>
@@ -102,12 +105,15 @@
     >
       <h3 class="settings-section-title">Advanced</h3>
 
-      <h4><strong>Try now to experience exclusive features</strong></h4>
-      <p>
-        * Chat bot<br />
-        * 7 days Forecast<br />
-        * Search History
-      </p>
+      <div class="premium-features">
+        <h4><strong>Try now to experience exclusive features</strong></h4>
+        <ul class="premium-list">
+          <li><strong>AI Weather Chatbot</strong> Ask natural questions and get smart, real-time weather insights.</li>
+          <li><strong>7-Day Forecast</strong> Access detailed forecasts to plan trips, work, and outdoor activities.</li>
+          <li><strong>Search History</strong> Review and track your previously searched locations anytime.</li>
+        </ul>
+      </div>
+
 
       <div class="settings-pricing-box">
         <p><strong>Register now VietCloud with attractive price</strong></p>
@@ -148,6 +154,7 @@ export default {
     return {
       username: this.getCookie("username") || "",
       is_premium: false,
+      showSidebar: false,
       temperature: "Celsius",
       windSpeed: "m/s", 
       Visibility: "Kilometers",
@@ -172,33 +179,13 @@ export default {
         this.is_premium = false;
       });
   },
-
-    // async forceLogout() {
-    //   alert("🚫 Your account has been disabled by administrator.");
-
-    //   try {
-    //     // 🔥 QUAN TRỌNG: gọi backend để xoá HttpOnly cookies
-    //     await fetch("http://localhost:8000/api/logout/", {
-    //       method: "POST",
-    //       credentials: "include",
-    //     });
-    //   } catch (err) {
-    //     console.warn("Logout API failed, continue cleanup", err);
-    //   } finally {
-    //     // 🧹 clear localStorage
-    //     localStorage.clear();
-
-    //     // 🧹 clear NON-HttpOnly cookies
-    //     document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    //     document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    //     document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-
-    //     this.username = "";
-
-    //     // 🔄 redirect giống App.vue
-    //     window.location.href = "/login";
-    //   }
-    // },
+  
+      toggleSidebar() {
+      this.showSidebar = !this.showSidebar;
+    },
+    closeSidebar() {
+      this.showSidebar = false;
+    },
 
     saveSettings() {
       // lưu settings
@@ -231,6 +218,11 @@ export default {
         this.generalLocation = parsed.generalLocation ?? this.generalLocation;
       }
     },
+  },
+  watch: {
+    $route() {
+      this.showSidebar = false;
+    }
   },
   mounted() {
     this.loadSettings();

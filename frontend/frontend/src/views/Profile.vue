@@ -1,16 +1,32 @@
 <template>
   <div class="profile-container">
+    <!-- Mobile: Toggle sidebar button -->
+      <button
+        class="sidebar-toggle"
+        @click="toggleSidebar"
+      >
+        ☰
+      </button>
+
+      <!-- Mobile overlay -->
+      <div
+        v-if="showSidebar"
+        class="sidebar-overlay"
+        @click="closeSidebar"
+      ></div>
     <!-- Sidebar trái -->
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" :class="{ open: showSidebar }">
       <h2 class="logo">
         <router-link to="/">🌤 VietCloud</router-link>
       </h2>
       <nav class="nav-menu">
-        <router-link to="/" class="nav-btn">☁️ Weather</router-link>
-        <router-link to="/map" class="nav-btn">🗺️ Maps</router-link>
-        <router-link v-if="username" to="/chatbot" class="nav-btn">🤖 Chatbot</router-link>
-        <router-link to="/settings" class="nav-btn">⚙️ Settings</router-link>
-        <router-link to="/profile" class="nav-btn">👤 Profile</router-link>
+        <router-link to="/" class="nav-btn" @click.native="closeSidebar">
+          ☁️ Weather
+        </router-link>
+        <router-link to="/map" class="nav-btn" @click.native="closeSidebar">🗺️ Maps</router-link>
+        <router-link v-if="username" to="/chatbot" class="nav-btn" @click.native="closeSidebar">🤖 Chatbot</router-link>
+        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link>
+        <router-link to="/profile" class="nav-btn" @click.native="closeSidebar">👤 Profile</router-link>
       </nav>
     </aside>
 
@@ -362,7 +378,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from "axios";
 import { apiFetch } from "@/services/apiClient";
@@ -371,6 +386,7 @@ export default {
   data() {
     return {
       invoices: [],
+      showSidebar: false, // mobile sidebar
       showAllInvoices: false,
       is_premium: false,
       premium_expires_at_ts: null,
@@ -463,9 +479,36 @@ export default {
       return Math.max(1, Math.ceil(diffSeconds / 86400));
     },
   },
+    watch: {
+    // ✅ NEW: mỗi lần chuyển route → đóng sidebar
+    $route() {
+      this.showSidebar = false;
+    },
+
+    // ✅ NEW: mở bất kỳ overlay nào → đóng sidebar
+    showChangeEmail(val) {
+      if (val) this.closeSidebar();
+    },
+    showChangePassword(val) {
+      if (val) this.closeSidebar();
+    },
+    showWarning(val) {
+      if (val) this.closeSidebar();
+    },
+    showDeleteAccount(val) {
+      if (val) this.closeSidebar();
+    },
+    showPopup(val) {
+      if (val) this.closeSidebar();
+    },
+    showChangeEmailOtp(val) {
+      if (val) this.closeSidebar();
+    }
+  },
   methods: {
     scrollTo(section) {
       this.activeTab = section;
+      this.closeSidebar();
       const el = document.getElementById(section);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -473,6 +516,12 @@ export default {
     },
     goToBilling() {
       window.location.href = "http://localhost:8080/#/Billing";
+    },
+    toggleSidebar() {
+      this.showSidebar = !this.showSidebar;
+    },
+    closeSidebar() {
+      this.showSidebar = false;
     },
 
     handleAction(action) { /* giữ nguyên */ },
