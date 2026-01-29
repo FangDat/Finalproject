@@ -142,6 +142,71 @@ WEATHER_INTENT_FUNCTION = {
         "required": ["intent", "location", "day", "time_of_day"]
     }
 }
+# =====================================================
+# STEP 3 – WEATHER FUNCTION DEFINITIONS (NEW)
+# =====================================================
+
+WEATHER_FUNCTIONS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "weather_overview",
+            "description": "Get current weather overview, call this function when intent includes weather_overview",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {"type": "string"}
+                },
+                "required": ["location"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "weather_forecast",
+            "description": "Get weather forecast for a specific date, call this function when intent includes weather_forecast",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {"type": "string"},
+                    "day": {"type": ["string", "null"]}
+                },
+                "required": ["location"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "daily_aggregation",
+            "description": "Get daily weather summary for a specific date, call this function when intent includes daily_aggregation",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {"type": "string"},
+                    "day": {"type": "string"}
+                },
+                "required": ["location", "day"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "air_pollution",
+            "description": "Get air pollution forecast, call this function when intent includes air_pollution",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {"type": "string"},
+                    "day": {"type": "string"}
+                },
+                "required": ["location", "day"]
+            }
+        }
+    }
+]
 
 # ---------------------
 # TIMEZONE HELPERS (GIỮ NGUYÊN)
@@ -459,21 +524,88 @@ def analyze_intent(request):
 
             except Exception as e:
                 logger.warning(f"Date distance check failed: {e}")
+                
+        
+        NON_WEATHER_INTENTS = {
+            "activity_recommendation",
+            "disaster",
+            "healthcare"
+        }
 
+        weather_intents = [
+            i for i in result["intent"]
+            if i not in NON_WEATHER_INTENTS
+        ]
 
-        # ============================
-        # 🔥 AUTO CALL WEATHER API 🔥
-        # ============================
-        weather_data = None
-        if any(i in result["intent"] for i in [
-            "weather_forecast",
-            "weather_overview",
-            "daily_aggregation"
-        ]):
+        # =====================================================
+        # STEP 4 – LLM DECIDES WEATHER TOOL CALLS (MULTI TOOL)
+        # =====================================================
+
+        tool_planner_messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a STRICT weather tool planner.\n"
+                    "ONLY call tools that already exist in intent[].\n"
+                    "DO NOT add new tools.\n"
+                    "DO NOT remove any intent.\n"
+                    "One intent corresponds to one tool call.\n"
+                    "Return tool calls only."
+                )
+            },
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "intent": [
+                        i for i in result["intent"]
+                        if i in ["weather_overview", "weather_forecast", "daily_aggregation", "air_pollution"]
+                    ],
+                    "location": result["location"],
+                    "day": result["day"]
+                })
+            }
+        ]
+
+        tool_plan = client.chat.completions.create(
+            model="gpt-4o",
+            messages=tool_planner_messages,
+            tools=WEATHER_FUNCTIONS,
+            tool_choice="auto"
+        )
+
+        tool_calls = tool_plan.choices[0].message.tool_calls or []
+
+        logger.debug("===== WEATHER TOOL CALLS =====")
+        for call in tool_calls:
+            logger.debug(
+                f"{call.function.name} -> {call.function.arguments}"
+            )
+
+        # =====================================================
+        # STEP 5 – EXECUTE WEATHER TOOLS
+        # =====================================================
+
+        weather_data = {}
+
+        for call in tool_calls:
+            args = json.loads(call.function.arguments)
+
+            payload = {
+                "intent": [call.function.name],
+                "location": args.get("location"),
+                "location_ascii": remove_accents(args.get("location")),
+                "day": args.get("day"),
+                "time_of_day": result.get("time_of_day")
+            }
+
             try:
-                weather_data = call_weather_router(result)
+                response = call_weather_router(payload)
+                weather_data[call.function.name] = response.get("data", {})
             except Exception as e:
-                logger.error(f"Weather router error: {e}", exc_info=True)
+                logger.error(
+                    f"Tool execution failed: {call.function.name}",
+                    exc_info=True
+                )
 
         # ============================
         # 🔥 STEP 4 – LLM RESPONSE 🔥
@@ -482,10 +614,10 @@ def analyze_intent(request):
 
         try:
             final_answer = generate_weather_response(
-                user_question=user_message,
-                intent_result=result,
-                weather_data=weather_data.get("data") if weather_data else {}
-            )
+            user_question=user_message,
+            intent_result=result,
+            weather_data=weather_data
+        )
         except Exception as e:
             logger.error(f"LLM response generation failed: {e}", exc_info=True)
 

@@ -26,3 +26,23 @@ Matched: 1, Modified: 1
 [2026-01-15 17:00:05,030] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
 Expired users matched: 0
 No expired users found.
+[2026-01-19 17:00:02,365] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-19 17:00:02,556] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 0
+No expired users found.
+[2026-01-22 17:00:03,926] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-22 17:00:04,093] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 0
+No expired users found.
+[2026-01-25 17:00:01,690] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-25 17:00:01,869] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 0
+No expired users found.
+[2026-01-26 17:00:02,452] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-26 17:00:02,632] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 0
+No expired users found.
+[2026-01-27 17:00:02,607] INFO [backend.api.views.weather_views] ✅ ISO_3166-2 loaded successfully (249 countries)
+[2026-01-27 17:00:02,781] INFO [backend.api.views.weather_views] ✅ WorldCities loaded successfully (48060 cities)
+Expired users matched: 0
+No expired users found.

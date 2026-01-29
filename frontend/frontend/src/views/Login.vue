@@ -410,8 +410,6 @@ export default {
         // Chỉ lưu vào cookie, không lưu localStorage
         Cookies.set("username", user, { expires: 7 });
         Cookies.set("email", email, { expires: 7 });
-        sessionStorage.removeItem("vietcloud_manual_logout");
-        sessionStorage.removeItem("vietcloud_force_logged_out");
         this.alertMessage = "Login successful! Redirecting...";
         this.alertType = "success";
 

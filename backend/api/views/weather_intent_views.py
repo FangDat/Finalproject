@@ -220,195 +220,196 @@ def weather_by_intent(request):
 
     responses = {}
 
+    for tool_name in intents:
     # -------------------------------
     # DAILY AGGREGATION
     # -------------------------------
-    if "daily_aggregation" in intents and day:
-        if settings.DEBUG:
-            logger.debug("CALLING DAY SUMMARY API")
+        if tool_name == "daily_aggregation" and day:
+            if settings.DEBUG:
+                logger.debug("CALLING DAY SUMMARY API")
 
-        r = requests.get(
-            f"{BASE_OW_URL}/onecall/day_summary",
-            params={
-                "lat": lat,
-                "lon": lon,
-                "date": day,
-                "appid": OPENWEATHER_KEY,
-            },
-            timeout=8,
-        )
-
-        raw_data = r.json()
-        normalized_daily = normalize_daily_aggregation(raw_data)
-        responses['daily_aggregation'] = normalized_daily
-
-        if settings.DEBUG:
-            logger.debug("DAY SUMMARY NORMALIZED (LLM READY)")
-            logger.debug(json.dumps(normalized_daily, indent=2, ensure_ascii=False))
-
-
-    # -------------------------------
-    # WEATHER OVERVIEW
-    # -------------------------------
-    if "weather_overview" in intents:
-        r = requests.get(
-            f"{BASE_OW_URL}/onecall/overview",
-            params={
-                "lat": lat,
-                "lon": lon,
-                "units": "metric",
-                "appid": OPENWEATHER_KEY,
-            },
-            timeout=8,
-        )
-
-        data = r.json()
-        responses["weather_overview"] = data
-
-        if settings.DEBUG:
-            logger.debug("WEATHER OVERVIEW RESPONSE")
-            logger.debug(json.dumps(data, indent=2, ensure_ascii=False))
-
-    # -------------------------------
-    # WEATHER FORECAST
-    # -------------------------------
-    if "weather_forecast" in intents:
-        r = requests.get(
-            f"{BASE_OW_URL}/onecall",
-            params={
-                "lat": lat,
-                "lon": lon,
-                "exclude": "minutely,alerts",
-                "appid": OPENWEATHER_KEY,
-            },
-            timeout=8,
-        )
-
-        raw_data = r.json()
-
-        tz_offset = raw_data.get("timezone_offset", 0)
-        tz_string = f"{tz_offset // 3600:+03d}:00"
-
-        # # ============================
-        # # DEBUG – GIỮ NGUYÊN RAW JSON
-        # # ============================
-        # if settings.DEBUG:
-        #     logger.debug("WEATHER FORECAST RAW RESPONSE (OPENWEATHER)")
-        #     logger.debug(json.dumps(raw_data, indent=2, ensure_ascii=False))
-
-        # ============================
-        # STEP 3 – NORMALIZE DATA
-        # ============================
-        normalized_data = {
-            "tz": tz_string,
-            "current": normalize_hourly(
-                raw_data.get("current", {}), tz_offset
-            ),
-            "hourly": [
-                normalize_hourly(h, tz_offset)
-                for h in raw_data.get("hourly", [])
-            ],
-            "daily": [
-                normalize_daily(d, tz_offset)
-                for d in raw_data.get("daily", [])
-            ],
-        }
-
-        # ============================
-        # DEBUG – NORMALIZED JSON
-        # ============================
-        if settings.DEBUG:
-            logger.debug(
-                "WEATHER FORECAST NORMALIZED RESPONSE (LLM READY)"
-            )
-            logger.debug(
-                json.dumps(normalized_data, indent=2, ensure_ascii=False)
+            r = requests.get(
+                f"{BASE_OW_URL}/onecall/day_summary",
+                params={
+                    "lat": lat,
+                    "lon": lon,
+                    "date": day,
+                    "appid": OPENWEATHER_KEY,
+                },
+                timeout=8,
             )
 
-        # 👉 RESPONSE CHO CHATBOT
-        responses["weather_forecast"] = normalized_data
-        
+            raw_data = r.json()
+            normalized_daily = normalize_daily_aggregation(raw_data)
+            responses['daily_aggregation'] = normalized_daily
+
+            if settings.DEBUG:
+                logger.debug("DAY SUMMARY NORMALIZED (LLM READY)")
+                logger.debug(json.dumps(normalized_daily, indent=2, ensure_ascii=False))
+
+
         # -------------------------------
-    # AIR POLLUTION FORECAST
-    # -------------------------------
-    if "air_pollution" in intents:
-        if settings.DEBUG:
-            logger.debug("CALLING AIR POLLUTION FORECAST API")
+        # WEATHER OVERVIEW
+        # -------------------------------
+        elif tool_name == "weather_overview":
+            r = requests.get(
+                f"{BASE_OW_URL}/onecall/overview",
+                params={
+                    "lat": lat,
+                    "lon": lon,
+                    "units": "metric",
+                    "appid": OPENWEATHER_KEY,
+                },
+                timeout=8,
+            )
 
-        r = requests.get(
-            "https://api.openweathermap.org/data/2.5/air_pollution/forecast",
-            params={
-                "lat": lat,
-                "lon": lon,
-                "appid": OPENWEATHER_KEY,
-            },
-            timeout=8,
-        )
+            data = r.json()
+            responses["weather_overview"] = data
 
-        raw_data = r.json()
+            if settings.DEBUG:
+                logger.debug("WEATHER OVERVIEW RESPONSE")
+                logger.debug(json.dumps(data, indent=2, ensure_ascii=False))
 
-        # timezone offset → reuse từ weather forecast nếu có
-        tz_offset = raw_data.get("timezone_offset", 0)
-        tz_string = f"{tz_offset // 3600:+03d}:00"
+        # -------------------------------
+        # WEATHER FORECAST
+        # -------------------------------
+        elif tool_name == "weather_forecast":
+            r = requests.get(
+                f"{BASE_OW_URL}/onecall",
+                params={
+                    "lat": lat,
+                    "lon": lon,
+                    "exclude": "minutely,alerts",
+                    "appid": OPENWEATHER_KEY,
+                },
+                timeout=8,
+            )
 
-        # fallback: dùng timezone của weather_forecast nếu tồn tại
-        if "weather_forecast" in responses:
-            tz_string = responses["weather_forecast"].get("tz", "+00:00")
-            try:
-                tz_offset = int(tz_string.split(":")[0]) * 3600
-            except:
-                tz_offset = 0
+            raw_data = r.json()
 
-        normalized_air = [
-            normalize_air_pollution(item, tz_offset)
-            for item in raw_data.get("list", [])
-        ]
+            tz_offset = raw_data.get("timezone_offset", 0)
+            tz_string = f"{tz_offset // 3600:+03d}:00"
 
-        responses["air_pollution"] = {
-            "coord": raw_data.get("coord"),
-            "forecast": normalized_air,
+            # # ============================
+            # # DEBUG – GIỮ NGUYÊN RAW JSON
+            # # ============================
+            # if settings.DEBUG:
+            #     logger.debug("WEATHER FORECAST RAW RESPONSE (OPENWEATHER)")
+            #     logger.debug(json.dumps(raw_data, indent=2, ensure_ascii=False))
+
+            # ============================
+            # STEP 3 – NORMALIZE DATA
+            # ============================
+            normalized_data = {
+                "tz": tz_string,
+                "current": normalize_hourly(
+                    raw_data.get("current", {}), tz_offset
+                ),
+                "hourly": [
+                    normalize_hourly(h, tz_offset)
+                    for h in raw_data.get("hourly", [])
+                ],
+                "daily": [
+                    normalize_daily(d, tz_offset)
+                    for d in raw_data.get("daily", [])
+                ],
+            }
+
+            # ============================
+            # DEBUG – NORMALIZED JSON
+            # ============================
+            if settings.DEBUG:
+                logger.debug(
+                    "WEATHER FORECAST NORMALIZED RESPONSE (LLM READY)"
+                )
+                logger.debug(
+                    json.dumps(normalized_data, indent=2, ensure_ascii=False)
+                )
+
+            # 👉 RESPONSE CHO CHATBOT
+            responses["weather_forecast"] = normalized_data
+            
+            # -------------------------------
+        # AIR POLLUTION FORECAST
+        # -------------------------------
+        elif tool_name == "air_pollution":
+            if settings.DEBUG:
+                logger.debug("CALLING AIR POLLUTION FORECAST API")
+
+            r = requests.get(
+                "https://api.openweathermap.org/data/2.5/air_pollution/forecast",
+                params={
+                    "lat": lat,
+                    "lon": lon,
+                    "appid": OPENWEATHER_KEY,
+                },
+                timeout=8,
+            )
+
+            raw_data = r.json()
+
+            # timezone offset → reuse từ weather forecast nếu có
+            tz_offset = raw_data.get("timezone_offset", 0)
+            tz_string = f"{tz_offset // 3600:+03d}:00"
+
+            # fallback: dùng timezone của weather_forecast nếu tồn tại
+            if "weather_forecast" in responses:
+                tz_string = responses["weather_forecast"].get("tz", "+00:00")
+                try:
+                    tz_offset = int(tz_string.split(":")[0]) * 3600
+                except:
+                    tz_offset = 0
+
+            normalized_air = [
+                normalize_air_pollution(item, tz_offset)
+                for item in raw_data.get("list", [])
+            ]
+
+            responses["air_pollution"] = {
+                "coord": raw_data.get("coord"),
+                "forecast": normalized_air,
+            }
+
+            if settings.DEBUG:
+                logger.debug("AIR POLLUTION NORMALIZED RESPONSE (LLM READY)")
+                logger.debug(
+                    json.dumps(
+                        responses["air_pollution"],
+                        indent=2,
+                        ensure_ascii=False,
+                    )
+                )
+
+
+        # -------------------------------
+        # ACTIVITY / DISASTER → LLM LATER (RAM ONLY)
+        # -------------------------------
+        elif tool_name == "activity_recommendation" or tool_name == "disaster" or tool_name == "heathcare":
+            responses["llm_required"] = True
+
+            if settings.DEBUG:
+                logger.debug("LLM_REASONING_REQUIRED (NOT USING LOG FILE)")
+                logger.debug(
+                    json.dumps(
+                        {
+                            "intents": intents,
+                            "location": location,
+                            "day": day,
+                        },
+                        indent=2,
+                        ensure_ascii=False,
+                    )
+                )
+
+        # -------------------------------
+        # FINAL RESPONSE
+        # -------------------------------
+        response_payload = {
+            # 'location': location,
+            # 'lat': lat,
+            # 'lon': lon,
+            # 'intents': intents,
+            "data": responses,
         }
 
-        if settings.DEBUG:
-            logger.debug("AIR POLLUTION NORMALIZED RESPONSE (LLM READY)")
-            logger.debug(
-                json.dumps(
-                    responses["air_pollution"],
-                    indent=2,
-                    ensure_ascii=False,
-                )
-            )
-
-
-    # -------------------------------
-    # ACTIVITY / DISASTER → LLM LATER (RAM ONLY)
-    # -------------------------------
-    if "activity_recommendation" in intents or "disaster" in intents:
-        responses["llm_required"] = True
-
-        if settings.DEBUG:
-            logger.debug("LLM_REASONING_REQUIRED (NOT USING LOG FILE)")
-            logger.debug(
-                json.dumps(
-                    {
-                        "intents": intents,
-                        "location": location,
-                        "day": day,
-                    },
-                    indent=2,
-                    ensure_ascii=False,
-                )
-            )
-
-    # -------------------------------
-    # FINAL RESPONSE
-    # -------------------------------
-    response_payload = {
-        # 'location': location,
-        # 'lat': lat,
-        # 'lon': lon,
-        # 'intents': intents,
-        "data": responses,
-    }
-
-    return Response(response_payload)
+        return Response(response_payload)

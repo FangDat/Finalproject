@@ -1,19 +1,13 @@
 // authService.js
-export async function forceLogout(message = "", reason = "system") {
-  // ❗ Nếu logout chủ động → KHÔNG hiển thị warning
-  if (reason === "manual") {
-    sessionStorage.setItem("vietcloud_manual_logout", "1");
-  }
 
-  if (sessionStorage.getItem("vietcloud_force_logged_out")) {
+let isLoggingOut = false;
+
+export async function forceLogout() {
+  if (isLoggingOut) {
     return;
   }
 
-  sessionStorage.setItem("vietcloud_force_logged_out", "1");
-
-  if (message && reason !== "manual") {
-    alert(message);
-  }
+  isLoggingOut = true;
 
   try {
     await fetch("http://localhost:8000/api/logout/", {
@@ -23,12 +17,19 @@ export async function forceLogout(message = "", reason = "system") {
   } catch (e) {
     console.warn("Logout API failed", e);
   } finally {
+    // 🧹 clear browser storage
     localStorage.clear();
 
-    document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie =
+      "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie =
+      "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie =
+      "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
-    window.location.href = "/#/login";
+    // 🔓 reset lock cho lần sau
+    setTimeout(() => {
+      isLoggingOut = false;
+    }, 500);
   }
 }

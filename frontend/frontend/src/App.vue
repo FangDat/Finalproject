@@ -42,6 +42,7 @@ export default {
     return {
       username: this.getCookie("username") || "",
       refreshInterval: null, // interval refresh token
+      hasEverLoggedIn: localStorage.getItem("vietcloud_has_ever_logged_in") === "1",
 
     // 🆕 detect sleep / wake
     lastActiveTime: Date.now(),
@@ -119,10 +120,34 @@ export default {
         });
     },
     async logout() {
-  await forceLogout("", "manual");
+      console.log("👋 Manual logout");
+
+      // 1️⃣ STOP all intervals (QUAN TRỌNG)
+      if (this.refreshInterval) {
+        clearInterval(this.refreshInterval);
+        this.refreshInterval = null;
+      }
+
+      if (this.cookieCheckInterval) {
+        clearInterval(this.cookieCheckInterval);
+        this.cookieCheckInterval = null;
+      }
+
+      // 2️⃣ Clear Vue state NGAY LẬP TỨC
+      this.username = "";
+
+      // 3️⃣ Call backend + clear browser
+      await forceLogout();
+
+      // 4️⃣ Điều hướng SPA (tránh cookie sync chạy lại)
+      this.$router.replace("/login");
     },
 
     async syncAuthSafe() {
+        if (!this.hasEverLoggedIn) {
+          console.log("ℹ️ First visit – skip auth sync");
+          return;
+        }
       try {
         // 1️⃣ Thử refresh token trước
         const refreshRes = await fetch("http://localhost:8000/api/refresh/", {
@@ -151,7 +176,7 @@ export default {
         const data = await userRes.json();
             // 🔥 🔥 🔥 ĐIỂM MỚI
         if (data.is_active === false) {
-          this.stopAppAndRedirect();
+          await forceLogout();
           return;
         }
         // 3️⃣ Update UI + cookie
@@ -222,7 +247,9 @@ export default {
   mounted() {
     // sessionStorage.removeItem("vietcloud_force_logged_out");
     // sessionStorage.removeItem("vietcloud_manual_logout");
-    this.syncAuthSafe();
+    if (this.hasEverLoggedIn) {
+      this.syncAuthSafe();
+    }
         // ✅ DETECT STRIPE PAYMENT SUCCESS
     const hash = window.location.hash; // "#/?payment=success"
     const queryString = hash.includes("?") ? hash.split("?")[1] : "";
