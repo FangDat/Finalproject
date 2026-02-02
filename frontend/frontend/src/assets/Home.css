@@ -1346,3 +1346,69 @@ a,
     width: 100%;
   }
 }
+
+/* ===============================
+   📱 MOBILE FIX – SIDEBAR RIGHT
+   =============================== */
+@media (max-width: 768px) {
+
+  /* 🔒 Đảm bảo sidebar-right không chiếm layout logic */
+  .sidebar-right {
+    width: auto;
+    padding: 12px;
+    align-items: stretch;
+  }
+
+  /* ===============================
+     📆 Daily Forecast (30/01 🌤 25/18°C)
+     =============================== */
+  .forecast-3day {
+    justify-content: flex-start;   /* ❌ bỏ space-between */
+    gap: 90px;                     /* 🔥 gộp 3 cột lại */
+    padding: 4px 0;
+    font-size: 0.95rem;
+  }
+
+  .forecast-day {
+    min-width: 54px;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .forecast-3day img {
+    width: 40px;                   /* 🔥 icon to hơn */
+    height: 40px;
+  }
+
+  .forecast-3day .forecast-temp {
+    margin-left: auto;             /* 🔥 temp nằm gọn bên phải */
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  /* ===============================
+     🔵 Signup / Upgrade button
+     =============================== */
+  .btn-signup {
+    width: 120px !important;       /* 🔥 nhỏ lại */
+    padding: 6px 14px;
+    font-size: 0.9rem;
+
+    margin: 14px auto 0;           /* 🔥 center ngang */
+    display: block;
+    text-align: center;
+  }
+
+  /* ===============================
+     🤖 VietCloud Chatbot
+     =============================== */
+  .chatbot-shortcut {
+    align-self: center;            /* ❌ bỏ flex-end */
+    margin: 16px 0 8px;
+  }
+
+  .chatbot-icon {
+    width: 150px;                  /* 🔥 giảm từ 200px */
+    height: 150px;
+  }
+}

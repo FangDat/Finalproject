@@ -15,7 +15,7 @@
         @click="closeSidebar"
       ></div>
     <!-- Sidebar trái -->
-    <<aside class="sidebar-left" :class="{ open: showSidebar }">
+    <aside class="sidebar-left" :class="{ open: showSidebar }">
       <h2 class="logo">
         <router-link to="/">🌤 VietCloud</router-link>
       </h2>
@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import { apiFetch } from "@/services/apiClient";
+import apiClient from "@/services/apiClient";
 export default {
   name: "Settings",
   data() {
@@ -167,18 +167,19 @@ export default {
     getCookie(name) {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? decodeURIComponent(match[2]) : null;
-    },fetchUserInfo() {
-    apiFetch("http://localhost:8000/api/user-info/")
-      .then(res => res.json())
-      .then(data => {
+    },
+    async fetchUserInfo() {
+      try {
+        const res = await apiClient.get("/api/user-info/");
+        const data = res.data;
+
         this.username = data.username || "";
         this.is_premium = data.is_premium || false;
-      })
-      .catch(() => {
+      } catch (e) {
         this.username = "";
         this.is_premium = false;
-      });
-  },
+      }
+    },
   
       toggleSidebar() {
       this.showSidebar = !this.showSidebar;

@@ -105,7 +105,8 @@
 </template>
 
 <script>
-import { apiFetch } from "@/services/apiClient";
+import { getUserInfo } from "@/services/authService";
+import apiClient from "@/services/apiClient";
 if (!window.__vietcloudChatPending) {
   window.__vietcloudChatPending = {
     pending: false,
@@ -180,8 +181,7 @@ export default {
     // ✅ Giống Home.vue (GIỮ NGUYÊN)
     async fetchUserInfo() {
       try {
-        const res = await apiFetch("http://localhost:8000/api/user-info/");
-        const data = await res.json();
+        const data = await getUserInfo();
 
         this.username = data.username || "";
         this.is_premium = data.is_premium || false;
@@ -291,36 +291,26 @@ export default {
         window.__vietcloudChatPending.answer = null;
         localStorage.setItem("vietcloud_chat_pending", "1");
 
-      const fetchPromise = apiFetch(
-        "http://localhost:8000/api/chatbot/intent/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text }),
-        }
-      )
-        .then(async (res) => {
-          const data = await res.json().catch(() => ({}));
-          let botText = "";
-
-          if (res.status === 200) {
-            botText =
-              data.answer ||
-              "The VietCloud system is overloaded. Please try again later.";
-          } else if (res.status === 400) {
-            botText =
-              "Sorry, your question must be in English and related to weather.";
-          } else {
-            botText = "Something went wrong. Please try again later.";
-          }
+      const fetchPromise = apiClient
+        .post("/api/chatbot/intent/", {
+          message: text,
+        })
+        .then((res) => {
+          const data = res.data || {};
+          const botText =
+            data.answer ||
+            "The VietCloud system is overloaded. Please try again later.";
 
           window.__vietcloudChatPending.answer = botText;
           return botText;
         })
         .catch((err) => {
-          // ⚠️ Nếu là Unauthorized → apiFetch đã logout rồi
-          if (err.message === "Unauthorized") {
-            return;
+          // ⚠️ 401 / 403 → interceptor đã forceLogout
+          if (err?.response?.status === 400) {
+            const msg =
+              "Sorry, your question must be in English and related to weather.";
+            window.__vietcloudChatPending.answer = msg;
+            return msg;
           }
 
           const errText =

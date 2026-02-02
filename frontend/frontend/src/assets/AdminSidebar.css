@@ -59,3 +59,19 @@ a,
   text-decoration: none !important;
   color: inherit;
 }
+
+@media (max-width: 768px) {
+  .sidebar-left {
+    position: fixed;
+    top: 0;
+    left: -240px;
+    height: 100%;
+    width: 220px;
+    z-index: 1300;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar-left.open {
+    left: 0;
+  }
+}

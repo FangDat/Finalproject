@@ -514,7 +514,7 @@ import { cToF, msToKmh, msToMph, kmToMiles, mToKm, mToMiles } from "@/utils.js";
 import WeatherError from "@/components/WeatherError.vue";
 import DynamicBackground from "@/components/DynamicBackground.vue";
 import SparklineChart from "@/components/SparklineChart.vue";
-import { apiFetch } from "@/services/apiClient";
+import apiClient from "@/services/apiClient";
 
 export default {
   name: "Home",
@@ -831,8 +831,8 @@ export default {
     },
     async fetchUserInfo() {
       try {
-        const res = await apiFetch("http://localhost:8000/api/user-info/");
-        const data = await res.json();
+        const res = await apiClient.get("/api/user-info/");
+        const data = res.data;
 
         this.username = data.username || "";
         this.is_premium = data.is_premium || false;
@@ -841,26 +841,27 @@ export default {
           this.fetchSearchHistory();
         }
       } catch (err) {
-        // ⛔ Nếu 401/403 → apiFetch đã forceLogout()
+        // 401 / 403 → interceptor auto forceLogout
         this.username = "";
         this.is_premium = false;
         this.searchHistory = [];
       }
     },
+
     async fetchSearchHistory() {
       if (!this.is_premium) return;
+
       try {
-        const res = await apiFetch(
-          "http://localhost:8000/api/search-history/list/"
-        );
-        const data = await res.json();
-        this.searchHistory = Array.isArray(data) ? data : [];
+        const res = await apiClient.get("/api/search-history/list/");
+        this.searchHistory = Array.isArray(res.data) ? res.data : [];
       } catch (err) {
         this.searchHistory = [];
       }
     },
+
     async addSearchHistory(cityObj) {
       if (!this.is_premium || !cityObj || !cityObj.name) return;
+
       try {
         const payload = {
           city_name: cityObj.name,
@@ -868,27 +869,19 @@ export default {
           lon: cityObj.lon,
         };
 
-        const res = await apiFetch(
-          "http://localhost:8000/api/search-history/add/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          }
+        await apiClient.post("/api/search-history/add/", payload);
+
+        this.searchHistory = this.searchHistory.filter(
+          (h) => h.city_name !== cityObj.name
         );
 
-        if (res.ok) {
-          this.searchHistory = this.searchHistory.filter(
-            (h) => h.city_name !== cityObj.name
-          );
-          this.searchHistory.unshift({
-            id: cityObj.id || null,
-            name: cityObj.name,
-            city_name: cityObj.name,
-            lat: cityObj.lat,
-            lon: cityObj.lon,
-          });
-        }
+        this.searchHistory.unshift({
+          id: cityObj.id || null,
+          name: cityObj.name,
+          city_name: cityObj.name,
+          lat: cityObj.lat,
+          lon: cityObj.lon,
+        });
       } catch (err) {
         console.error("addSearchHistory error", err);
       }
@@ -896,25 +889,18 @@ export default {
 
     async deleteHistory(historyItem) {
       if (!historyItem) return;
+
       const id = historyItem.id;
-
-      if (!id) {
-        this.searchHistory = this.searchHistory.filter((h) => h !== historyItem);
-        return;
-      }
-
       const prev = [...this.searchHistory];
-      this.searchHistory = this.searchHistory.filter((h) => h.id !== id);
+
+      this.searchHistory = this.searchHistory.filter((h) => h !== historyItem);
+
+      if (!id) return;
 
       try {
-        const res = await apiFetch(
-          `http://localhost:8000/api/search-history/clear/${encodeURIComponent(id)}/`,
-          { method: "DELETE" }
+        await apiClient.delete(
+          `/api/search-history/clear/${encodeURIComponent(id)}/`
         );
-
-        if (!res.ok) {
-          this.searchHistory = prev;
-        }
       } catch (err) {
         this.searchHistory = prev;
       }
@@ -931,12 +917,11 @@ export default {
     },
     async fetchSuggestions(q) {
       try {
-        const res = await fetch(
-          `http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(
-            q
-          )}`
-        );
-        const arr = await res.json();
+        const res = await apiClient.get("/api/autocomplete_local/", {
+          params: { q },
+        });
+
+        const arr = res.data;
         if (Array.isArray(arr)) {
           this.suggestions = arr;
           this.showSuggestions = arr.length > 0;
@@ -990,30 +975,29 @@ export default {
     },
    async fetchWeather(city = "") {
     try {
-      let url = city
-        ? `http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`
-        : "http://localhost:8000/api/weather/";
+      const res = await apiClient.get("/api/weather/", {
+        params: city ? { city } : {},
+      });
 
-      const response = await apiFetch(url);
-      const data = await response.json();
+      const data = res.data;
 
       this.errorMessage = "";
       this.errorGif = "";
       this.applyWeatherData(data);
       this.showSuggestions = false;
     } catch (err) {
-      // ⛔ Nếu bị ban → đã logout
       this.errorMessage = `Location '${city}' not found\nTry searching another location`;
       this.errorGif = "";
     }
   },
+
   async getWeatherByLocation(lat, lon, name = null) {
     try {
-      let url = `http://localhost:8000/api/weather/?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
-      if (name) url += `&name=${encodeURIComponent(name)}`;
+      const params = { lat, lon };
+      if (name) params.name = name;
 
-      const res = await apiFetch(url);
-      const data = await res.json();
+      const res = await apiClient.get("/api/weather/", { params });
+      const data = res.data;
 
       this.errorMessage = "";
       this.errorGif = "";
@@ -1024,6 +1008,7 @@ export default {
       this.errorGif = "";
     }
   },
+
     applyWeatherData(data) {
       this.city = data.location || this.searchQuery;
       this.temperature = data.temperature;
@@ -1095,39 +1080,51 @@ export default {
       }
     }
 
-    if (navigator.geolocation) {
+   if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           const lat = pos.coords.latitude;
           const lon = pos.coords.longitude;
-          const res = await fetch(
-            `http://localhost:8000/api/weather/?lat=${lat}&lon=${lon}`,
-            { credentials: "include" }
-          );
-          const data = await res.json();
-          if (res.ok) {
+
+          try {
+            const res = await apiClient.get("/api/weather/", {
+              params: { lat, lon },
+            });
+
+            const data = res.data;
+
             const cache = {
               fixed_name: data.location,
               lat,
               lon,
               timestamp: Date.now(),
             };
+
             localStorage.setItem(
               "vietcloud_device_location",
               JSON.stringify(cache)
             );
+
+            this.errorMessage = "";
+            this.errorGif = "";
             this.applyWeatherData(data);
-          } else {
+          } catch (err) {
+            console.error("Geo weather error", err);
             this.errorMessage = "Cannot fetch weather from your location.";
+            this.errorGif = "location-pin.gif";
           }
         },
         () => {
-          this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:\n- Refresh your browser.\n- Allow your browser to access your location and try again.`;
+          this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:
+    - Refresh your browser.
+    - Allow your browser to access your location and try again.`;
           this.errorGif = "location-pin.gif";
         }
       );
     } else {
-      this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:\n- Refresh your browser.\n- Allow your browser to access your location and try again.`;
+      this.errorMessage = `Sorry, but we couldn't find your exact location. Please try:
+    - Refresh your browser.
+    - Allow your browser to access your location and try again.`;
       this.errorGif = "location-pin.gif";
     }
 

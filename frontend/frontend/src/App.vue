@@ -35,7 +35,11 @@
   </div>
 </template>
 <script>
-import { forceLogout } from "@/services/authService";
+import {
+  forceLogout,
+  refreshToken as refreshTokenService,
+  getUserInfo,
+} from "@/services/authService";
 export default {
   name: "App",
   data() {
@@ -144,42 +148,25 @@ export default {
     },
 
     async syncAuthSafe() {
-        if (!this.hasEverLoggedIn) {
-          console.log("ℹ️ First visit – skip auth sync");
-          return;
-        }
+      if (!this.hasEverLoggedIn) {
+        console.log("ℹ️ First visit – skip auth sync");
+        return;
+      }
+
       try {
-        // 1️⃣ Thử refresh token trước
-        const refreshRes = await fetch("http://localhost:8000/api/refresh/", {
-          method: "POST",
-          credentials: "include",
-        });
+        // 1️⃣ refresh token
+        await refreshTokenService();
 
-        if (!refreshRes.ok) {
-          console.warn("❌ Refresh token invalid");
-          this.username = "";
-          return;
-        }
+        // 2️⃣ lấy user info
+        const data = await getUserInfo();
 
-        // 2️⃣ Sau khi có access token → gọi user-info
-        const userRes = await fetch("http://localhost:8000/api/user-info/", {
-          method: "GET",
-          credentials: "include",
-        });
-
-        if (!userRes.ok) {
-          console.warn("❌ user-info failed");
-          this.username = "";
-          return;
-        }
-
-        const data = await userRes.json();
-            // 🔥 🔥 🔥 ĐIỂM MỚI
+        // 🔥 user bị ban / inactive
         if (data.is_active === false) {
           await forceLogout();
           return;
         }
-        // 3️⃣ Update UI + cookie
+
+        // 3️⃣ update UI + cookie
         this.username = data.username;
 
         document.cookie = `username=${data.username}; path=/`;
@@ -191,58 +178,18 @@ export default {
         this.username = "";
       }
     },
-
-    // async logout() {
-    //   try {
-    //     const res = await fetch("http://localhost:8000/api/logout/", {
-    //       method: "POST",
-    //       credentials: "include",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify({}),
-    //     });
-
-    //     document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    //     document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    //     this.username = "";
-    //     this.$router.push("/");
-    //     window.location.reload();
-    //   } catch (err) {
-    //     console.error("Logout failed", err);
-    //      } finally {
-    // // 🧹 XOÁ CHAT LOCALSTORAGE
-    //     localStorage.removeItem("vietcloud_chat");
-        
-    //     document.cookie = "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    //     document.cookie = "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    //     document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    //     this.username = "";
-    //     this.$router.push("/");
-    //     window.location.reload();
-    //   }
-    // },
-
     // -------------------------------
     // 🔄 Refresh token tự động
     // -------------------------------
     async refreshToken() {
       try {
-        const res = await fetch("http://localhost:8000/api/refresh/", {
-          method: "POST",
-          credentials: "include", // quan trọng: gửi cookie HttpOnly
-        });
-
-        if (!res.ok) {
-          console.warn("Refresh token failed:", res.status);
-          // nếu refresh thất bại → logout user
-          this.logout();
-        } else {
-          console.log("Access token refreshed successfully");
-        }
+        await refreshTokenService();
+        console.log("Access token refreshed successfully");
       } catch (err) {
-        console.error("Error refreshing token:", err);
+        console.warn("Refresh token failed");
         this.logout();
       }
-    },
+    }
   },
   mounted() {
     // sessionStorage.removeItem("vietcloud_force_logged_out");

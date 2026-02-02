@@ -1,17 +1,52 @@
 // apiClient.js
+import axios from "axios";
 import { forceLogout } from "./authService";
 
-export async function apiFetch(url, options = {}) {
-  const res = await fetch(url, {
-    credentials: "include",
-    ...options,
-  });
+const API_BASE_URL = "http://localhost:8000";
 
-  if (res.status === 401 || res.status === 403) {
-    // 🔒 Unauthorized → logout (đã có lock chống lặp)
-    forceLogout();
-    throw new Error("Unauthorized");
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,
+  timeout: 15000,
+});
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error?.response?.status;
+    const url = error?.config?.url || "";
+
+    // ❗ Những endpoint KHÔNG được auto logout
+    const SAFE_AUTH_ENDPOINTS = [
+      "/api/login/",
+      "/api/signup/",
+      "/api/verify-otp/",
+      "/api/resend-otp/",
+      "/api/forgot-password/",
+      "/api/change-email/verify-password/",
+      "/api/change-email/verify-otp/",
+      "/api/change-password/",
+    ];
+
+    const isSafeEndpoint = SAFE_AUTH_ENDPOINTS.some((ep) =>
+      url.includes(ep)
+    );
+
+    /*
+      🔥 CHỈ logout khi:
+      - 401 / 403
+      - KHÔNG phải auth-related endpoint
+    */
+    if (
+      (status === 401 || status === 403) &&
+      !isSafeEndpoint
+    ) {
+      console.warn("🚫 Auth expired → force logout");
+      await forceLogout();
+    }
+
+    return Promise.reject(error);
   }
+);
 
-  return res;
-}
+export default apiClient;

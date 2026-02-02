@@ -198,6 +198,11 @@ LOGGING = {
         'formatter': 'verbose',
         'mode': 'a',   # append (ta sẽ clear bằng code)
         },
+        'cron_file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'cron.log',
+            'formatter': 'verbose',
+        },
     },
         'loggers': {
         'backend.api.views.weather_views': {  
@@ -235,6 +240,11 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
+        },
+        'cron.expire_premium': {
+            'handlers': ['cron_file'],
+            'level': 'INFO',
+            'propagate': False,
         },
     },
 

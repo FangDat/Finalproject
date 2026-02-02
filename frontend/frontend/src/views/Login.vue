@@ -168,7 +168,7 @@
 
 <script>
 import "../assets/Login.css";
-import axios from "axios";
+import apiClient from "@/services/apiClient";
 import Cookies from "js-cookie";
 
 export default {
@@ -245,7 +245,6 @@ export default {
           return;
         }
 
-        // HTML5 email format check
         const emailInput = document.createElement("input");
         emailInput.type = "email";
         emailInput.value = this.forgotEmail;
@@ -259,30 +258,30 @@ export default {
       this.forgotLoading = true;
 
       try {
+        // STEP 1: SEND OTP
         if (this.forgotStep === 1) {
-          await axios.post(
-            "http://localhost:8000/api/forgot-password/send-otp/",
-            { email: this.forgotEmail }
-          );
+          await apiClient.post("/api/forgot-password/send-otp/", {
+            email: this.forgotEmail,
+          });
 
           this.showForgotPassword = false;
           this.showForgotOtp = true;
           this.startResendCountdown();
-        } else {
+        }
+
+        // STEP 3: RESET PASSWORD
+        else {
           if (this.forgotNewPassword !== this.forgotConfirmPassword) {
             this.forgotAlert = "Passwords do not match.";
             this.forgotSuccess = false;
             return;
           }
 
-          await axios.post(
-            "http://localhost:8000/api/forgot-password/reset/",
-            {
-              email: this.forgotEmail,
-              new_password: this.forgotNewPassword,
-              confirm_password: this.forgotConfirmPassword,
-            }
-          );
+          await apiClient.post("/api/forgot-password/reset/", {
+            email: this.forgotEmail,
+            new_password: this.forgotNewPassword,
+            confirm_password: this.forgotConfirmPassword,
+          });
 
           this.forgotAlert = "Password reset successfully.";
           this.forgotSuccess = true;
@@ -290,7 +289,6 @@ export default {
           setTimeout(() => this.closeForgotPassword(), 2000);
         }
       } catch (err) {
-        // Backend email error
         if (
           this.forgotStep === 1 &&
           err.response?.status === 400 &&
@@ -300,7 +298,8 @@ export default {
           return;
         }
 
-        this.forgotAlert = err.response?.data?.error || "Action failed.";
+        this.forgotAlert =
+          err.response?.data?.error || "Action failed.";
         this.forgotSuccess = false;
       } finally {
         this.forgotLoading = false;
@@ -319,7 +318,7 @@ export default {
       }
 
       try {
-        await axios.post("http://localhost:8000/api/forgot-password/verify-otp/", {
+        await apiClient.post("/api/forgot-password/verify-otp/", {
           email: this.forgotEmail,
           otp,
         });
@@ -328,7 +327,8 @@ export default {
         this.showForgotPassword = true;
         this.forgotStep = 3;
       } catch (err) {
-        this.forgotOtpError = err.response?.data?.error || "Invalid or expired OTP.";
+        this.forgotOtpError =
+          err.response?.data?.error || "Invalid or expired OTP.";
       } finally {
         this.verifyingForgotOtp = false;
       }
@@ -344,7 +344,7 @@ export default {
     },
 
     async resendForgotOtp() {
-      await axios.post("http://localhost:8000/api/forgot-password/resend-otp/", {
+      await apiClient.post("/api/forgot-password/resend-otp/", {
         email: this.forgotEmail,
       });
       this.startResendCountdown();
@@ -375,41 +375,36 @@ export default {
     async handleLogin() {
       this.resetErrors();
 
-      // Validate cơ bản
       if (!this.username || !this.password) {
-        if (!this.username) this.errors.username = "Please enter your username.";
-        if (!this.password) this.errors.password = "Please enter your password.";
+        if (!this.username)
+          this.errors.username = "Please enter your username.";
+        if (!this.password)
+          this.errors.password = "Please enter your password.";
+
         this.alertMessage = "Please fill in all required fields.";
         this.alertType = "warning";
         return;
       }
 
       this.submitting = true;
+
       try {
         const payload = {
           username: this.username,
           password: this.password,
         };
 
-        // Gửi request login với cookie tự động kèm theo
-        const res = await axios.post(
-          "http://localhost:8000/api/login/",
-          payload,
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true, // bắt buộc để gửi cookie HttpOnly
-          }
-        );
+        // 🔥 DÙNG apiClient (cookie tự gửi)
+        const res = await apiClient.post("/api/login/", payload);
 
-        // Backend trả về thông tin user (nếu cần)
         const user = res.data?.user || this.username;
         const email = res.data?.email || "";
         const role = res.data?.role || "user";
-        Cookies.set("role", role, { expires: 7 });
 
-        // Chỉ lưu vào cookie, không lưu localStorage
         Cookies.set("username", user, { expires: 7 });
         Cookies.set("email", email, { expires: 7 });
+        Cookies.set("role", role, { expires: 7 });
+
         this.alertMessage = "Login successful! Redirecting...";
         this.alertType = "success";
 
@@ -423,33 +418,34 @@ export default {
       } catch (err) {
         if (err.response) {
           const { status, data } = err.response;
-          if (data && typeof data === "object" && (data.username || data.password)) {
-            if (data.username?.length) this.errors.username = data.username[0];
-            if (data.password?.length) this.errors.password = data.password[0];
+
+          if (data?.username || data?.password) {
+            if (data.username?.length)
+              this.errors.username = data.username[0];
+            if (data.password?.length)
+              this.errors.password = data.password[0];
+
             this.alertMessage =
-              [data.username?.[0], data.password?.[0]].filter(Boolean).join(" ") ||
+              data.username?.[0] ||
+              data.password?.[0] ||
               "Login failed.";
             this.alertType = "error";
-          } else if (status === 404 && data?.error?.toLowerCase().includes("user not found")) {
+          } else if (status === 404) {
             this.errors.username = "User not found.";
             this.alertMessage = "User not found.";
             this.alertType = "warning";
-          } else if (status === 400 && data?.error?.toLowerCase().includes("invalid password")) {
+          } else if (status === 400) {
             this.errors.password = "Incorrect password.";
             this.alertMessage = "Incorrect password.";
             this.alertType = "warning";
-          } else if (
-            status === 403 &&
-            data?.error?.toLowerCase().includes("suspend")
-          ) {
-            this.alertMessage =
+          } else if (status === 403) {
+            // 👇 hiển thị giống "Please enter your password."
+            this.errors.password =
               "Your account has been temporarily suspended. Please contact support.";
-            this.errors.password = "Your account has been temporarily suspended. Please contact support.";
-            this.alertMessage = "Your account has been temporarily suspended. Please contact support.";
-            this.alertType = "warning";
           }
         } else {
-          this.alertMessage = "Cannot connect to server. Please try again.";
+          this.alertMessage =
+            "Cannot connect to server. Please try again.";
           this.alertType = "error";
         }
       } finally {

@@ -98,4 +98,34 @@ export default {
   color: #1565c0;
   font-weight: 600;
 }
+
+/* ===========================
+   MOBILE RESPONSIVE AUDIT LOG
+=========================== */
+@media (max-width: 768px) {
+  /* 전체 bảng chữ nhỏ hơn */
+  .audit-table {
+    font-size: 0.85rem; /* ↓ từ mặc định */
+  }
+
+  /* Header gọn lại */
+  .audit-table th {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  /* Cell gọn hơn */
+  .audit-table td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  /* Badge action nhỏ & cân */
+  .badge.action {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}
+
 </style>

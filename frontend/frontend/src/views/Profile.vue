@@ -379,8 +379,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import { apiFetch } from "@/services/apiClient";
+import apiClient from "@/services/apiClient";
 export default {
   name: "Profile",
   data() {
@@ -515,8 +514,9 @@ export default {
       }
     },
     goToBilling() {
-      window.location.href = "http://localhost:8080/#/Billing";
+      this.$router.push("/Billing");
     },
+
     toggleSidebar() {
       this.showSidebar = !this.showSidebar;
     },
@@ -546,22 +546,18 @@ export default {
 
   async fetchUserInfo() {
     try {
-      const res = await apiFetch("http://localhost:8000/api/user-info/");
-      const data = await res.json();
+      const res = await apiClient.get("/api/user-info/");
+      const data = res.data;
 
       this.is_premium = !!data.is_premium;
       this.premium_expires_at_ts = data.premium_expires_at_ts
         ? Number(data.premium_expires_at_ts)
         : null;
     } catch (err) {
-      // ✅ Unauthorized đã được forceLogout → chỉ cần im lặng
-      if (err.message === "Unauthorized") return;
-
-      // ❌ lỗi khác thì vẫn log
+      // 401 / 403 đã bị interceptor forceLogout
       console.error("fetchUserInfo failed:", err);
     }
   },
-
 
 
     async handleChangeEmail() {
@@ -570,18 +566,16 @@ export default {
 
     try {
       if (this.changeEmailStep === 1) {
-        await axios.post(
-          "http://localhost:8000/api/change-email/verify-password/",
-          { password: this.email_password },
-          { withCredentials: true }
+        await apiClient.post(
+          "/api/change-email/verify-password/",
+          { password: this.email_password }
         );
         this.changeEmailStep = 2;
       } else {
-        await axios.post(
-          "http://localhost:8000/api/change-email/send-otp/",
-          { new_email: this.new_email },
-          { withCredentials: true }
-        );
+      await apiClient.post(
+        "/api/change-email/send-otp/",
+        { new_email: this.new_email }
+      );
         this.showChangeEmail = false;
         this.showChangeEmailOtp = true;
         this.startResendCountdown();
@@ -605,35 +599,24 @@ export default {
     }
 
     try {
-      await axios.post(
-        "http://localhost:8000/api/change-email/verify-otp/",
-        { otp: otpCode },
-        { withCredentials: true }
+      await apiClient.post(
+        "/api/change-email/verify-otp/",
+        { otp: otpCode }
       );
 
-      // ✅ UX giống Change Password
       this.showChangeEmailOtp = false;
       this.popupMessage = "Email changed successfully.";
       this.popupSuccess = true;
       this.showPopup = true;
 
-      // ⏳ Logout giống hệt Change Password
       setTimeout(() => {
         document.cookie.split(";").forEach(c => {
-          document.cookie = c
-            .replace(/^ +/, "")
+          document.cookie = c.replace(/^ +/, "")
             .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
         });
-
-        // reset state (tránh bug sau reload)
-        this.otpDigits = ["", "", "", "", "", ""];
-        this.resendTimer = 60;
-        this.otpError = null;
-
         this.$router.push("/");
         window.location.reload();
       }, 3000);
-
     } catch (err) {
       this.otpError =
         err.response?.data?.error ||
@@ -653,18 +636,14 @@ export default {
   }, 1000);
 },
 
-  async resendChangeEmailOtp() {
-    try {
-      await axios.post(
-        "http://localhost:8000/api/change-email/resend-otp/",
-        {},
-        { withCredentials: true }
-      );
-      this.startResendCountdown();
-    } catch {
-      this.otpError = "Failed to resend OTP.";
-    }
-  },
+    async resendChangeEmailOtp() {
+      try {
+        await apiClient.post("/api/change-email/resend-otp/");
+        this.startResendCountdown();
+      } catch {
+        this.otpError = "Failed to resend OTP.";
+      }
+    },
 focusNext(index) {
   if (this.otpDigits[index].length === 1 && index < 5) {
     this.$el.querySelectorAll(".otp-inputs input")[index + 1].focus();
@@ -695,31 +674,32 @@ focusPrev(index, event) {
       this.submittingPassword = true;
 
       try {
-        const res = await axios.post(
-          "http://localhost:8000/api/change-password/",
+        const res = await apiClient.post(
+          "/api/change-password/",
           {
             current_password: this.current_password,
             new_password: this.new_password,
             confirm_password: this.confirm_password,
-          },
-          {
-            withCredentials: true,
           }
         );
 
-        this.passwordAlert = res.data.message || "Password changed successfully.";
+        this.passwordAlert =
+          res.data.message || "Password changed successfully.";
         this.passwordSuccess = true;
 
         setTimeout(() => {
           document.cookie.split(";").forEach(c => {
-            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            document.cookie = c.replace(/^ +/, "")
+              .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
           });
           this.$router.push("/");
           window.location.reload();
         }, 3000);
       } catch (err) {
-        this.passwordAlert = err.response?.data?.error || err.response?.data?.detail || err.message;
-        this.passwordSuccess = false;
+        this.passwordAlert =
+          err.response?.data?.error ||
+          err.response?.data?.detail ||
+          err.message;
       } finally {
         this.submittingPassword = false;
       }
@@ -755,14 +735,13 @@ focusPrev(index, event) {
 
       this.submittingDelete = true;
       try {
-        const res = await axios.post(
-          "http://localhost:8000/api/delete-account/",
+        const res = await apiClient.post(
+          "/api/delete-account/",
           {
             username: this.delete_username,
             password: this.delete_password,
             confirm_password: this.delete_confirm_password,
-          },
-          { withCredentials: true }
+          }
         );
 
         this.deleteAlert = res.data.message || "Account deleted successfully.";
@@ -790,10 +769,12 @@ focusPrev(index, event) {
         this.showPopup = true;
         return;
       }
+
       if (this.sendingDisabled) return;
 
       this.sendingDisabled = true;
       this.countdown = 8;
+
       const interval = setInterval(() => {
         this.countdown--;
         if (this.countdown <= 0) {
@@ -803,31 +784,29 @@ focusPrev(index, event) {
       }, 1000);
 
       try {
-        await axios.post(
-          "http://localhost:8000/api/send-feedback/",
-          {
-            message: this.feedbackMessage,
-            email: this.email || "",
-          },
-          { withCredentials: true }
-        );
-        this.popupMessage = "Feedback sent successfully! Support will respond to your email soon.";
+        await apiClient.post("/api/send-feedback/", {
+          message: this.feedbackMessage,
+          email: this.email || "",
+        });
+
+        this.popupMessage =
+          "Feedback sent successfully! Support will respond to your email soon.";
         this.popupSuccess = true;
         this.showPopup = true;
         this.feedbackMessage = "";
       } catch (err) {
-        console.error(err);
-        this.popupMessage = err.response?.data?.error || err.response?.data?.detail || "Failed to send feedback.";
+        this.popupMessage =
+          err.response?.data?.error ||
+          err.response?.data?.detail ||
+          "Failed to send feedback.";
         this.popupSuccess = false;
         this.showPopup = true;
       }
     },
+
     async fetchInvoices() {
       try {
-        const res = await axios.get(
-          "http://localhost:8000/api/stripe/invoices/",
-          { withCredentials: true }
-        );
+        const res = await apiClient.get("/api/stripe/invoices/");
         this.invoices = res.data || [];
       } catch (err) {
         console.error("Failed to load invoices", err);

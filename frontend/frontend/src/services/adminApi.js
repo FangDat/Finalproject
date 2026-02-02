@@ -1,56 +1,53 @@
-const BASE_URL = "http://localhost:8000/api/admin";
+// adminApi.js
+import apiClient from "./apiClient";
 
-async function handleResponse(res) {
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || "API error");
-  }
-  return res.json();
-}
+const BASE_URL = "/api/admin";
 
-export async function fetchUsers() {
-  const res = await fetch(`${BASE_URL}/users/`, {
-    credentials: "include",
+// ===============================
+// 👥 USERS
+// ===============================
+
+// 📋 fetch users (có search)
+export async function fetchUsers(query = "") {
+  const res = await apiClient.get(`${BASE_URL}/users/`, {
+    params: query ? { q: query } : {},
   });
-  return handleResponse(res);
+  return res.data;
 }
 
+// 👤 user detail
 export async function fetchUserDetail(userId) {
-  const res = await fetch(`${BASE_URL}/users/${userId}/`, {
-    credentials: "include",
-  });
-  return handleResponse(res);
+  const res = await apiClient.get(`${BASE_URL}/users/${userId}/`);
+  return res.data;
 }
 
+// 🚫 ban / unban
 export async function banOrUnbanUser(userId) {
-  const res = await fetch(`${BASE_URL}/users/${userId}/ban/`, {
-    method: "POST",
-    credentials: "include",
-  });
-  return handleResponse(res);
+  const res = await apiClient.post(
+    `${BASE_URL}/users/${userId}/ban/`
+  );
+  return res.data;
 }
 
+// ⭐ update premium
 export async function updatePremium(userId, days) {
-  const res = await fetch(`${BASE_URL}/users/${userId}/premium/`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ days }),
-  });
-  return handleResponse(res);
+  const res = await apiClient.post(
+    `${BASE_URL}/users/${userId}/premium/`,
+    { days }
+  );
+  return res.data;
 }
 
+// ❌ delete user
 export async function deleteUser(userId) {
-  const res = await fetch(`${BASE_URL}/users/${userId}/delete/`, {
-    method: "DELETE",
-    credentials: "include",
-  });
-  return handleResponse(res);
+  const res = await apiClient.delete(
+    `${BASE_URL}/users/${userId}/delete/`
+  );
+  return res.data;
 }
 
+// 📜 audit logs
 export async function fetchAuditLogs() {
-  const res = await fetch(`${BASE_URL}/audit-logs/`, {
-    credentials: "include",
-  });
-  return handleResponse(res);
+  const res = await apiClient.get(`${BASE_URL}/audit-logs/`);
+  return res.data;
 }

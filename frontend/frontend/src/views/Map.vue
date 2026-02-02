@@ -165,7 +165,8 @@ import {
   mToKm,
   mToMiles
 } from "@/utils.js";
-import { apiFetch } from "@/services/apiClient";
+import apiClient from "@/services/apiClient";
+import { getUserInfo } from "@/services/authService";
 export default {
   name: "Map",
   components: { WeatherError },
@@ -355,18 +356,35 @@ export default {
 
     async fetchCityWeather(city) {
       if (!city) return;
+
       try {
-        const res = await fetch(`http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`, { credentials: 'include' });
-        const data = await res.json();
-        if (res.ok && data) {
-          const now = new Date();
-          const icon = data.icon || "01d";
-          const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-          const idx = this.cities.findIndex((c) => c.name === "—" || c.name === city);
-          if (idx !== -1) {
-            const tempOrigin = data.temperature != null ? Number(data.temperature) : null;
-            this.cities[idx] = { name: data.location, temp: tempOrigin, temp_origin: tempOrigin, icon, time: timeStr };
-          }
+        const res = await apiClient.get("/api/weather/", {
+          params: { city }
+        });
+        const data = res.data;
+
+        const now = new Date();
+        const icon = data.icon || "01d";
+        const timeStr = now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        const idx = this.cities.findIndex(
+          c => c.name === "—" || c.name === city
+        );
+
+        if (idx !== -1) {
+          const tempOrigin =
+            data.temperature != null ? Number(data.temperature) : null;
+
+          this.cities[idx] = {
+            name: data.location,
+            temp: tempOrigin,
+            temp_origin: tempOrigin,
+            icon,
+            time: timeStr
+          };
         }
       } catch (err) {
         console.error("Error fetching weather:", err);
@@ -540,61 +558,52 @@ export default {
        ====================================================== */
       async fetchUserInfo() {
         try {
-          const res = await apiFetch("http://localhost:8000/api/user-info/");
-          const data = await res.json();
+          const data = await getUserInfo();
 
           this.username = data.username || "";
-          this.is_premium = data.is_premium || false;
+          this.is_premium = !!data.is_premium;
 
           if (this.is_premium) {
             await this.fetchSearchHistory();
           }
-        } catch {
+        } catch (err) {
+          // 401 / 403 sẽ bị interceptor forceLogout
           this.username = "";
           this.is_premium = false;
           this.searchHistory = [];
         }
       },
+    /* ======================================================
+        ⭐⭐ FETCH SEARCH HISTORY (Home.vue logic)
+       ====================================================== */
 
+      async fetchSearchHistory() {
+        if (!this.is_premium) return;
 
-    async fetchSearchHistory() {
-      if (!this.is_premium) return;
-
-      try {
-        const res = await apiFetch(
-          "http://localhost:8000/api/search-history/list/"
-        );
-        const data = await res.json();
-        this.searchHistory = Array.isArray(data) ? data : [];
-      } catch (err) {
-        console.error("fetchSearchHistory error:", err);
-        this.searchHistory = [];
-      }
-    },
+        try {
+          const res = await apiClient.get("/api/search-history/list/");
+          this.searchHistory = Array.isArray(res.data) ? res.data : [];
+        } catch (err) {
+          console.error("fetchSearchHistory error:", err);
+          this.searchHistory = [];
+        }
+      },
 
     /* ======================================================
         ⭐⭐ ADD SEARCH HISTORY (Home.vue logic)
        ====================================================== */
-    async addSearchHistory(cityObj) {
-      if (!this.is_premium || !cityObj || !cityObj.name) return;
+      async addSearchHistory(cityObj) {
+        if (!this.is_premium || !cityObj || !cityObj.name) return;
 
-      try {
-        const payload = {
-          city_name: cityObj.name,
-          lat: cityObj.lat,
-          lon: cityObj.lon,
-        };
+        try {
+          const payload = {
+            city_name: cityObj.name,
+            lat: cityObj.lat,
+            lon: cityObj.lon,
+          };
 
-        const res = await apiFetch(
-          "http://localhost:8000/api/search-history/add/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          }
-        );
+          await apiClient.post("/api/search-history/add/", payload);
 
-        if (res.ok) {
           this.searchHistory = this.searchHistory.filter(
             h => h.city_name !== cityObj.name
           );
@@ -606,38 +615,34 @@ export default {
             lat: cityObj.lat,
             lon: cityObj.lon
           });
+        } catch (err) {
+          console.error("addSearchHistory error:", err);
         }
-      } catch (err) {
-        console.error("addSearchHistory error:", err);
-      }
-    },
+      },
 
     /* ======================================================
         ⭐⭐ DELETE HISTORY — Home.vue logic
        ====================================================== */
-    async deleteHistory(item) {
-      if (!item) return;
+      async deleteHistory(item) {
+        if (!item) return;
 
-      const id = item.id;
-      if (!id) {
-        this.searchHistory = this.searchHistory.filter(h => h !== item);
-        return;
-      }
+        const id = item.id;
+        if (!id) {
+          this.searchHistory = this.searchHistory.filter(h => h !== item);
+          return;
+        }
 
-      const prev = [...this.searchHistory];
-      this.searchHistory = this.searchHistory.filter(h => h.id !== id);
+        const prev = [...this.searchHistory];
+        this.searchHistory = this.searchHistory.filter(h => h.id !== id);
 
-      try {
-        const res = await apiFetch(
-          `http://localhost:8000/api/search-history/clear/${encodeURIComponent(id)}/`,
-          { method: "DELETE" }
-        );
-
-        if (!res.ok) this.searchHistory = prev;
-      } catch {
-        this.searchHistory = prev;
-      }
-    },
+        try {
+          await apiClient.delete(
+            `/api/search-history/clear/${encodeURIComponent(id)}/`
+          );
+        } catch {
+          this.searchHistory = prev;
+        }
+      },
 
      /* ======================================================
         ⭐⭐ SELECT HISTORY
@@ -663,19 +668,19 @@ export default {
         /* ======================================================
         ⭐⭐ SUGGESTIONS
        ====================================================== */
-    async fetchSuggestions(q) {
-      try {
-        const res = await fetch(
-          `http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(q)}`
-        );
-        const arr = await res.json();
+      async fetchSuggestions(q) {
+        try {
+          const res = await apiClient.get("/api/autocomplete_local/", {
+            params: { q }
+          });
 
-        this.suggestions = Array.isArray(arr) ? arr : [];
-        this.showSuggestions = this.suggestions.length > 0;
-      } catch (err) {
-        this.suggestions = [];
-      }
-    },
+          this.suggestions = Array.isArray(res.data) ? res.data : [];
+          this.showSuggestions = this.suggestions.length > 0;
+        } catch {
+          this.suggestions = [];
+        }
+      },
+
      /* ======================================================
        ⭐⭐ SELECT SUGGESTION (add history)
        ====================================================== */
@@ -730,19 +735,31 @@ export default {
 
     async updatePopup(cityName, lat, lon) {
       try {
-        const res = await fetch(`http://localhost:8000/api/weather/?city=${encodeURIComponent(cityName)}`);
-        const data = await res.json();
-        if (!res.ok || !data) return;
+        const res = await apiClient.get("/api/weather/", {
+          params: { city: cityName }
+        });
+        const data = res.data;
 
         let content = `<b>${data.location}</b><br>`;
+
         if (this.activeLayer === "precipitation") {
-          content += `🌧️ Rainfall: ${data.rainfall != null ? data.rainfall : 0} mm`;
+          content += `🌧️ Rainfall: ${data.rainfall ?? 0} mm`;
         } else if (this.activeLayer === "temp") {
-          const tempVal = data.temperature != null ? this.formatTemp(data.temperature) : "—";
-          content += `🌡️ Temperature: ${tempVal !== "—" ? Math.round(tempVal) + this.tempUnitSymbol : "—"}`;
+          const tempVal =
+            data.temperature != null
+              ? this.formatTemp(data.temperature)
+              : "—";
+          content += `🌡️ Temperature: ${
+            tempVal !== "—" ? Math.round(tempVal) + this.tempUnitSymbol : "—"
+          }`;
         } else if (this.activeLayer === "wind") {
-          const windVal = data.wind_speed != null ? this.formatSpeed(data.wind_speed) : "—";
-          content += `💨 Wind Speed: ${windVal !== "—" ? Math.round(windVal) + this.windUnitSymbol : "—"}`;
+          const windVal =
+            data.wind_speed != null
+              ? this.formatSpeed(data.wind_speed)
+              : "—";
+          content += `💨 Wind Speed: ${
+            windVal !== "—" ? Math.round(windVal) + this.windUnitSymbol : "—"
+          }`;
         }
 
         if (this.popupRef) {
@@ -764,7 +781,6 @@ export default {
     },
 
 
-
  /* ======================================================
         ⭐⭐ FETCH WEATHER (add history)
        ====================================================== */
@@ -772,17 +788,13 @@ export default {
       if (!city) return;
 
       try {
-        const res = await fetch(
-          `http://localhost:8000/api/weather/?city=${encodeURIComponent(city)}`
-        );
-        const data = await res.json();
-
-        if (!res.ok || !data) {
-          this.errorMessage = `Location '${city}' not found`;
-          return;
-        }
+        const res = await apiClient.get("/api/weather/", {
+          params: { city }
+        });
+        const data = res.data;
 
         this.errorMessage = "";
+
         const lat = data.lat ?? data.coord?.lat ?? null;
         const lon = data.lon ?? data.coord?.lon ?? null;
 
@@ -792,8 +804,6 @@ export default {
 
         await this.updatePopup(city, lat, lon);
         if (this.map) this.map.panTo([lat, lon]);
-
-        // this.addSearchHistory({ name: city, lat, lon });
       } catch {
         this.errorMessage = `Location '${city}' not found`;
       }
@@ -808,10 +818,10 @@ export default {
       if (!q) return;
 
       try {
-        const res = await fetch(
-          `http://localhost:8000/api/autocomplete_local/?q=${encodeURIComponent(q)}`
-        );
-        const arr = await res.json();
+        const res = await apiClient.get("/api/autocomplete_local/", {
+          params: { q }
+        });
+        const arr = res.data;
 
         if (Array.isArray(arr) && arr.length > 0) {
           const s = arr[0];
@@ -844,8 +854,6 @@ export default {
       this.showSidebar = false;
     }
   },
-
-
 
 };
 </script>

@@ -111,7 +111,12 @@
 </template>
 
 <script>
-import axios from "axios";
+import {
+  signup,
+  verifySignupOtp,
+  resendSignupOtp,
+} from "@/services/authService";
+
 import Cookies from "js-cookie";
 function cleanCookieValue(value) {
   if (!value) return "";
@@ -191,26 +196,16 @@ export default {
       }
 
       this.submitting = true;
+
       try {
-        const payload = {
+        await signup({
           username: this.username,
           email: this.email,
           password: this.password,
-        };
+        });
 
-        const res = await axios.post(
-          "http://localhost:8000/api/signup/",
-          payload,
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        );
-
-        if (res.status === 200 || res.status === 201) {
-          this.showOtpModal = true;
-          this.startResendCountdown();
-        }
+        this.showOtpModal = true;
+        this.startResendCountdown();
       } catch (err) {
         this.handleSignupError(err);
       } finally {
@@ -219,13 +214,14 @@ export default {
     },
 
     handleSignupError(err) {
-      if (err.response && err.response.status === 400 && err.response.data) {
-        const data = err.response.data;
-        if (data.email?.[0]?.toLowerCase().includes("already in use")) {
-          this.errors.email = "This email is already in use!";
-        } else if (data.username?.[0]?.toLowerCase().includes("already exists")) {
-          this.errors.username = "Username already exists!";
+      const status = err?.response?.status;
+      const data = err?.response?.data;
 
+      if (status === 400 && data) {
+        if (data.email?.[0]?.toLowerCase().includes("already")) {
+          this.errors.email = "This email is already in use!";
+        } else if (data.username?.[0]?.toLowerCase().includes("already")) {
+          this.errors.username = "Username already exists!";
         } else {
           this.alertMessage = "Signup failed. Please check your inputs.";
           this.alertType = "error";
@@ -239,8 +235,8 @@ export default {
     async verifyOtp() {
       this.verifying = true;
       this.otpError = null;
-      const otpCode = this.otpDigits.join("");
 
+      const otpCode = this.otpDigits.join("");
       if (otpCode.length !== 6) {
         this.otpError = "Please enter all 6 digits.";
         this.verifying = false;
@@ -248,22 +244,18 @@ export default {
       }
 
       try {
-        const res = await axios.post(
-          "http://localhost:8000/api/verify-otp/",
-          { email: this.email, otp: otpCode },
-          { headers: { "Content-Type": "application/json" }, withCredentials: true }
-        );
+        await verifySignupOtp(this.email, otpCode);
 
-        if (res.status === 200 || res.status === 201) {
-          this.showOtpModal = false;
-          this.alertMessage = "Verification successful! Redirecting...";
-          this.alertType = "success";
-          setTimeout(() => this.$router.push("/billing"), 3500);
-        }
+        this.showOtpModal = false;
+        this.alertMessage = "Verification successful! Redirecting...";
+        this.alertType = "success";
+        setTimeout(() => this.$router.push("/billing"), 3500);
       } catch (err) {
-        this.otpError =
-          err.response?.data?.message || "Invalid or expired OTP. Please try again.";
-      } finally {
+          this.otpError =
+            err?.response?.data?.message ||
+            "Invalid or expired OTP. Please try again.";
+        }
+      finally {
         this.verifying = false;
       }
     },
@@ -291,11 +283,7 @@ export default {
 
     async resendOtp() {
       try {
-        await axios.post(
-          "http://localhost:8000/api/resend-otp/",
-          { email: this.email },
-          { headers: { "Content-Type": "application/json" }, withCredentials: true }
-        );
+        await resendSignupOtp(this.email);
         this.resendTimer = 600;
         this.startResendCountdown();
       } catch (err) {

@@ -116,7 +116,13 @@
 </template>
 
 <script>
-import axios from "axios";
+import {
+  fetchUserInfo,
+  fetchBillingInfo,
+  saveBillingInfo,
+  createCheckoutSession,
+} from "@/services/billingService";
+
 
 export default {
   name: "Billing",
@@ -141,40 +147,29 @@ export default {
   },
 
   async mounted() {
+    // 🔐 check user + premium
     try {
-      const res = await fetch("http://localhost:8000/api/user-info/", {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        this.$router.push("/");
-        return;
-      }
-
-      const data = await res.json();
+      const data = await fetchUserInfo();
       this.is_premium = data.is_premium || false;
-
     } catch {
       this.$router.push("/");
       return;
     }
 
-    // Load existing billing info (GIỮ NGUYÊN)
+    // 💳 load billing info cũ (GIỮ NGUYÊN HÀNH VI)
     try {
-      const res = await axios.get(
-        "http://localhost:8000/api/billing-info/",
-        { withCredentials: true }
-      );
-      Object.assign(this.form, res.data);
-    } catch (_) {}
+      const billing = await fetchBillingInfo();
+      Object.assign(this.form, billing);
+    } catch (_) {
+      // ignore nếu chưa có billing info
+    }
   },
 
     methods: {
     async handleSubmit() {
       this.submitted = true;
 
-      // 🔒 BLOCK PREMIUM USER (GIỐNG CHATBOT)
+      // 🔒 BLOCK PREMIUM USER
       if (this.is_premium) {
         this.showPremiumPopup = true;
         return;
@@ -183,26 +178,18 @@ export default {
       if (this.hasAnyError) return;
 
       this.loading = true;
+      this.error = "";
 
       try {
-        await axios.post(
-          "http://localhost:8000/api/billing-info/save/",
-          this.form,
-          { withCredentials: true }
-        );
+        // 💾 save billing info
+        await saveBillingInfo(this.form);
 
-        const res = await axios.post(
-          "http://localhost:8000/api/stripe/create-checkout-session/",
-          {},
-          { withCredentials: true }
-        );
+        // 💸 create stripe session
+        const data = await createCheckoutSession();
 
-        window.location.href = res.data.checkout_url;
-
+        window.location.href = data.checkout_url;
       } catch (err) {
-        this.error =
-          err.response?.data?.error ||
-          "Billing submission failed";
+        this.error = err.message || "Billing submission failed";
       } finally {
         this.loading = false;
       }

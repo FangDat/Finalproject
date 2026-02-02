@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
 from django.db import connection
 import time
-
+import logging
+logger = logging.getLogger("cron.expire_premium")
 
 class Command(BaseCommand):
     help = "Deactivate expired premium users (timestamp-based)"

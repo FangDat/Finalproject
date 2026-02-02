@@ -1,22 +1,46 @@
 <template>
   <div class="admin-layout">
-    <!-- ✅ SIDEBAR GIỐNG CHATBOT -->
-    <AdminSidebar />
+
+    <!-- ☰ MOBILE TOGGLE -->
+    <button class="sidebar-toggle" @click="toggleSidebar">☰</button>
+
+    <!-- OVERLAY -->
+    <div
+      v-if="showSidebar"
+      class="sidebar-overlay"
+      @click="closeSidebar"
+    ></div>
+
+    <!-- SIDEBAR -->
+    <AdminSidebar :open="showSidebar" @close="closeSidebar" />
 
     <!-- MAIN CONTENT -->
     <main class="content">
       <router-view />
     </main>
+
   </div>
 </template>
+
 
 <script>
 import AdminSidebar from "./AdminSidebar.vue";
 
 export default {
   name: "AdminDashboard",
-  components: {
-    AdminSidebar,
+  components: { AdminSidebar },
+  data() {
+    return {
+      showSidebar: false,
+    };
+  },
+  methods: {
+    toggleSidebar() {
+      this.showSidebar = !this.showSidebar;
+    },
+    closeSidebar() {
+      this.showSidebar = false;
+    },
   },
 };
 </script>
@@ -53,4 +77,32 @@ export default {
   padding: 25px;
   background: #f5faff;
 }
+
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 18px;
+  z-index: 1500;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 22px;
+  padding: 8px 14px;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1200;
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block;
+  }
+}
+
 </style>

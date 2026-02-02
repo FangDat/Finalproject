@@ -14,7 +14,8 @@
     </div>
 
     <!-- 📋 USER TABLE -->
-    <div class="table-wrapper">
+    <!-- 📋 USER TABLE (DESKTOP) -->
+    <div class="table-wrapper desktop-only">
       <table class="user-table">
         <thead>
           <tr>
@@ -32,14 +33,12 @@
             <td>{{ u.username }}</td>
             <td>{{ u.email }}</td>
 
-            <!-- ROLE -->
             <td>
               <span class="badge role">
                 {{ u.role === "admin" ? "Admin" : "User" }}
               </span>
             </td>
 
-            <!-- ACTIVE -->
             <td>
               <span
                 class="badge status"
@@ -49,7 +48,6 @@
               </span>
             </td>
 
-            <!-- PREMIUM -->
             <td>
               <span
                 class="badge premium-status"
@@ -59,7 +57,6 @@
               </span>
             </td>
 
-            <!-- ACTIONS -->
             <td class="actions">
               <button
                 class="btn btn-ban"
@@ -88,11 +85,65 @@
         </tbody>
       </table>
     </div>
+
+    <!-- 📱 USER CARDS (MOBILE) -->
+    <div class="user-cards mobile-only">
+      <div v-for="u in users" :key="u.user_id" class="user-card">
+        <h3>{{ u.username }}</h3>
+
+        <p><b>Email:</b> {{ u.email }}</p>
+        <p><b>Role:</b> {{ u.role }}</p>
+        <p>
+          <b>Status:</b>
+          <span :class="['badge', u.is_active ? 'active' : 'inactive']">
+            {{ u.is_active ? "Active" : "Banned" }}
+          </span>
+        </p>
+
+        <p>
+          <b>Plan:</b>
+          <span :class="['badge', u.is_premium ? 'premium' : 'free']">
+            {{ u.is_premium ? "Premium" : "Free" }}
+          </span>
+        </p>
+
+        <!-- ✅ 3 BUTTONS -->
+        <div class="card-actions">
+          <button
+            class="btn btn-ban"
+            :disabled="u.role === 'admin'"
+            @click="toggleBan(u)"
+          >
+            {{ u.is_active ? "Ban" : "Unban" }}
+          </button>
+
+          <button
+            class="btn btn-detail"
+            @click="$router.push('/admin/users/' + u.user_id)"
+          >
+            Detail
+          </button>
+
+          <button
+            class="btn btn-delete"
+            :disabled="u.role === 'admin'"
+            @click="deleteUserConfirm(u)"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { banOrUnbanUser, deleteUser } from "@/services/adminApi";
+import {
+  fetchUsers,
+  banOrUnbanUser,
+  deleteUser,
+} from "@/services/adminApi";
+
 
 export default {
   name: "AdminUserList",
@@ -123,15 +174,9 @@ export default {
     async fetchUsers(query = "") {
       this.loading = true;
       try {
-        const url = query
-          ? `http://localhost:8000/api/admin/users/?q=${encodeURIComponent(query)}`
-          : `http://localhost:8000/api/admin/users/`;
-
-        const res = await fetch(url, { credentials: "include" });
-        if (!res.ok) throw new Error("Fetch users failed");
-        this.users = await res.json();
+        this.users = await fetchUsers(query);
       } catch (err) {
-        console.error(err);
+        console.error("Fetch users failed", err);
         this.users = [];
       } finally {
         this.loading = false;
@@ -140,12 +185,14 @@ export default {
 
     async toggleBan(user) {
       if (!confirm("Confirm change user status?")) return;
+
       await banOrUnbanUser(user.user_id);
       await this.fetchUsers(this.searchQuery);
     },
 
     async deleteUserConfirm(user) {
       if (!confirm("CONFIRM DELETE USER?")) return;
+
       await deleteUser(user.user_id);
       await this.fetchUsers(this.searchQuery);
     },
@@ -305,5 +352,87 @@ export default {
 .btn:disabled:hover {
   transform: none;
 }
+.audit-cards {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .audit-table {
+    display: none;
+  }
+
+  .audit-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .audit-card {
+    background: white;
+    padding: 16px;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  }
+}
+
+/* =====================
+   RESPONSIVE SWITCH
+===================== */
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+}
+@media (max-width: 768px) {
+  .admin-search {
+    max-width: 260px;
+    margin-bottom: 16px;
+  }
+
+  .search-bar {
+    padding: 8px 36px 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  .search-icon {
+    right: -28px;
+    font-size: 0.9rem;
+  }
+}
+/* =====================
+   MOBILE CARD
+===================== */
+.user-card {
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.card-actions .btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+
 
 </style>
