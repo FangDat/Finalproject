@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from backend.api.permissions.is_admin_user import IsAdminUser
-from backend.api.models import AdminAuditLog
+from api.permissions.is_admin_user import IsAdminUser
+from api.models import AdminAuditLog
 
 
 @api_view(["GET"])

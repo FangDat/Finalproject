@@ -27,7 +27,7 @@ INSTALLED_APPS = [
 
     'corsheaders',
     'rest_framework',
-    'backend.api',
+    'api',
 ]
 
 # ----------------------
@@ -45,7 +45,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'backend.myproject.urls'
+ROOT_URLCONF = 'myproject.urls'
 
 TEMPLATES = [
     {
@@ -62,7 +62,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.myproject.wsgi.application'
+WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # ----------------------
 # Database
@@ -142,7 +142,7 @@ CSRF_COOKIE_SAMESITE = None
 # ----------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'backend.api.authentication.CustomJWTAuthentication',  # đọc token từ cookie
+        'api.authentication.CustomJWTAuthentication',  # đọc token từ cookie
     ),
 }
 
@@ -199,38 +199,39 @@ LOGGING = {
         'mode': 'a',   # append (ta sẽ clear bằng code)
         },
         'cron_file': {
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'cron.log',
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "cron.log"),
             'formatter': 'verbose',
         },
     },
         'loggers': {
-        'backend.api.views.weather_views': {  
+        'api.views.weather_views': {  
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
         },
-        'backend.api.views.map_views': {
+        'api.views.map_views': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
         },
-        'backend.api.views.verifyotp_views': {
+        'api.views.verifyotp_views': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
         },
-        'backend.api.views.auth_views': {
+        'api.views.auth_views': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
         },  
-        'backend.api.views.chatbot_views': {
+        'api.views.chatbot_views': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
         },  
-        'backend.api.views.weather_intent_views': {
+        'api.views.weather_intent_views': {
             'handlers': ['intent_file'],
             'level': 'DEBUG',
             'propagate': False,   # ❗ không đẩy sang debug.log
@@ -247,5 +248,6 @@ LOGGING = {
             'propagate': False,
         },
     },
+
 
 }

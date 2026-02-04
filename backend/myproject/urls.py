@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from backend.api.views.verifyotp_views import send_otp, verify_otp, resend_otp
-from backend.api.views.chatbot_views import analyze_intent
-from backend.api.views.map_views import get_weather_map, proxy_tile
-from backend.api.views.admin.admin_audit_log_views import admin_audit_log_list
+from api.views.verifyotp_views import send_otp, verify_otp, resend_otp
+from api.views.chatbot_views import analyze_intent
+from api.views.map_views import get_weather_map, proxy_tile
+from api.views.admin.admin_audit_log_views import admin_audit_log_list
 
-from backend.api.views.admin.admin_user_views import (
+from api.views.admin.admin_user_views import (
     admin_list_users,
     admin_user_detail,
     admin_ban_user,
@@ -15,7 +15,7 @@ from backend.api.views.admin.admin_user_views import (
 )
 
 # import các view đã tách
-from backend.api.views.auth_views import (
+from api.views.auth_views import (
     signup, login, logout, refresh_token,
     change_password, delete_account,
     check_premium, CustomTokenObtainPairView, user_info,  verify_change_email_password,
@@ -29,7 +29,7 @@ from backend.api.views.auth_views import (
 
     
 )
-from backend.api.views.payment_views import (
+from api.views.payment_views import (
     payment_success_mock,
     stripe_webhook,
     create_checkout_session,
@@ -38,11 +38,11 @@ from backend.api.views.payment_views import (
     list_stripe_invoices,
 )
 
-from backend.api.views.weather_views import (
+from api.views.weather_views import (
     get_weather, autocomplete_local, add_search_history, list_search_history, clear_search_history
 )
 
-from backend.api.views.feedback_views import (
+from api.views.feedback_views import (
     send_feedback,
 )
 

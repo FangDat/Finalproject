@@ -20,11 +20,14 @@ class Command(BaseCommand):
             "is_premium": True,
             "premium_expires_at_ts": {"$lt": now_ts}
         })
-
+        
+        msg = f"Expired users matched: {expired_count}"
         self.stdout.write(f"Expired users matched: {expired_count}")
+        logger.info(msg)
 
         if expired_count == 0:
             self.stdout.write("No expired users found.")
+            logger.info("No expired users found.")
             return
 
         # 2️⃣ Update
@@ -37,6 +40,12 @@ class Command(BaseCommand):
                 "$set": {"is_premium": False}
             }
         )
+        success_msg = (
+            f"Matched: {result.matched_count}, "
+            f"Modified: {result.modified_count}"
+        )
+        
+        logger.info(success_msg)
 
         self.stdout.write(
             self.style.SUCCESS(

@@ -7,7 +7,7 @@ from bson import ObjectId
 from django.utils import timezone
 from ..models import SearchHistory, User
 from rest_framework.permissions import IsAuthenticated
-from backend.api.permissions.is_premium_user import IsPremiumUser
+from api.permissions.is_premium_user import IsPremiumUser
 from django.core.cache import cache
 from pprint import pprint
 from collections import Counter

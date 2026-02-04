@@ -12,9 +12,9 @@ from datetime import datetime, timedelta
 from rest_framework.test import APIRequestFactory
 from rest_framework.permissions import IsAuthenticated
 
-from backend.api.views.weather_intent_views import weather_by_intent
-from backend.api.permissions.is_premium_user import IsPremiumUser
-from backend.api.services.weather_response_generator import (
+from api.views.weather_intent_views import weather_by_intent
+from api.permissions.is_premium_user import IsPremiumUser
+from api.services.weather_response_generator import (
     generate_weather_response
 )
 

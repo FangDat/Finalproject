@@ -9,11 +9,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from backend.api.permissions.is_admin_user import IsAdminUser
+from api.permissions.is_admin_user import IsAdminUser
 
 
-from backend.api.models import User, AdminAuditLog
-from backend.api.permissions.is_admin_user import IsAdminUser
+from api.models import User, AdminAuditLog
+from api.permissions.is_admin_user import IsAdminUser
 
 logger = logging.getLogger(__name__)
 

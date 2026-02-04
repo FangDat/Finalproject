@@ -1,28 +1,40 @@
 <template>
   <div class="map-container">
     <!-- Mobile: Toggle sidebar button -->
-      <button
-        class="sidebar-toggle"
-        @click="toggleSidebar"
-      >
-        ☰
-      </button>
+    <button class="sidebar-toggle" @click="toggleSidebar">☰</button>
 
-      <!-- Mobile overlay -->
-      <div
-        v-if="showSidebar"
-        class="sidebar-overlay"
-        @click="closeSidebar"
-      ></div>
+    <!-- Mobile overlay -->
+    <div v-if="showSidebar" class="sidebar-overlay" @click="closeSidebar"></div>
     <!-- Sidebar trái -->
     <aside class="sidebar-left" :class="{ open: showSidebar }">
       <h2 class="logo">🌤 VietCloud</h2>
       <nav class="nav-menu">
-        <router-link to="/" exact class="nav-btn" @click.native="closeSidebar">☁️ Weather</router-link>
-        <router-link to="/map" class="nav-btn active" @click.native="closeSidebar">🗺️ Maps</router-link>
-        <router-link v-if="username" to="/chatbot" class="nav-btn" @click.native="closeSidebar">🤖 Chatbot</router-link>
-        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link>
-        <router-link v-if="username" to="/profile" class="nav-btn" @click.native="closeSidebar">👤 Profile</router-link>
+        <router-link to="/" exact class="nav-btn" @click.native="closeSidebar"
+          >☁️ Weather</router-link
+        >
+        <router-link
+          to="/map"
+          class="nav-btn active"
+          @click.native="closeSidebar"
+          >🗺️ Maps</router-link
+        >
+        <router-link
+          v-if="username"
+          to="/chatbot"
+          class="nav-btn"
+          @click.native="closeSidebar"
+          >🤖 Chatbot</router-link
+        >
+        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar"
+          >⚙️ Settings</router-link
+        >
+        <router-link
+          v-if="username"
+          to="/profile"
+          class="nav-btn"
+          @click.native="closeSidebar"
+          >👤 Profile</router-link
+        >
       </nav>
     </aside>
 
@@ -31,7 +43,11 @@
       <!-- Thanh tìm kiếm -->
       <header class="top-bar">
         <div class="left-header">
-          <div class="search-container" ref="searchContainer" style="position:relative;">
+          <div
+            class="search-container"
+            ref="searchContainer"
+            style="position: relative"
+          >
             <input
               type="text"
               v-model="searchQuery"
@@ -43,7 +59,10 @@
             />
             <span class="search-icon" @click="onClickSearch">🔍</span>
 
-            <ul v-if="showSuggestions && suggestions.length" class="suggestions">
+            <ul
+              v-if="showSuggestions && suggestions.length"
+              class="suggestions"
+            >
               <li
                 v-for="(s, idx) in suggestions"
                 :key="idx"
@@ -53,45 +72,72 @@
                 {{ s.name }} <small v-if="!s.is_vn">· {{ s.raw }}</small>
               </li>
             </ul>
-                           <!-- Search History dropdown (chỉ cho premium) -->
-              <ul v-if="is_premium && showHistory && searchHistory.length" class="search-dropdown">
-                <li
-                  v-for="(h, idx) in searchHistory"
-                  :key="h.id || idx"
-                  class="dropdown-item"
+            <!-- Search History dropdown (chỉ cho premium) -->
+            <ul
+              v-if="is_premium && showHistory && searchHistory.length"
+              class="search-dropdown"
+            >
+              <li
+                v-for="(h, idx) in searchHistory"
+                :key="h.id || idx"
+                class="dropdown-item"
+              >
+                <div
+                  @click="selectHistory(h)"
+                  style="
+                    flex: 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                  "
                 >
-                  <div @click="selectHistory(h)" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                    {{ h.name }}
-                  </div>
+                  {{ h.name }}
+                </div>
 
-                  <!-- nút X: dùng class đã có trong Home.css (.dropdown-delete-icon) -->
-                  <button
-                    class="dropdown-delete-icon"
-                    :title="'Delete ' + h.name"
-                    @click.stop="deleteHistory(h)"
-                    aria-label="Delete history item"
-                    style="background:none; border:none;"
-                  >
-                    x
-                  </button>
-                </li>
-              </ul>
+                <!-- nút X: dùng class đã có trong Home.css (.dropdown-delete-icon) -->
+                <button
+                  class="dropdown-delete-icon"
+                  :title="'Delete ' + h.name"
+                  @click.stop="deleteHistory(h)"
+                  aria-label="Delete history item"
+                  style="background: none; border: none"
+                >
+                  x
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </header>
 
       <!-- 🌍 Gợi ý thành phố -->
       <section class="city-weather-list" v-if="!errorMessage">
-        <h3 class="section-subtitle">🌍 Some places you may be interested in:</h3>
-        <div v-for="(city, index) in cities" :key="index" class="city-weather-card">
-          <img v-if="city.icon" :src="getIconSrc(city.icon)" class="weather-icon" alt="icon" />
+        <h3 class="section-subtitle">
+          🌍 Some places you may be interested in:
+        </h3>
+        <div
+          v-for="(city, index) in cities"
+          :key="index"
+          class="city-weather-card"
+        >
+          <img
+            v-if="city.icon"
+            :src="getIconSrc(city.icon)"
+            class="weather-icon"
+            alt="icon"
+          />
           <div class="city-info">
             <h4>{{ city.name }}</h4>
             <p class="time">{{ city.time }}</p>
           </div>
           <div class="temp">
             <!-- dùng formatTemp và tempUnitSymbol để đổi đơn vị -->
-            {{ city.temp !== null ? Math.round(formatTemp(city.temp_origin ?? city.temp)) + tempUnitSymbol : '—' }}
+            {{
+              city.temp !== null
+                ? Math.round(formatTemp(city.temp_origin ?? city.temp)) +
+                  tempUnitSymbol
+                : "—"
+            }}
           </div>
         </div>
       </section>
@@ -103,9 +149,36 @@
         <!-- ⚙️ Control Panel -->
         <div class="overlay-panel">
           <h4>Weather Layers</h4>
-          <label><input type="radio" name="weatherLayer" value="precipitation" v-model="activeLayer" @change="toggleLayer" /> 🌧️ Rainfall</label>
-          <label><input type="radio" name="weatherLayer" value="temp" v-model="activeLayer" @change="toggleLayer" /> 🌡️ Temperature</label>
-          <label><input type="radio" name="weatherLayer" value="wind" v-model="activeLayer" @change="toggleLayer" /> 💨 Wind Speed</label>
+          <label
+            ><input
+              type="radio"
+              name="weatherLayer"
+              value="precipitation"
+              v-model="activeLayer"
+              @change="toggleLayer"
+            />
+            🌧️ Rainfall</label
+          >
+          <label
+            ><input
+              type="radio"
+              name="weatherLayer"
+              value="temp"
+              v-model="activeLayer"
+              @change="toggleLayer"
+            />
+            🌡️ Temperature</label
+          >
+          <label
+            ><input
+              type="radio"
+              name="weatherLayer"
+              value="wind"
+              v-model="activeLayer"
+              @change="toggleLayer"
+            />
+            💨 Wind Speed</label
+          >
           <h5>24-hour forecast</h5>
 
           <!-- 🕒 Time-lapse control -->
@@ -158,13 +231,7 @@
 <script>
 import WeatherError from "@/components/WeatherError.vue";
 import L from "leaflet";
-import {
-  cToF,
-  msToKmh,
-  msToMph,
-  mToKm,
-  mToMiles
-} from "@/utils.js";
+import { cToF, msToKmh, msToMph, mToKm, mToMiles } from "@/utils.js";
 import apiClient from "@/services/apiClient";
 import { getUserInfo } from "@/services/authService";
 export default {
@@ -174,7 +241,7 @@ export default {
     return {
       username: this.getCookie("username") || "",
       is_premium: false,
-      searchHistory: [], 
+      searchHistory: [],
       showSidebar: false,
       showHistory: false,
       searchQuery: "",
@@ -210,7 +277,7 @@ export default {
       settings: {
         temperature: "Celsius",
         windSpeed: "Km/h",
-        Visibility: "Kilometers"
+        Visibility: "Kilometers",
       },
     };
   },
@@ -267,10 +334,10 @@ export default {
     },
     distanceUnitSymbol() {
       return this.settings.Visibility === "Miles" ? " miles" : " km";
-    }
+    },
   },
 
-    methods: {
+  methods: {
     // storage event handler -> update settings when changed elsewhere
     onStorageChange(e) {
       if (!e) return;
@@ -307,7 +374,7 @@ export default {
         this.showHistory = false;
       }
     },
-        /* ======================================================
+    /* ======================================================
         ⭐⭐ FOCUS INPUT — show history nếu input rỗng
        ====================================================== */
     onFocusInput() {
@@ -317,8 +384,6 @@ export default {
       }
     },
 
-
-
     // formatting helpers using utils.js
     formatTemp(tempC) {
       if (tempC === null || tempC === undefined || tempC === "") return tempC;
@@ -327,7 +392,8 @@ export default {
       return this.settings.temperature === "Fahrenheit" ? cToF(raw) : raw;
     },
     formatSpeed(speedMs) {
-      if (speedMs === null || speedMs === undefined || speedMs === "") return speedMs;
+      if (speedMs === null || speedMs === undefined || speedMs === "")
+        return speedMs;
       const raw = Number(speedMs);
       if (Number.isNaN(raw)) return speedMs;
       return this.settings.windSpeed === "Mph" ? msToMph(raw) : msToKmh(raw);
@@ -342,7 +408,9 @@ export default {
     },
 
     getCookie(name) {
-      const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+      const match = document.cookie.match(
+        new RegExp("(^| )" + name + "=([^;]+)"),
+      );
       return match ? decodeURIComponent(match[2]) : null;
     },
 
@@ -359,7 +427,7 @@ export default {
 
       try {
         const res = await apiClient.get("/api/weather/", {
-          params: { city }
+          params: { city },
         });
         const data = res.data;
 
@@ -367,11 +435,11 @@ export default {
         const icon = data.icon || "01d";
         const timeStr = now.toLocaleTimeString([], {
           hour: "2-digit",
-          minute: "2-digit"
+          minute: "2-digit",
         });
 
         const idx = this.cities.findIndex(
-          c => c.name === "—" || c.name === city
+          (c) => c.name === "—" || c.name === city,
         );
 
         if (idx !== -1) {
@@ -383,7 +451,7 @@ export default {
             temp: tempOrigin,
             temp_origin: tempOrigin,
             icon,
-            time: timeStr
+            time: timeStr,
           };
         }
       } catch (err) {
@@ -392,7 +460,17 @@ export default {
     },
 
     getRandomCities() {
-      const all = ["Hanoi", "Ho Chi Minh", "Da Nang", "Hue", "Nha Trang", "Hai Phong", "Can Tho", "Phu Quoc", "Da Lat"];
+      const all = [
+        "Hanoi",
+        "Ho Chi Minh",
+        "Da Nang",
+        "Hue",
+        "Nha Trang",
+        "Hai Phong",
+        "Can Tho",
+        "Phu Quoc",
+        "Da Lat",
+      ];
       return all.sort(() => 0.5 - Math.random()).slice(0, 3);
     },
 
@@ -402,20 +480,26 @@ export default {
       // ✅ Wrapper tileLayer để debug header
       const TileLayerWrapper = (url, options = {}) => {
         const layer = L.tileLayer(url, options);
-        layer.on('tileload', (event) => {
+        layer.on("tileload", (event) => {
           const xhr = event.tile._xhr;
           if (xhr) {
-            const xcache = xhr.getResponseHeader('X-Cache');
-            if (xcache) console.debug(`Tile ${event.coords.z}/${event.coords.x}/${event.coords.y} ${xcache}`);
+            const xcache = xhr.getResponseHeader("X-Cache");
+            if (xcache)
+              console.debug(
+                `Tile ${event.coords.z}/${event.coords.x}/${event.coords.y} ${xcache}`,
+              );
           }
         });
         return layer;
       };
 
-      this.baseLayer = TileLayerWrapper("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenStreetMap contributors',
-        maxZoom: 6,
-      }).addTo(this.map);
+      this.baseLayer = TileLayerWrapper(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          attribution: "&copy; OpenStreetMap contributors",
+          maxZoom: 6,
+        },
+      ).addTo(this.map);
 
       // ✅ Popup mặc định
       this.popupRef = L.popup({
@@ -431,7 +515,7 @@ export default {
       this.layerRefs = {
         precipitation: null,
         temp: null,
-        wind: null
+        wind: null,
       };
     },
 
@@ -456,39 +540,33 @@ export default {
       if (!this.activeLayer || !this.map) return;
 
       try {
-        const timestamp = this.timelapseTimestamps[this.currentIndex] || Math.floor(Date.now() / 1000);
+        const timestamp =
+          this.timelapseTimestamps[this.currentIndex] ||
+          Math.floor(Date.now() / 1000);
 
-        // remove previous
+        // Remove previous layers
         Object.values(this.layerRefs).forEach((layer) => {
           if (layer && this.map.hasLayer(layer)) this.map.removeLayer(layer);
         });
 
-        const tileUrl = `http://localhost:8000/api/map/tile/?layer=${this.activeLayer}&z={z}&x={x}&y={y}&timestamp=${timestamp}`;
-        const tileLayer = L.tileLayer(tileUrl, { 
-          opacity: 0.6, 
-          tileSize: 256, 
-          zIndex: 10, 
-          updateWhenIdle: true, 
-          keepBuffer: 2, 
-          detectRetina: true 
-        });
+        const tileUrl = `${apiClient.defaults.baseURL}/api/map/tile/?layer=${this.activeLayer}&z={z}&x={x}&y={y}&timestamp=${timestamp}`;
 
-        tileLayer.on('tileload', (event) => {
-          const xhr = event.tile._xhr;
-          if (xhr) {
-            const xcache = xhr.getResponseHeader('X-Cache');
-            if (xcache) console.debug(`Tile ${event.coords.z}/${event.coords.x}/${event.coords.y} ${xcache}`);
-          }
+        const tileLayer = L.tileLayer(tileUrl, {
+          opacity: 0.6,
+          tileSize: 256,
+          zIndex: 10,
+          updateWhenIdle: true,
+          keepBuffer: 2,
+          detectRetina: true,
+          crossOrigin: true,
         });
 
         this.layerRefs[this.activeLayer] = tileLayer;
         tileLayer.addTo(this.map);
 
-        // update popup nếu đã có city
         if (this.lastCity && this.lastLat !== null && this.lastLon !== null) {
           await this.updatePopup(this.lastCity, this.lastLat, this.lastLon);
         }
-
       } catch (err) {
         console.error("Error loading layer:", err);
       }
@@ -532,7 +610,7 @@ export default {
       if (!this.isPlaying) this.toggleLayer();
     },
 
-/* ======================================================
+    /* ======================================================
         ⭐⭐ INPUT SEARCH — toggle giữa suggestions / history
        ====================================================== */
     onSearchInput() {
@@ -552,99 +630,98 @@ export default {
       }, 120);
     },
 
-    
     /* ======================================================
         ⭐⭐ FETCH USER INFO + HISTORY
        ====================================================== */
-      async fetchUserInfo() {
-        try {
-          const data = await getUserInfo();
+    async fetchUserInfo() {
+      try {
+        const data = await getUserInfo();
 
-          this.username = data.username || "";
-          this.is_premium = !!data.is_premium;
+        this.username = data.username || "";
+        this.is_premium = !!data.is_premium;
 
-          if (this.is_premium) {
-            await this.fetchSearchHistory();
-          }
-        } catch (err) {
-          // 401 / 403 sẽ bị interceptor forceLogout
-          this.username = "";
-          this.is_premium = false;
-          this.searchHistory = [];
+        if (this.is_premium) {
+          await this.fetchSearchHistory();
         }
-      },
+      } catch (err) {
+        // 401 / 403 sẽ bị interceptor forceLogout
+        this.username = "";
+        this.is_premium = false;
+        this.searchHistory = [];
+      }
+    },
     /* ======================================================
         ⭐⭐ FETCH SEARCH HISTORY (Home.vue logic)
        ====================================================== */
 
-      async fetchSearchHistory() {
-        if (!this.is_premium) return;
+    async fetchSearchHistory() {
+      if (!this.is_premium) return;
 
-        try {
-          const res = await apiClient.get("/api/search-history/list/");
-          this.searchHistory = Array.isArray(res.data) ? res.data : [];
-        } catch (err) {
-          console.error("fetchSearchHistory error:", err);
-          this.searchHistory = [];
-        }
-      },
+      try {
+        const res = await apiClient.get("/api/search-history/list/");
+        this.searchHistory = Array.isArray(res.data) ? res.data : [];
+      } catch (err) {
+        console.error("fetchSearchHistory error:", err);
+        this.searchHistory = [];
+      }
+    },
 
     /* ======================================================
         ⭐⭐ ADD SEARCH HISTORY (Home.vue logic)
        ====================================================== */
-      async addSearchHistory(cityObj) {
-        if (!this.is_premium || !cityObj || !cityObj.name) return;
+    async addSearchHistory(cityObj) {
+      if (!this.is_premium || !cityObj || !cityObj.name) return;
 
-        try {
-          const payload = {
-            city_name: cityObj.name,
-            lat: cityObj.lat,
-            lon: cityObj.lon,
-          };
+      try {
+        const payload = {
+          city_name: cityObj.name,
+          lat: cityObj.lat,
+          lon: cityObj.lon,
+        };
 
-          await apiClient.post("/api/search-history/add/", payload);
+        await apiClient.post("/api/search-history/add/", payload);
 
-          this.searchHistory = this.searchHistory.filter(
-            h => h.city_name !== cityObj.name
-          );
+        this.searchHistory = this.searchHistory.filter(
+          (h) => h.city_name !== cityObj.name,
+        );
 
-          this.searchHistory.unshift({
-            id: cityObj.id || null,
-            name: cityObj.name,
-            city_name: cityObj.name,
-            lat: cityObj.lat,
-            lon: cityObj.lon
-          });
-        } catch (err) {
-          console.error("addSearchHistory error:", err);
-        }
-      },
+        this.searchHistory.unshift({
+          id: cityObj.id || null,
+          name: cityObj.name,
+          city_name: cityObj.name,
+          lat: cityObj.lat,
+          lon: cityObj.lon,
+        });
+      } catch (err) {
+        console.error("addSearchHistory error:", err);
+      }
+    },
 
     /* ======================================================
         ⭐⭐ DELETE HISTORY — Home.vue logic
        ====================================================== */
-      async deleteHistory(item) {
-        if (!item) return;
+    async deleteHistory(item) {
+      if (!item) return;
 
-        const id = item.id;
-        if (!id) {
-          this.searchHistory = this.searchHistory.filter(h => h !== item);
-          return;
-        }
+      const id = item.id;
+      if (!id) {
+        this.searchHistory = this.searchHistory.filter((h) => h !== item);
+        return;
+      }
 
-        const prev = [...this.searchHistory];
-        this.searchHistory = this.searchHistory.filter(h => h.id !== id);
+      const prev = [...this.searchHistory];
+      this.searchHistory = this.searchHistory.filter((h) => h.id !== id);
 
-        try {
-          await apiClient.delete(
-            `/api/search-history/clear/${encodeURIComponent(id)}/`
-          );
-        } catch {
-          this.searchHistory = prev;
-        }
-      },
+      try {
+        await apiClient.delete(
+          `/api/search-history/clear/${encodeURIComponent(id)}/`,
+        );
+      } catch {
+        this.searchHistory = prev;
+      }
+    },
 
-     /* ======================================================
+    /* ======================================================
         ⭐⭐ SELECT HISTORY
        ====================================================== */
     selectHistory(h) {
@@ -665,23 +742,23 @@ export default {
       }
     },
 
-        /* ======================================================
+    /* ======================================================
         ⭐⭐ SUGGESTIONS
        ====================================================== */
-      async fetchSuggestions(q) {
-        try {
-          const res = await apiClient.get("/api/autocomplete_local/", {
-            params: { q }
-          });
+    async fetchSuggestions(q) {
+      try {
+        const res = await apiClient.get("/api/autocomplete_local/", {
+          params: { q },
+        });
 
-          this.suggestions = Array.isArray(res.data) ? res.data : [];
-          this.showSuggestions = this.suggestions.length > 0;
-        } catch {
-          this.suggestions = [];
-        }
-      },
+        this.suggestions = Array.isArray(res.data) ? res.data : [];
+        this.showSuggestions = this.suggestions.length > 0;
+      } catch {
+        this.suggestions = [];
+      }
+    },
 
-     /* ======================================================
+    /* ======================================================
        ⭐⭐ SELECT SUGGESTION (add history)
        ====================================================== */
     async selectSuggestion(s) {
@@ -699,7 +776,6 @@ export default {
 
       this.addSearchHistory(s);
     },
-
 
     async restoreFromLocalStorage() {
       try {
@@ -727,7 +803,6 @@ export default {
 
         // Nếu bạn muốn map pan nhẹ tới vị trí đó thì bật dòng dưới:
         // this.map.panTo([lat, lon]);
-
       } catch (err) {
         console.error("Error restoring from localStorage:", err);
       }
@@ -736,7 +811,7 @@ export default {
     async updatePopup(cityName, lat, lon) {
       try {
         const res = await apiClient.get("/api/weather/", {
-          params: { city: cityName }
+          params: { city: cityName },
         });
         const data = res.data;
 
@@ -746,24 +821,23 @@ export default {
           content += `🌧️ Rainfall: ${data.rainfall ?? 0} mm`;
         } else if (this.activeLayer === "temp") {
           const tempVal =
-            data.temperature != null
-              ? this.formatTemp(data.temperature)
-              : "—";
+            data.temperature != null ? this.formatTemp(data.temperature) : "—";
           content += `🌡️ Temperature: ${
             tempVal !== "—" ? Math.round(tempVal) + this.tempUnitSymbol : "—"
           }`;
         } else if (this.activeLayer === "wind") {
           const windVal =
-            data.wind_speed != null
-              ? this.formatSpeed(data.wind_speed)
-              : "—";
+            data.wind_speed != null ? this.formatSpeed(data.wind_speed) : "—";
           content += `💨 Wind Speed: ${
             windVal !== "—" ? Math.round(windVal) + this.windUnitSymbol : "—"
           }`;
         }
 
         if (this.popupRef) {
-          this.popupRef.setLatLng([lat, lon]).setContent(content).openOn(this.map);
+          this.popupRef
+            .setLatLng([lat, lon])
+            .setContent(content)
+            .openOn(this.map);
         } else {
           this.popupRef = L.popup({
             closeButton: false,
@@ -780,8 +854,7 @@ export default {
       }
     },
 
-
- /* ======================================================
+    /* ======================================================
         ⭐⭐ FETCH WEATHER (add history)
        ====================================================== */
     async fetchWeather(city) {
@@ -789,7 +862,7 @@ export default {
 
       try {
         const res = await apiClient.get("/api/weather/", {
-          params: { city }
+          params: { city },
         });
         const data = res.data;
 
@@ -809,8 +882,7 @@ export default {
       }
     },
 
-    
- /* ======================================================
+    /* ======================================================
         ⭐⭐ ENTER SEARCH (add history)
        ====================================================== */
     async onEnterSearch() {
@@ -819,7 +891,7 @@ export default {
 
       try {
         const res = await apiClient.get("/api/autocomplete_local/", {
-          params: { q }
+          params: { q },
         });
         const arr = res.data;
 
@@ -849,12 +921,11 @@ export default {
     },
   },
 
-    watch: {
+  watch: {
     $route() {
       this.showSidebar = false;
-    }
+    },
   },
-
 };
 </script>
 
