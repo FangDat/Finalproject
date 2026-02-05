@@ -70,3 +70,9 @@ Thumbs.db
 # ===============================
 .cache/
 .tmp/
+# ===============================
+# 🔥 Runtime / cache / redis
+# ===============================
+checkbar.json
+checkexpire.json
+dump.rdb

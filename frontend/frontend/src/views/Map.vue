@@ -260,6 +260,7 @@ export default {
       currentIndex: 0,
       sliderProgress: 0,
       lastFrameTime: null,
+      isComponentAlive: true,
       cities: [
         // city objects will have:
         // { name, temp (converted for display), temp_origin (raw C), icon, time }
@@ -315,6 +316,7 @@ export default {
   },
 
   beforeUnmount() {
+    this.isComponentAlive = false;
     document.removeEventListener("click", this.handleClickOutside);
     window.removeEventListener("storage", this.onStorageChange);
     clearInterval(this.cookieCheckInterval);
@@ -475,49 +477,69 @@ export default {
     },
 
     async initLeafletMap() {
-      this.map = L.map("leaflet-map").setView([21.0285, 105.8542], 6);
+      // 🛑 Guard 1: component đã bị unmount
+      if (!this.isComponentAlive) return;
 
-      // ✅ Wrapper tileLayer để debug header
-      const TileLayerWrapper = (url, options = {}) => {
-        const layer = L.tileLayer(url, options);
-        layer.on("tileload", (event) => {
-          const xhr = event.tile._xhr;
-          if (xhr) {
-            const xcache = xhr.getResponseHeader("X-Cache");
-            if (xcache)
-              console.debug(
-                `Tile ${event.coords.z}/${event.coords.x}/${event.coords.y} ${xcache}`,
-              );
-          }
-        });
-        return layer;
-      };
+      // 🛑 Guard 2: DOM chưa tồn tại hoặc đã bị destroy
+      const container = document.getElementById("leaflet-map");
+      if (!container) {
+        // im lặng tuyệt đối
+        return;
+      }
 
-      this.baseLayer = TileLayerWrapper(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-          attribution: "&copy; OpenStreetMap contributors",
-          maxZoom: 6,
-        },
-      ).addTo(this.map);
+      // 🛑 Guard 3: tránh init trùng
+      if (this.map) return;
 
-      // ✅ Popup mặc định
-      this.popupRef = L.popup({
-        closeButton: false,
-        autoClose: false,
-        closeOnClick: false,
-        className: "custom-popup",
-      })
-        .setLatLng([21.0285, 105.8542])
-        .setContent("<b>Hà Nội</b><br>Default Center")
-        .openOn(this.map);
+      try {
+        this.map = L.map(container).setView([21.0285, 105.8542], 6);
 
-      this.layerRefs = {
-        precipitation: null,
-        temp: null,
-        wind: null,
-      };
+        // ✅ Wrapper tileLayer để debug header
+        const TileLayerWrapper = (url, options = {}) => {
+          const layer = L.tileLayer(url, options);
+          layer.on("tileload", (event) => {
+            const xhr = event.tile?._xhr;
+            if (xhr) {
+              const xcache = xhr.getResponseHeader("X-Cache");
+              if (xcache) {
+                console.debug(
+                  `Tile ${event.coords.z}/${event.coords.x}/${event.coords.y} ${xcache}`,
+                );
+              }
+            }
+          });
+          return layer;
+        };
+
+        this.baseLayer = TileLayerWrapper(
+          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          {
+            attribution: "&copy; OpenStreetMap contributors",
+            maxZoom: 6,
+          },
+        ).addTo(this.map);
+
+        // ✅ Popup mặc định
+        this.popupRef = L.popup({
+          closeButton: false,
+          autoClose: false,
+          closeOnClick: false,
+          className: "custom-popup",
+        })
+          .setLatLng([21.0285, 105.8542])
+          .setContent("<b>Hà Nội</b>")
+          .openOn(this.map);
+
+        this.layerRefs = {
+          precipitation: null,
+          temp: null,
+          wind: null,
+        };
+      } catch (err) {
+        // ❗ IM LẶNG – không console.error
+        // vì lỗi này chỉ do route change quá nhanh
+      }
     },
+
 
     prepareTimestamps() {
       const now = Math.floor(Date.now() / 1000);
