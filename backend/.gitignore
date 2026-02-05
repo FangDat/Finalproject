@@ -1,0 +1,72 @@
+# ===============================
+# 🔐 Environment & Secrets
+# ===============================
+.env
+.env.*
+*.env
+.env.local
+.env.production
+.env.development
+
+# ===============================
+# 🐍 Python virtual environment
+# ===============================
+.venv/
+venv/
+ENV/
+env/
+virtualenv/
+pip-wheel-metadata/
+
+# ===============================
+# 🧠 Python cache & compiled files
+# ===============================
+
+*.py[cod]
+*.pyo
+*.pyd
+
+# ===============================
+# 📦 Django stuff
+# ===============================
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Django static & media (tuỳ project)
+staticfiles/
+media/
+
+# ===============================
+# 🧪 Test / coverage
+# ===============================
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ===============================
+# 🧾 Logs
+# ===============================
+logs/
+*.log
+cron.log
+debug.log
+
+# ===============================
+# 🛠 IDE / OS
+# ===============================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+
+# ===============================
+# 🔧 Misc
+# ===============================
+.cache/
+.tmp/
