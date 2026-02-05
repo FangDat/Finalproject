@@ -8,12 +8,14 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 import math
+from django.conf import settings
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
          
 # CONFIG
-OPENWEATHER_API_KEY = "49d2545d1cdff8820a039e6e2f451ffc"  # lưu backend, không cho frontend thấy
+OPENWEATHER_API_KEY = settings.OPENWEATHER_API_KEY  
 METADATA_CACHE_TIMEOUT = 300  # 5 phút
 TILE_CACHE_TIMEOUT = 600      # 10 phút cache tile bytes
 MAX_TIMESTAMP_RANGE_HOURS = 48

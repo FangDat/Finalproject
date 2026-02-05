@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # -------------------------------
 # CONFIG
 # -------------------------------
-OPENWEATHER_KEY = "49d2545d1cdff8820a039e6e2f451ffc"
+OPENWEATHER_API_KEY = settings.OPENWEATHER_API_KEY
 BASE_OW_URL = "https://api.openweathermap.org/data/3.0"
 
 # ==================================================
@@ -234,7 +234,7 @@ def weather_by_intent(request):
                     "lat": lat,
                     "lon": lon,
                     "date": day,
-                    "appid": OPENWEATHER_KEY,
+                    "appid": OPENWEATHER_API_KEY,
                 },
                 timeout=8,
             )
@@ -258,7 +258,7 @@ def weather_by_intent(request):
                     "lat": lat,
                     "lon": lon,
                     "units": "metric",
-                    "appid": OPENWEATHER_KEY,
+                    "appid": OPENWEATHER_API_KEY,
                 },
                 timeout=8,
             )
@@ -280,7 +280,7 @@ def weather_by_intent(request):
                     "lat": lat,
                     "lon": lon,
                     "exclude": "minutely,alerts",
-                    "appid": OPENWEATHER_KEY,
+                    "appid": OPENWEATHER_API_KEY,
                 },
                 timeout=8,
             )
@@ -341,7 +341,7 @@ def weather_by_intent(request):
                 params={
                     "lat": lat,
                     "lon": lon,
-                    "appid": OPENWEATHER_KEY,
+                    "appid": OPENWEATHER_API_KEY,
                 },
                 timeout=8,
             )

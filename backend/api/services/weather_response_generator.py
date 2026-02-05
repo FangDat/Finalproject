@@ -3,13 +3,20 @@
 import json
 import logging
 from openai import OpenAI
-
+import os
 logger = logging.getLogger(__name__)
 
 # ============================
 # INIT OPENAI CLIENT
 # ============================
-OPENAI_API_KEY = "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"
+# ============================
+# INIT OPENAI CLIENT (ENV)
+# ============================
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    logger.error("❌ OPENAI_API_KEY is missing in environment variables")
+    raise RuntimeError("OPENAI_API_KEY is not set")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 

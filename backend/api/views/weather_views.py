@@ -35,6 +35,11 @@ import os, json
 from django.conf import settings
 
 CHECKBAR_PATH = os.path.join(settings.BASE_DIR, "checkbar.json")
+# ---------------------------
+# API KEYS (FROM ENV - PRODUCTION SAFE)
+# ---------------------------
+OPENWEATHER_API_KEY = settings.OPENWEATHER_API_KEY
+OPENCAGE_API_KEY = settings.OPENCAGE_API_KEY
 
 
 # --- Đọc file ISO codes một lần khi server start ---
@@ -292,7 +297,7 @@ def autocomplete_local(request):
         logger.exception("autocomplete_local failed")
         return Response({"error": str(e)}, status=500)
 
-def get_city_from_coordinates(lat, lon, geocode_key):
+def get_city_from_coordinates(lat, lon, OPENCAGE_API_KEY):
     """Reverse geocoding → Từ lat/lon trả về tên thành phố chuẩn hóa (ISO-3166-2)."""
     cache_key = f"geocode:reverse:{lat}:{lon}"
     cached = cache.get(cache_key)
@@ -301,7 +306,7 @@ def get_city_from_coordinates(lat, lon, geocode_key):
         return cached
 
     try:
-        url = f"https://api.opencagedata.com/geocode/v1/json?q={lat}+{lon}&key={geocode_key}&language=vi"
+        url = f"https://api.opencagedata.com/geocode/v1/json?q={lat}+{lon}&key={OPENCAGE_API_KEY}&language=vi"
         geo_resp = requests.get(url, timeout=5).json()
         
         # ✅ In ra để kiểm tra cấu trúc components
@@ -600,8 +605,19 @@ def format_duration_hm(minutes):
 # ---------------------------
 @api_view(['GET'])
 def get_weather(request):
-    api_key = "49d2545d1cdff8820a039e6e2f451ffc"
-    geocode_key = "f70417a9320a42c28e2f87398e996e6f"
+    if not OPENWEATHER_API_KEY:
+        logger.error("❌ Missing OPENWEATHER_API_KEY")
+        return Response(
+            {"error": "Server misconfiguration: missing OpenWeather API key"},
+            status=500
+        )
+
+    if not OPENCAGE_API_KEY:
+        logger.error("❌ Missing OPENCAGE_API_KEY")
+        return Response(
+            {"error": "Server misconfiguration: missing OpenCage API key"},
+            status=500
+        )
 
     city_input = request.GET.get("city")
     lat = request.GET.get("lat")
@@ -635,7 +651,7 @@ def get_weather(request):
                 city_name = name
                 logger.debug("📍 Lấy city_name từ query param name='%s'", name)
             else:
-                city_name = get_city_from_coordinates(lat, lon, geocode_key)
+                city_name = get_city_from_coordinates(lat, lon, OPENCAGE_API_KEY)
                 logger.debug("📍 Lấy city_name từ OpenCage reverse geocode: %s", city_name)
 
             city_name = strip_country_suffix(city_name)
@@ -689,7 +705,7 @@ def get_weather(request):
             logger.info(f"🌍 [API CALL] Gọi OpenWeather cho {weather_cache_key}")
 
          # --- CALL OpenWeather 3.0 ---
-        url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&units=metric&exclude=minutely,alerts&appid={api_key}"
+        url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&units=metric&exclude=minutely,alerts&appid={OPENWEATHER_API_KEY}"
         resp = requests.get(url, timeout=8)
         if resp.status_code != 200:
             return Response({"error": "Không lấy được dữ liệu thời tiết", "details": resp.json()}, status=400)
@@ -810,7 +826,7 @@ def get_weather(request):
         try:
             air_url = (
                 f"https://api.openweathermap.org/data/2.5/air_pollution"
-                f"?lat={lat}&lon={lon}&appid={api_key}"
+                f"?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
             )
             air_resp = requests.get(air_url, timeout=6)
 
