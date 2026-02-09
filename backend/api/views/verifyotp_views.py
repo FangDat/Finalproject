@@ -175,13 +175,55 @@ def verify_otp(request):
         "email": getattr(user, "email", ""),
         "user_id": str(getattr(user, "_id", "")),
     }, status=201)
+        # ===============================
+    # Xác định domain & secure cookie
+    # (COPY 100% từ auth_views.py)
+    # ===============================
+    host = request.get_host()
+    if 'localhost' in host or '127.0.0.1' in host:
+        cookie_domain = "localhost"
+        secure_cookie = False
+    else:
+        cookie_domain = None
+        secure_cookie = True
 
+    
+    
     # Set HttpOnly cookies
-    resp.set_cookie("access_token", str(access), httponly=True, secure=False, domain="localhost", path="/", samesite="Lax", max_age=60*30)
-    resp.set_cookie("refresh_token", str(refresh), httponly=True, secure=False, domain="localhost", path="/", samesite="Lax", max_age=60*60*24*7)
+        resp.set_cookie(
+        key="access_token",
+        value=str(access),
+        httponly=True,
+        secure=secure_cookie,
+        domain=cookie_domain,
+        path="/",
+        samesite="None" if secure_cookie else "Lax",
+        max_age=60 * 30
+    )
+
+    resp.set_cookie(
+        key="refresh_token",
+        value=str(refresh),
+        httponly=True,
+        secure=secure_cookie,
+        domain=cookie_domain,
+        path="/",
+        samesite="None" if secure_cookie else "Lax",
+        max_age=60 * 60 * 24 * 7
+    )
+
     # Cookies frontend
     
-    resp.set_cookie("username", str(user.username), httponly=False, domain="localhost", path="/", samesite="Lax", max_age=60*60*24*7)
+    resp.set_cookie(
+        "username",
+        str(user.username),
+        httponly=False,
+        secure=secure_cookie,
+        domain=cookie_domain,
+        path="/",
+        samesite="None" if secure_cookie else "Lax",
+        max_age=60 * 60 * 24 * 7
+    )
     
     clean_email = normalize_email(user.email)
     if clean_email and clean_email.startswith('"') and clean_email.endswith('"'):
@@ -191,13 +233,14 @@ def verify_otp(request):
             clean_email = clean_email.strip('"').strip("'")
 
     resp.set_cookie(
-    "email",
-    clean_email,
-    httponly=False,
-    domain="localhost",
-    path="/",
-    samesite="Lax",
-    max_age=60*60*24*7
+        "email",
+        clean_email,
+        httponly=False,
+        secure=secure_cookie,
+        domain=cookie_domain,
+        path="/",
+        samesite="None" if secure_cookie else "Lax",
+        max_age=60 * 60 * 24 * 7
     )
 
 

@@ -2,7 +2,7 @@
 import axios from "axios";
 import { forceLogout } from "./authService";
 
-const API_BASE_URL = "https://finalproject-xgyt.onrender.com";
+const API_BASE_URL = "https://finalproject-production-b074.up.railway.app";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

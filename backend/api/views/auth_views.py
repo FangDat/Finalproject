@@ -128,25 +128,34 @@ def login(request):
         user.last_login_at = int(datetime.datetime.now().timestamp())
         user.save(update_fields=["last_login_at"])
 
+        # Xác định domain cho cookie dựa trên request
+        host = request.get_host()
+        if 'localhost' in host or '127.0.0.1' in host:
+            cookie_domain = "localhost"
+            secure_cookie = False
+        else:
+            # Production: để domain=None để browser tự xử lý
+            cookie_domain = None
+            secure_cookie = True
 
         # Set cookies HttpOnly
         resp.set_cookie(
             key="access_token",
             value=str(access),
             httponly=True,
-            secure=False,
-            domain="localhost",
+            secure=secure_cookie,
+            domain=cookie_domain,
             path="/",
-            samesite="Lax",
+            samesite="None" if secure_cookie else "Lax",
             max_age=60 * 30
         )
         resp.set_cookie(
             key="refresh_token",
             value=str(refresh),
             httponly=True,
-            secure=False,
-            samesite="Lax",
-            domain="localhost",
+            secure=secure_cookie,
+            samesite="None" if secure_cookie else "Lax",
+            domain=cookie_domain,
             path="/",
             max_age=60 * 60 * 24 * 7
         )
@@ -164,9 +173,16 @@ def login(request):
 def logout(request):
     resp = Response({"message": "Logged out successfully"})
 
+    # Xác định domain cho cookie dựa trên request
+    host = request.get_host()
+    if 'localhost' in host or '127.0.0.1' in host:
+        cookie_domain = "localhost"
+    else:
+        cookie_domain = None
+
     # Delete cookies server-side (include domain/path used when setting)
-    resp.delete_cookie("access_token", domain="localhost", path="/")
-    resp.delete_cookie("refresh_token", domain="localhost", path="/")
+    resp.delete_cookie("access_token", domain=cookie_domain, path="/")
+    resp.delete_cookie("refresh_token", domain=cookie_domain, path="/")
     return resp
 
 
@@ -196,17 +212,26 @@ def refresh_token(request):
         logger.debug(f"New access token generated: {str(new_access)}")
         resp = Response({"message": "Access token refreshed"})
 
-        # Trước tiên xóa cookie access_token cũ
-        resp.delete_cookie("access_token", domain="localhost", path="/")
+        # Xác định domain cho cookie dựa trên request
+        host = request.get_host()
+        if 'localhost' in host or '127.0.0.1' in host:
+            cookie_domain = "localhost"
+            secure_cookie = False
+        else:
+            cookie_domain = None
+            secure_cookie = True
 
-        # Set cookie mới giống login: samesite="Lax"
+        # Trước tiên xóa cookie access_token cũ
+        resp.delete_cookie("access_token", domain=cookie_domain, path="/")
+
+        # Set cookie mới giống login
         resp.set_cookie(
             key="access_token",
             value=str(new_access),
             httponly=True,
-            secure=False,
-            samesite="Lax",
-            domain="localhost",
+            secure=secure_cookie,
+            samesite="None" if secure_cookie else "Lax",
+            domain=cookie_domain,
             path="/",
             max_age=60 * 30  # 30 phút
         )
@@ -245,9 +270,16 @@ def change_password(request):
     user.password = new_password
     user.save()
 
+    # Xác định domain cho cookie dựa trên request
+    host = request.get_host()
+    if 'localhost' in host or '127.0.0.1' in host:
+        cookie_domain = "localhost"
+    else:
+        cookie_domain = None
+
     resp = Response({"message": "Password changed. Logged out automatically."})
-    resp.delete_cookie("access_token", domain="localhost", path="/")
-    resp.delete_cookie("refresh_token", domain="localhost", path="/")
+    resp.delete_cookie("access_token", domain=cookie_domain, path="/")
+    resp.delete_cookie("refresh_token", domain=cookie_domain, path="/")
     return resp
 
 
@@ -282,9 +314,16 @@ def delete_account(request):
 
         logger.info(f"User '{username}' deleted by user request.")
 
+        # Xác định domain cho cookie dựa trên request
+        host = request.get_host()
+        if 'localhost' in host or '127.0.0.1' in host:
+            cookie_domain = "localhost"
+        else:
+            cookie_domain = None
+
         resp = Response({"message": f"User '{username}' deleted successfully. Logged out automatically."})
-        resp.delete_cookie("access_token", domain="localhost", path="/")
-        resp.delete_cookie("refresh_token", domain="localhost", path="/")
+        resp.delete_cookie("access_token", domain=cookie_domain, path="/")
+        resp.delete_cookie("refresh_token", domain=cookie_domain, path="/")
         return resp
 
     except Exception as e:

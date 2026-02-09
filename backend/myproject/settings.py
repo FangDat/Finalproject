@@ -1,7 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-import certifi
 from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG_INTENT_LOG_FILE = BASE_DIR / 'checkjson.log'
@@ -16,7 +15,7 @@ OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
-ALLOWED_HOSTS = ["finalproject-xgyt.onrender.com", "localhost"]
+ALLOWED_HOSTS = ['finalprojectdat.onrender.com', 'finalproject-production-b074.up.railway.app', 'localhost', '127.0.0.1']
 
 # ----------------------
 # Installed Apps
@@ -77,13 +76,10 @@ DATABASES = {
         'NAME': 'vietcloud_db',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb+srv://phamdiep400dn_db_user:omGkBX6v1uqeHlfY@vietcloud.5gnveh4.mongodb.net/?appName=vietcloud',
-            'tls': True,
-            'tlsCAFile': certifi.where(),
+            'host': 'mongodb+srv://datpvgcd220073:UG2PXaXDRRr3c4jE@cluster-comp1842.yafek.mongodb.net/vietcloud_db?appName=Cluster-COMP1842'
         }
     }
 }
-
 
 # ----------------------
 # Cache
@@ -129,20 +125,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ----------------------
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://localhost:3000",
+    "finalproject-production-b074.up.railway.app",
 ]
-CORS_ALLOW_CREDENTIALS = True   # ✅ quan trọng để frontend gửi cookie
+CORS_ALLOW_CREDENTIALS = True   
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
+    "http://localhost:3000",
+    "finalproject-production-b074.up.railway.app",
 ]
 
-SESSION_COOKIE_SECURE = False   # True khi deploy HTTPS
-CSRF_COOKIE_SECURE = False
-# Nếu dùng cookie
-SESSION_COOKIE_SAMESITE = None
-# SESSION_COOKIE_SECURE = True  # cần HTTPS, khi deploy đặt True
-CSRF_COOKIE_SAMESITE = None
-# CSRF_COOKIE_SECURE = True      # cần HTTPS, khi deploy đặt True
+# Cookie settings - tự động theo môi trường
+import os
+_is_production = os.getenv('RAILWAY_ENVIRONMENT') == 'production'
+
+SESSION_COOKIE_SECURE = _is_production   # True khi deploy HTTPS
+CSRF_COOKIE_SECURE = _is_production
+SESSION_COOKIE_SAMESITE = 'None' if _is_production else 'Lax'
+CSRF_COOKIE_SAMESITE = 'None' if _is_production else 'Lax'
 
 # ----------------------
 # REST Framework / JWT
