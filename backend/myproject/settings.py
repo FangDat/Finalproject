@@ -15,7 +15,7 @@ OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
-ALLOWED_HOSTS = ['finalprojectdat.onrender.com', 'finalproject-production-b074.up.railway.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['finalprojectdat.onrender.com', 'https://finalproject-production-b074.up.railway.app', 'localhost', '127.0.0.1']
 
 # ----------------------
 # Installed Apps
@@ -126,14 +126,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:3000",
-    "finalproject-production-b074.up.railway.app",
+    "https://finalproject-production-b074.up.railway.app",
 ]
 CORS_ALLOW_CREDENTIALS = True   
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:3000",
-    "finalproject-production-b074.up.railway.app",
+    "https://finalproject-production-b074.up.railway.app",
 ]
 
 # Cookie settings - tự động theo môi trường
