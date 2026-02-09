@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+import certifi
 from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG_INTENT_LOG_FILE = BASE_DIR / 'checkjson.log'
@@ -76,10 +77,13 @@ DATABASES = {
         'NAME': 'vietcloud_db',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb://localhost:27017',
+            'host': 'mongodb+srv://datpvgcd220073:UG2PXaXDRRr3c4jE@cluster-comp1842.yafek.mongodb.net/vietcloud_db?retryWrites=true&w=majority&appName=Cluster-COMP1842',
+            'tls': True,
+            'tlsCAFile': certifi.where(),
         }
     }
 }
+
 
 # ----------------------
 # Cache
