@@ -76,7 +76,7 @@ DATABASES = {
         'NAME': 'vietcloud_db',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb+srv://datpvgcd220073:UG2PXaXDRRr3c4jE@cluster-comp1842.yafek.mongodb.net/vietcloud_db?appName=Cluster-COMP1842'
+            'host': 'mongodb+srv://phamdiep400dn_db_user:<db_password>@vietcloud.5gnveh4.mongodb.net/?appName=vietcloud'
         }
     }
 }
