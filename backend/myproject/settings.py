@@ -9,7 +9,14 @@ SECRET_KEY = 'django-insecure-#-q_^(f#_-$e73z^0$-@r3duc9!y_^b*re3*&6cinnfzz&p6c!
 
 DEBUG = True
 load_dotenv() 
-REDIS_URL = os.getenv("REDIS_URL")
+REDIS_URL = (
+    os.getenv("REDIS_PRIVATE_URL")   # Railway internal (backend dùng cái này)
+    or os.getenv("REDIS_URL")        # fallback
+    or os.getenv("REDIS_PUBLIC_URL") # fallback cuối
+)
+
+if not REDIS_URL:
+    raise Exception("Redis is required but no Redis URL found in environment variables.")
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")

@@ -426,14 +426,7 @@ def user_info(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def verify_change_email_password(request):
-    import redis
-    import json
-    from django.conf import settings
-
-    redis_client = redis.from_url(
-    settings.REDIS_URL,
-    decode_responses=True
-    )
+    from .verifyotp_views import redis_client
 
     user = request.user
     password = request.data.get("password")
@@ -457,13 +450,7 @@ def verify_change_email_password(request):
 @permission_classes([IsAuthenticated])
 def change_email_send_otp(request):
     from .verifyotp_views import send_change_email_otp_logic, normalize_email
-    import redis
-    from django.conf import settings
-
-    redis_client = redis.from_url(
-        settings.REDIS_URL,
-        decode_responses=True
-    )
+    from .verifyotp_views import redis_client
 
     user = request.user
     raw_email = request.data.get("new_email")

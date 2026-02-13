@@ -16,15 +16,17 @@ from rest_framework_simplejwt.tokens import RefreshToken
 # ============================
 # Redis client (Railway compatible)
 # ============================
-REDIS_URL = getattr(settings, "REDIS_URL", None)
+# ============================
+# Redis client (Railway production safe)
+# ============================
+try:
+    redis_client = redis.from_url(
+        settings.REDIS_URL,
+        decode_responses=True
+    )
+except Exception as e:
+    raise Exception(f"Redis connection failed: {str(e)}")
 
-if not REDIS_URL:
-    raise Exception("REDIS_URL is not set in environment variables")
-
-redis_client = redis.from_url(
-    REDIS_URL,
-    decode_responses=True
-)
 
 
 logger = logging.getLogger(__name__)
