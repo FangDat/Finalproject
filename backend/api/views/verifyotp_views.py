@@ -3,6 +3,7 @@ import string
 import logging
 import json
 import redis
+import threading
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
@@ -106,15 +107,36 @@ def send_otp_logic(username, email, password):
     subject = "VietCloud Email Verification Code"
     message = f"Hello {username},\n\nYour VietCloud verification code is: {otp}\n\nThis code will expire in 10 minutes.\n\n— VietCloud Team"
     try:
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
-    except Exception:
+        send_mail_async(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [email]
+    )
+    except Exception as e:
         logger.exception("❌ Failed to send OTP mail")
         redis_client.delete(otp_key)
         redis_client.delete(pending_key)
-        return Response({"error": "Failed to send OTP email"}, status=500)
+        return Response(
+            {"error": "Failed to send OTP email", "details": str(e)},
+            status=500
+        )
 
-    return Response({"message": "OTP sent successfully"}, status=200)
+def send_mail_async(subject, message, from_email, recipient_list):
+    def task():
+        try:
+            send_mail(
+                subject,
+                message,
+                from_email,
+                recipient_list,
+                fail_silently=False,
+            )
+            logger.debug("✅ Email sent successfully (async)")
+        except Exception:
+            logger.exception("❌ Async email sending failed")
 
+    threading.Thread(target=task).start()
 
 # ---------------------------
 # API send_otp
@@ -293,7 +315,12 @@ def resend_otp(request):
     subject = "VietCloud Email Verification Code (Resent)"
     message = f"Hello,\n\nYour new VietCloud OTP code is: {otp}\n\nExpires in 10 minutes.\n\n— VietCloud Team"
     try:
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+                send_mail_async(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email]
+            )
     except Exception:
         return Response({"error": "Failed to resend OTP"}, status=500)
 
