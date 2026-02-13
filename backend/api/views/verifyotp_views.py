@@ -7,6 +7,7 @@ import threading
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
+import resend
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -129,16 +130,23 @@ def send_otp_logic(username, email, password):
 def send_mail_async(subject, message, from_email, recipient_list):
     def task():
         try:
-            send_mail(
-                subject,
-                message,
-                from_email,
-                recipient_list,
-                fail_silently=False,
-            )
-            logger.debug("✅ Email sent successfully (async)")
-        except Exception:
-            logger.exception("❌ Async email sending failed")
+            resend.api_key = settings.RESEND_API_KEY
+
+            # Convert plain text message sang HTML
+            html_content = message.replace("\n", "<br>")
+
+            for recipient in recipient_list:
+                resend.Emails.send({
+                    "from": settings.DEFAULT_FROM_EMAIL,
+                    "to": recipient,
+                    "subject": subject,
+                    "html": f"<div style='font-family:Arial,sans-serif'>{html_content}</div>"
+                })
+
+            logger.debug("✅ Email sent successfully via Resend (async)")
+
+        except Exception as e:
+            logger.exception(f"❌ Resend email sending failed: {str(e)}")
 
     threading.Thread(target=task).start()
 
@@ -386,7 +394,7 @@ def send_change_email_otp_logic(user, raw_new_email):
     )
 
     try:
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [new_email])
+        send_mail_async(subject, message, settings.DEFAULT_FROM_EMAIL, [new_email])
     except Exception:
         logger.exception("❌ Failed to send change email OTP")
         redis_client.delete(otp_key)
@@ -526,7 +534,7 @@ def resend_change_email_otp_logic(user):
     )
 
     try:
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [new_email])
+        send_mail_async(subject, message, settings.DEFAULT_FROM_EMAIL, [new_email])
     except Exception:
         logger.exception("❌ Failed to resend change email OTP")
         return Response({"error": "Failed to resend OTP"}, status=500)
@@ -583,7 +591,7 @@ def send_forgot_password_otp_logic(raw_email):
     )
 
     try:
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+        send_mail_async(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
     except Exception:
         logger.exception("❌ Failed to send forgot password OTP")
         redis_client.delete(otp_key)
@@ -717,7 +725,7 @@ def resend_forgot_password_otp_logic(raw_email):
     message = f"Your new OTP is: {otp}"
 
     try:
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+        send_mail_async(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
     except Exception:
         return Response({"error": "Failed to resend OTP"}, status=500)
 
