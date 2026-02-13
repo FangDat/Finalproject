@@ -13,7 +13,19 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 # Redis client
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+# ============================
+# Redis client (Railway compatible)
+# ============================
+REDIS_URL = getattr(settings, "REDIS_URL", None)
+
+if not REDIS_URL:
+    raise Exception("REDIS_URL is not set in environment variables")
+
+redis_client = redis.from_url(
+    REDIS_URL,
+    decode_responses=True
+)
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -402,8 +414,31 @@ def verify_change_email_otp_logic(user, otp_input):
         "new_email": new_email
     }, status=200)
 
-    resp.delete_cookie("access_token", domain="localhost", path="/")
-    resp.delete_cookie("refresh_token", domain="localhost", path="/")
+    host = user._request.get_host() if hasattr(user, "_request") else ""
+    is_local = 'localhost' in host or '127.0.0.1' in host
+    secure_cookie = not is_local
+
+    resp.set_cookie(
+        "access_token",
+        "",
+        httponly=True,
+        secure=secure_cookie,
+        samesite="None" if secure_cookie else "Lax",
+        path="/",
+        max_age=0,
+        expires=0
+    )
+
+    resp.set_cookie(
+        "refresh_token",
+        "",
+        httponly=True,
+        secure=secure_cookie,
+        samesite="None" if secure_cookie else "Lax",
+        path="/",
+        max_age=0,
+        expires=0
+    )
     
     return resp 
 

@@ -166,24 +166,42 @@ def login(request):
 
 
 # ---------------------------
-# LOGOUT → clear cookies
+# LOGOUT → clear cookies (FIXED RAILWAY)
 # ---------------------------
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout(request):
     resp = Response({"message": "Logged out successfully"})
 
-    # Xác định domain cho cookie dựa trên request
     host = request.get_host()
-    if 'localhost' in host or '127.0.0.1' in host:
-        cookie_domain = "localhost"
-    else:
-        cookie_domain = None
+    is_local = 'localhost' in host or '127.0.0.1' in host
+    secure_cookie = not is_local
 
-    # Delete cookies server-side (include domain/path used when setting)
-    resp.delete_cookie("access_token", domain=cookie_domain, path="/")
-    resp.delete_cookie("refresh_token", domain=cookie_domain, path="/")
+    # Ghi đè và xoá hoàn toàn cookie
+    resp.set_cookie(
+        "access_token",
+        "",
+        httponly=True,
+        secure=secure_cookie,
+        samesite="None" if secure_cookie else "Lax",
+        path="/",
+        max_age=0,
+        expires=0
+    )
+
+    resp.set_cookie(
+        "refresh_token",
+        "",
+        httponly=True,
+        secure=secure_cookie,
+        samesite="None" if secure_cookie else "Lax",
+        path="/",
+        max_age=0,
+        expires=0
+    )
+
     return resp
+
 
 
 # ---------------------------
@@ -270,16 +288,34 @@ def change_password(request):
     user.password = new_password
     user.save()
 
-    # Xác định domain cho cookie dựa trên request
     host = request.get_host()
-    if 'localhost' in host or '127.0.0.1' in host:
-        cookie_domain = "localhost"
-    else:
-        cookie_domain = None
+    is_local = 'localhost' in host or '127.0.0.1' in host
+    secure_cookie = not is_local
 
     resp = Response({"message": "Password changed. Logged out automatically."})
-    resp.delete_cookie("access_token", domain=cookie_domain, path="/")
-    resp.delete_cookie("refresh_token", domain=cookie_domain, path="/")
+
+    resp.set_cookie(
+        "access_token",
+        "",
+        httponly=True,
+        secure=secure_cookie,
+        samesite="None" if secure_cookie else "Lax",
+        path="/",
+        max_age=0,
+        expires=0
+    )
+
+    resp.set_cookie(
+        "refresh_token",
+        "",
+        httponly=True,
+        secure=secure_cookie,
+        samesite="None" if secure_cookie else "Lax",
+        path="/",
+        max_age=0,
+        expires=0
+    )
+
     return resp
 
 
@@ -316,14 +352,35 @@ def delete_account(request):
 
         # Xác định domain cho cookie dựa trên request
         host = request.get_host()
-        if 'localhost' in host or '127.0.0.1' in host:
-            cookie_domain = "localhost"
-        else:
-            cookie_domain = None
+        is_local = 'localhost' in host or '127.0.0.1' in host
+        secure_cookie = not is_local
 
-        resp = Response({"message": f"User '{username}' deleted successfully. Logged out automatically."})
-        resp.delete_cookie("access_token", domain=cookie_domain, path="/")
-        resp.delete_cookie("refresh_token", domain=cookie_domain, path="/")
+        resp = Response({
+            "message": f"User '{username}' deleted successfully. Logged out automatically."
+        })
+
+        resp.set_cookie(
+            "access_token",
+            "",
+            httponly=True,
+            secure=secure_cookie,
+            samesite="None" if secure_cookie else "Lax",
+            path="/",
+            max_age=0,
+            expires=0
+        )
+
+        resp.set_cookie(
+            "refresh_token",
+            "",
+            httponly=True,
+            secure=secure_cookie,
+            samesite="None" if secure_cookie else "Lax",
+            path="/",
+            max_age=0,
+            expires=0
+        )
+
         return resp
 
     except Exception as e:
@@ -371,8 +428,12 @@ def user_info(request):
 def verify_change_email_password(request):
     import redis
     import json
+    from django.conf import settings
 
-    redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+    redis_client = redis.from_url(
+    settings.REDIS_URL,
+    decode_responses=True
+    )
 
     user = request.user
     password = request.data.get("password")
@@ -397,11 +458,10 @@ def verify_change_email_password(request):
 def change_email_send_otp(request):
     from .verifyotp_views import send_change_email_otp_logic, normalize_email
     import redis
+    from django.conf import settings
 
-    redis_client = redis.StrictRedis(
-        host='localhost',
-        port=6379,
-        db=0,
+    redis_client = redis.from_url(
+        settings.REDIS_URL,
         decode_responses=True
     )
 
