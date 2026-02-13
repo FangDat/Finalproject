@@ -9,6 +9,7 @@ SECRET_KEY = 'django-insecure-#-q_^(f#_-$e73z^0$-@r3duc9!y_^b*re3*&6cinnfzz&p6c!
 
 DEBUG = True
 load_dotenv() 
+REDIS_URL = os.getenv("REDIS_URL")
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
@@ -87,17 +88,16 @@ DATABASES = {
 # Sử dụng django-redis (đã cài django-redis==4.12.1 và redis==3.5.3)
 # Cache chỉ lưu dữ liệu API (weather, geocoding) — KHÔNG dùng cho session hoặc JWT
 CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        # ⚠️ Dùng DB 0 để dễ xem trong redis-cli (mặc định CLI kết nối DB 0)
-        "LOCATION": "redis://127.0.0.1:6379/0",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "IGNORE_EXCEPTIONS": True,  # không crash khi Redis lỗi
-        },
-        "KEY_PREFIX": "vietcloud"  # dễ lọc bằng redis-cli keys vietcloud*
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_URL,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "IGNORE_EXCEPTIONS": True,  # không crash nếu Redis lỗi
+            },
+            "KEY_PREFIX": "vietcloud",
+        }
     }
-}
 
 
 # ----------------------
