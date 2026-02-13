@@ -113,6 +113,10 @@ def send_otp_logic(username, email, password):
         settings.DEFAULT_FROM_EMAIL,
         [email]
     )
+        return Response({
+        "message": "OTP sent successfully",
+        "email": email
+    }, status=200)
     except Exception as e:
         logger.exception("❌ Failed to send OTP mail")
         redis_client.delete(otp_key)
