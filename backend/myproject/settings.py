@@ -7,7 +7,7 @@ DEBUG_INTENT_LOG_FILE = BASE_DIR / 'checkjson.log'
 SECRET_KEY = 'django-insecure-#-q_^(f#_-$e73z^0$-@r3duc9!y_^b*re3*&6cinnfzz&p6c!'
 # STRIPE_PREMIUM_PRICE_ID = "price_1SqV5EFDCAdx0wmRYACLZs98"
 
-DEBUG = True
+DEBUG = False
 load_dotenv() 
 REDIS_URL = (
     os.getenv("REDIS_PRIVATE_URL")   # Railway internal (backend dùng cái này)
@@ -23,12 +23,14 @@ OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
-ALLOWED_HOSTS = ['finalprojectdat.onrender.com', 'finalproject-production-b074.up.railway.app', 'localhost', '127.0.0.1', 'finalproject-seven-teal.vercel.app']
+ALLOWED_HOSTS = ['finalprojectdat.onrender.com', 'finalproject-production-b074.up.railway.app', 'localhost', '127.0.0.1', 'finalproject-seven-teal.vercel.app', 'vietcloud.work',
+    'www.vietcloud.work',
+]
 # =========================
 # RESEND EMAIL CONFIG
 # =========================
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
-DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
+DEFAULT_FROM_EMAIL = "VietCloud <no-reply@send.vietcloud.work>"
 # ----------------------
 # Installed Apps
 # ----------------------
@@ -138,7 +140,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:3000",
     "https://finalproject-production-b074.up.railway.app",
-    "https://finalproject-seven-teal.vercel.app"
+    "https://finalproject-seven-teal.vercel.app",
+    "https://vietcloud.work",
+    "https://www.vietcloud.work",
+    
 ]
 CORS_ALLOW_CREDENTIALS = True   
 
@@ -146,7 +151,9 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:3000",
     "https://finalproject-production-b074.up.railway.app",
-    "https://finalproject-seven-teal.vercel.app"
+    "https://finalproject-seven-teal.vercel.app",
+    "https://vietcloud.work",
+    "https://www.vietcloud.work",
 ]
 
 # Cookie settings - tự động theo môi trường
