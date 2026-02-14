@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['finalprojectdat.onrender.com', 'finalproject-production-b074.u
 # RESEND EMAIL CONFIG
 # =========================
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
-DEFAULT_FROM_EMAIL = "VietCloud <no-reply@send.vietcloud.work>"
+DEFAULT_FROM_EMAIL = "VietCloud <no-reply@vietcloud.work>"
 # ----------------------
 # Installed Apps
 # ----------------------
