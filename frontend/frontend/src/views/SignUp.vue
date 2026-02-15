@@ -244,22 +244,35 @@ export default {
       }
 
       try {
+        // 1️⃣ Verify OTP
         await verifySignupOtp(this.email, otpCode);
 
-        // ✅ Sau khi verify thành công → login luôn
+        // 2️⃣ GỌI LOGIN (signup hiện tại của bạn đang dùng như login)
         await signup({
           username: this.username,
           email: this.email,
           password: this.password,
         });
 
+        // 3️⃣ SET LẠI COOKIE Ở DOMAIN HIỆN TẠI (QUAN TRỌNG)
+        Cookies.set("username", this.username, {
+          path: "/",
+          secure: true,
+          sameSite: "Lax"
+        });
+
+        // 4️⃣ ĐỢI COOKIE COMMIT
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         this.showOtpModal = false;
         this.alertMessage = "Verification successful! Redirecting...";
         this.alertType = "success";
 
+        // 5️⃣ REDIRECT
         setTimeout(() => {
-          this.$router.replace("/billing");
-        }, 5000);
+        this.$router.replace("/billing"),
+        3600}
+      )
 
       } catch (err) {
         this.otpError =
