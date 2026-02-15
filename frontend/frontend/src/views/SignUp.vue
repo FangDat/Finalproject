@@ -244,44 +244,38 @@ export default {
       }
 
       try {
-        // 1️⃣ Verify OTP
+        // ✅ 1. Verify OTP
         await verifySignupOtp(this.email, otpCode);
 
-        // 2️⃣ GỌI LOGIN (signup hiện tại của bạn đang dùng như login)
-        await signup({
-          username: this.username,
-          email: this.email,
-          password: this.password,
-        });
-
-        // 3️⃣ SET LẠI COOKIE Ở DOMAIN HIỆN TẠI (QUAN TRỌNG)
+        // ✅ 2. SET COOKIE username ở domain hiện tại
         Cookies.set("username", this.username, {
           path: "/",
           secure: true,
-          sameSite: "Lax"
+          sameSite: "Lax",
         });
 
-        // 4️⃣ ĐỢI COOKIE COMMIT
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // (KHÔNG gọi lại signup nữa)
 
         this.showOtpModal = false;
         this.alertMessage = "Verification successful! Redirecting...";
         this.alertType = "success";
 
-        // 5️⃣ REDIRECT
+        // ✅ 3. Redirect đúng chuẩn hash mode
         setTimeout(() => {
-        this.$router.replace("/billing"),
-        3600}
-      )
+          this.$router.replace("/billing");
+        }, 3600);
 
       } catch (err) {
+        console.log("VERIFY ERROR:", err?.response?.data);
+
         this.otpError =
           err?.response?.data?.message ||
           "Invalid or expired OTP. Please try again.";
       } finally {
         this.verifying = false;
       }
-    },
+    }
+,
 
     focusNext(index) {
       if (this.otpDigits[index].length === 1 && index < 5) {
