@@ -246,16 +246,26 @@ export default {
       try {
         await verifySignupOtp(this.email, otpCode);
 
+        // ✅ Sau khi verify thành công → login luôn
+        await signup({
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        });
+
         this.showOtpModal = false;
         this.alertMessage = "Verification successful! Redirecting...";
         this.alertType = "success";
-        setTimeout(() => this.$router.push("/billing"), 3500);
+
+        setTimeout(() => {
+          this.$router.replace("/billing");
+        }, 1500);
+
       } catch (err) {
-          this.otpError =
-            err?.response?.data?.message ||
-            "Invalid or expired OTP. Please try again.";
-        }
-      finally {
+        this.otpError =
+          err?.response?.data?.message ||
+          "Invalid or expired OTP. Please try again.";
+      } finally {
         this.verifying = false;
       }
     },
