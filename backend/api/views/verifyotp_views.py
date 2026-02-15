@@ -34,8 +34,8 @@ except Exception as e:
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-OTP_EXPIRE_SECONDS = 60  
-PENDING_EXPIRE_SECONDS = 300 
+OTP_EXPIRE_SECONDS = 600  
+PENDING_EXPIRE_SECONDS = 3000
 
 # ---------------------------
 # HÀM PHỤ TRỢ

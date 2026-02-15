@@ -119,8 +119,8 @@ def create_checkout_session(request):
                 },
                 "quantity": 1,
             }],
-            success_url="http://localhost:8080/#/?payment=success",
-            cancel_url="http://localhost:8080/#/",
+            success_url="https://vietcloud.work/#/?payment=success",
+            cancel_url="https://vietcloud.work/#/",
             client_reference_id=str(user._id),
         )
 
