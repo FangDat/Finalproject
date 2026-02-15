@@ -259,7 +259,7 @@ export default {
 
         setTimeout(() => {
           this.$router.replace("/billing");
-        }, 1500);
+        }, 5000);
 
       } catch (err) {
         this.otpError =
