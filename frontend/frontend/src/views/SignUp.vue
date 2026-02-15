@@ -153,9 +153,10 @@ export default {
       // OTP modal states
       showOtpModal: false,
       otpDigits: ["", "", "", "", "", ""],
-      resendTimer: 600,
+      resendTimer: 0,
       otpError: null,
       otpInterval: null,
+      OTP_COOLDOWN: 600,
     };
   },
   mounted() {
@@ -289,22 +290,38 @@ export default {
       }
     },
 
-    startResendCountdown() {
-      this.resendTimer = 600;
+    startResendCountdown(seconds = this.OTP_COOLDOWN) {
+      this.resendTimer = seconds;
+
       if (this.otpInterval) clearInterval(this.otpInterval);
+
       this.otpInterval = setInterval(() => {
-        if (this.resendTimer > 0) this.resendTimer--;
-        else clearInterval(this.otpInterval);
+        if (this.resendTimer > 0) {
+          this.resendTimer--;
+        } else {
+          clearInterval(this.otpInterval);
+        }
       }, 1000);
     },
 
     async resendOtp() {
       try {
         await resendSignupOtp(this.email);
-        this.resendTimer = 600;
-        this.startResendCountdown();
+
+        // ✅ reset full cooldown 10 phút
+        this.startResendCountdown(this.OTP_COOLDOWN);
+
       } catch (err) {
-        this.otpError = "Failed to resend OTP. Please try again.";
+        const secondsRemaining =
+          err?.response?.data?.seconds_remaining;
+
+        // 🔥 Nếu backend trả TTL → sync luôn
+        if (secondsRemaining) {
+          this.startResendCountdown(secondsRemaining);
+          this.otpError = `Please wait ${secondsRemaining}s before requesting again.`;
+        } else {
+          this.otpError = "Failed to resend OTP. Please try again.";
+        }
       }
     },
   },
