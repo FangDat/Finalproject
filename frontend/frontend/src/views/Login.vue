@@ -54,7 +54,7 @@
 
       <hr class="divider" />
             <p class="signup-text">Don't have an account</p>
-      <router-link to="/signup" class="btn-signup">Sign up for VietCloud</router-link>
+      <router-link to="/signup" class="btn-signup">Sign up now!</router-link>
     </div>
   </div>
   <!-- ================= FORGOT PASSWORD MODAL ================= -->

@@ -438,3 +438,25 @@ body {
   top: 36px;
 }
 
+
+/* ================= MOBILE OTP FIX ================= */
+@media (max-width: 480px) {
+
+  .otp-modal {
+    width: 92%;
+    padding: 26px 18px;
+  }
+
+  .otp-inputs {
+    justify-content: flex-start;   /* ⭐ tránh tràn */
+    gap: 6px;
+    padding-left: 6px;             /* ⭐ đẩy sang trái nhẹ */
+  }
+
+  .otp-inputs input {
+    width: 38px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+}

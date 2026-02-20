@@ -33,7 +33,7 @@
   height: 40px;
 
   position: relative;
-  top: 18px;   /* ⭐ hạ icon xuống ~0.5cm */
+  top: 15px;   /* ⭐ hạ icon xuống ~0.5cm */
 }
 
 /* Title */
@@ -231,4 +231,26 @@
   color: #c62828;
   font-weight: 500;
   margin-top: 10px;
+}
+
+/* ================= MOBILE OTP FIX ================= */
+@media (max-width: 480px) {
+
+  .otp-modal {
+    width: 92%;
+    padding: 28px 18px;
+  }
+
+  .otp-inputs {
+    justify-content: flex-start;   /* ⭐ bỏ space-between */
+    gap: 6px;                      /* ⭐ khoảng cách đều */
+    padding-left: 6px;             /* ⭐ đẩy nhẹ sang trái */
+  }
+
+  .otp-inputs input {
+    width: 38px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
 }
