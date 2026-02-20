@@ -116,22 +116,25 @@ body {
 .btn-signup {
   display: block;
 
-  width: 80%;              /* ⭐ dài hơn */
-  max-width: 300px;
+  width: 95%;          /* ⭐ kéo dài ngang */
+  max-width: 380px;    /* ⭐ gần bằng input */
 
-  padding: 14px;
-  margin: 15px auto 0 auto; /* ⭐ CENTER PERFECT */
+  padding: 10px 16px;  /* ⭐ giảm chiều cao */
+
+  margin: 15px auto 0 auto;
 
   background: #fff;
   color: #0077b6;
-  font-size: 17px;
-  font-weight: bold;
+
+  font-size: 16px;     /* ⭐ giảm nhẹ */
+  font-weight: 600;
 
   border: 2px solid #0077b6;
-  border-radius: 30px;
+  border-radius: 28px;
 
   text-align: center;
   box-sizing: border-box;
+
   transition: all 0.25s ease;
 }
 
