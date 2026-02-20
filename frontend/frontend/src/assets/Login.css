@@ -112,21 +112,22 @@ body {
 }
 
 
-
 .btn-signup {
   display: block;
 
-  width: 95%;          /* ⭐ kéo dài ngang */
-  max-width: 380px;    /* ⭐ gần bằng input */
+  align-self: stretch;   /* ⭐⭐⭐ FIX QUAN TRỌNG */
+  width: 100%;
 
-  padding: 10px 16px;  /* ⭐ giảm chiều cao */
+  max-width: 360px;      /* cùng size input */
 
-  margin: 15px auto 0 auto;
+  padding: 10px 16px;
+
+  margin-top: 15px;
 
   background: #fff;
   color: #0077b6;
 
-  font-size: 16px;     /* ⭐ giảm nhẹ */
+  font-size: 16px;
   font-weight: 600;
 
   border: 2px solid #0077b6;
@@ -137,6 +138,7 @@ body {
 
   transition: all 0.25s ease;
 }
+
 
 
 .btn-signup:hover {
@@ -167,7 +169,7 @@ body {
 
 /* Form fields */
 .input-box {
-  width: 95%;
+  width: 100%;
   padding: 12px;
   margin: 10px 0;
   border-radius: 10px;
