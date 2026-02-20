@@ -31,6 +31,9 @@
 .logo {
   width: 40px;
   height: 40px;
+
+  position: relative;
+  top: 18px;   /* ⭐ hạ icon xuống ~0.5cm */
 }
 
 /* Title */
