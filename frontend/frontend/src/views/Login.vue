@@ -3,7 +3,7 @@
     <div class="login-box">
       <!-- Logo -->
       <div class="logo">
-        <img src="@/assets/cloudy.png" alt="logo" class="logo-img" />
+        <img :src="cloudyLogo" alt="logo" class="logo-img" />
         <h1>VietCloud</h1>
       </div>
 
@@ -170,6 +170,7 @@
 import "../assets/Login.css";
 import apiClient from "@/services/apiClient";
 import Cookies from "js-cookie";
+import cloudyLogo from "@/assets/cloudy.png";
 
 export default {
   name: "Login",
@@ -178,6 +179,7 @@ export default {
       username: "",
       password: "",
       submitting: false,
+      cloudyLogo,
 
       // UI state
       alertMessage: "",

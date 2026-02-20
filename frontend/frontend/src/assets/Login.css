@@ -32,7 +32,15 @@ body {
 }
 .logo-img {
   width: 60px;
+  height: 60px;        /* FIX layout shift */
+  object-fit: contain;
+  display: block;
 }
+.logo h1 {
+  margin: 6px 0 0 0;
+  line-height: 1.2;
+}
+
 
 /* Title */
 .login-title {
@@ -99,20 +107,21 @@ body {
 
 
 .btn-signup {
-  display: inline-block;
-  width: 95%;
+  display: block;
+  width: 100%;
   padding: 12px;
   background: #fff;
   color: #0077b6;
   font-size: 16px;
   font-weight: bold;
   border: 2px solid #0077b6;
-  border-radius: 30px; /* bo tròn giống các nút khác */
+  border-radius: 30px;
   cursor: pointer;
   margin-top: 10px;
   text-align: center;
-  transition: all 0.3s ease;
+  box-sizing: border-box;   /* ⭐ VERY IMPORTANT */
 }
+
 
 .btn-signup:hover {
   background: #0077b6;
