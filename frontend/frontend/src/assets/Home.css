@@ -5,25 +5,39 @@
   background: transparent !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* 🌈 Sidebar trái */
 .sidebar-left {
   width: 200px;
+  flex-shrink: 0;          /* ⭐ NGĂN flex co lại */
+  position: relative;      /* ⭐ tạo anchor */
+  left: 0;                 /* ⭐ khóa vị trí */
+  box-sizing: border-box;  /* ⭐ fix padding overflow */
+
   background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
   padding: 20px;
+
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
   border-radius: 0 20px 20px 0;
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
+
 .logo {
   margin-bottom: 40px;
   font-weight: bold;
   font-size: 1.5rem;
+
+  display: flex;
+  justify-content: center;   /* ⭐ CENTER NGANG */
+  align-items: center;
+  text-align: center;
+  width: 100%;
 }
+
 
 .nav-menu {
   display: flex;
@@ -223,8 +237,25 @@
   margin-top: 25px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center;   /* giữ icon nằm giữa */
 }
+
+/* =========================
+   🌤 Weather Left Layout FIX
+   ========================= */
+
+.weather-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 🔥 ép mọi thứ về trái */
+}
+
+/* đảm bảo temperature KHÔNG bị lệch */
+.weather-left .temperature {
+  margin-top: 6px;
+  text-align: left;
+}
+
 
 .city {
   font-size: 2rem;
@@ -241,6 +272,9 @@
 .weather-icon img {
   width: 136px;
   height: 136px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Chance of rain màu xanh dương để dễ thấy */
@@ -1412,3 +1446,10 @@ a,
     height: 150px;
   }
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+

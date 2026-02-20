@@ -122,9 +122,10 @@
               }}
             </h2>
           </div>
-          <div class="weather-icon">
-            <img :src="weatherIcon" alt="Weather Icon" />
-          </div>
+            <!-- ✅ RIGHT ICON (GIỮ BÊN PHẢI BOX) -->
+            <div class="weather-icon">
+              <img :src="currentIconUrl" alt="weather icon" />
+            </div>
         </section>
 
         <!-- Forecast trong ngày -->
