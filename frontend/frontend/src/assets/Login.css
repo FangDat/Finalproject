@@ -458,5 +458,32 @@ body {
     height: 50px;
     font-size: 1.2rem;
   }
+/* ================= FORGOT PASSWORD MOBILE FIX ================= */
+.modal {
+  width: 92%;
+  padding: 24px 18px;
+  box-sizing: border-box;
+}
+
+/* shrink email input */
+.modal .form-group input {
+  width: 100%;
+  font-size: 14px;
+  padding: 9px 10px;
+  box-sizing: border-box;
+}
+
+/* fix description text overflow */
+.modal .note {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  padding: 0 4px;
+}
+
+/* prevent left overflow */
+.form-group {
+  width: 100%;
+  margin-left: 0;
+}
 
 }
