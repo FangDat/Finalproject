@@ -237,7 +237,8 @@
   margin-top: 25px;
   display: flex;
   justify-content: space-between;
-  align-items: center;   /* giữ icon nằm giữa */
+  align-items: center;
+  gap: 20px;          /* ⭐ icon không sát mép */
 }
 
 /* =========================
@@ -247,8 +248,10 @@
 .weather-left {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 🔥 ép mọi thứ về trái */
+  align-items: flex-start;
+  padding-left: 8px;   /* ⭐ dịch trái nhẹ */
 }
+
 
 /* đảm bảo temperature KHÔNG bị lệch */
 .weather-left .temperature {
@@ -262,20 +265,18 @@
   font-weight: bold;
 }
 
-.temperature {
-  font-size: 3rem;
-  margin: 8px 0 0 0;
-  color: #ff5722;
-  text-align: left;
+.weather-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .weather-icon img {
   width: 136px;
   height: 136px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  object-fit: contain; /* ✅ đảm bảo icon hiển thị đúng */
 }
+
 
 /* Chance of rain màu xanh dương để dễ thấy */
 .rain {
