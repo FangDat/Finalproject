@@ -20,10 +20,20 @@
 }
 
 .logo {
-  margin-bottom: 40px;
-  font-weight: bold;
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 32px;
+
+  font-weight: 700;
+  font-size: 1.4rem;
 }
+.logo span {
+  display: flex;
+  align-items: center;
+}
+
 
 .nav-menu {
   display: flex;
@@ -88,13 +98,15 @@
 
 .search-icon {
   position: absolute;
-  right: -39px;
+  right: 16px;            /* ⭐ ICON CHUI VÀO INPUT */
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: #2196f3;
   cursor: pointer;
+  pointer-events: none;   /* ⭐ không block click input */
 }
+
 
 /* Gợi ý dropdown */
 .suggestions {
@@ -471,16 +483,18 @@ button:hover {
   }
 
   /* Sidebar */
-  .sidebar-left {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 1200;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    border-radius: 0 20px 20px 0;
-  }
+.sidebar-left {
+  width: 200px;
+  background: #ffffffcc;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 20px 20px 0;
+
+  display: flex;           /* ⭐ thêm */
+  flex-direction: column;  /* ⭐ thêm */
+  align-items: flex-start; /* ⭐ giống Home.vue */
+}
+
 
   .sidebar-left.open {
     transform: translateX(0);
@@ -522,7 +536,7 @@ button:hover {
   }
 
   .search-icon {
-    right: -36x; /* 🔥 bỏ âm */
+    right: 16x; /* 🔥 bỏ âm */
   }
 
   /* CITY LIST */

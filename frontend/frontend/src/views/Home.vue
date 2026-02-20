@@ -111,15 +111,9 @@
 
         <!-- Thông tin thời tiết -->
         <section class="weather-main card" v-if="!errorMessage">
-
-          <!-- ✅ LEFT CONTENT -->
-          <div class="weather-left">
+          <div>
             <h1 class="city">{{ city }}</h1>
-
-            <p class="rain">
-              Chance of rain: {{ chanceOfRain }}
-            </p>
-
+            <p class="rain">Chance of rain: {{ chanceOfRain }}</p>
             <h2 class="temperature">
               {{
                 temperature !== null
@@ -128,17 +122,9 @@
               }}
             </h2>
           </div>
-
-          <!-- ✅ RIGHT ICON -->
           <div class="weather-icon">
-            <img
-              v-if="currentIconUrl"
-              :src="currentIconUrl"
-              :key="currentIconUrl"
-              alt=""
-            />
+            <img :src="weatherIcon" alt="Weather Icon" />
           </div>
-
         </section>
 
         <!-- Forecast trong ngày -->

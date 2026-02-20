@@ -238,45 +238,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;          /* ⭐ icon không sát mép */
 }
-
-/* =========================
-   🌤 Weather Left Layout FIX
-   ========================= */
-
-.weather-left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 8px;   /* ⭐ dịch trái nhẹ */
-}
-
-
-/* đảm bảo temperature KHÔNG bị lệch */
-.weather-left .temperature {
-  margin-top: 6px;
-  text-align: left;
-}
-
 
 .city {
   font-size: 2rem;
   font-weight: bold;
 }
 
-.weather-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.temperature {
+  font-size: 3rem;
+  margin: 8px 0 0 0;
+  color: #ff5722;
+  text-align: left;
 }
 
 .weather-icon img {
   width: 136px;
   height: 136px;
-  object-fit: contain; /* ✅ đảm bảo icon hiển thị đúng */
 }
-
 
 /* Chance of rain màu xanh dương để dễ thấy */
 .rain {
