@@ -16,20 +16,29 @@ body {
 
 .login-box {
   background: #fff;
-  padding: 40px;
+  padding: 50px 45px;   /* tăng padding */
   border-radius: 20px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   width: 420px;
   text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* ⭐ center toàn bộ */
 }
+
 
 /* Logo */
 .logo {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: center;
+
+  margin-bottom: 10px;
+  margin-top: -10px; /* ⭐ đẩy logo lên cao */
 }
+
 .logo-img {
   width: 60px;
   height: 60px;        /* FIX layout shift */
@@ -39,6 +48,9 @@ body {
 .logo h1 {
   margin: 6px 0 0 0;
   line-height: 1.2;
+  font-size: 38px;     /* control size */
+  font-weight: 700;
+  text-align: center;
 }
 
 
@@ -86,16 +98,19 @@ body {
 }
 
 .btn-login {
-  width: 50%;
-  padding: 12px;
-  background: #FFA500; /* orange */
+  width: 70%;
+  max-width: 260px;
+  padding: 13px;
+  background: #FFA500;
   color: white;
   font-size: 16px;
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 18px auto 0 auto; /* ⭐ CENTER */
+  display: block;
 }
+
 .btn-login:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -108,19 +123,26 @@ body {
 
 .btn-signup {
   display: block;
-  width: 100%;
-  padding: 12px;
+
+  width: 80%;              /* ⭐ dài hơn */
+  max-width: 300px;
+
+  padding: 14px;
+  margin: 15px auto 0 auto; /* ⭐ CENTER PERFECT */
+
   background: #fff;
   color: #0077b6;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: bold;
+
   border: 2px solid #0077b6;
   border-radius: 30px;
-  cursor: pointer;
-  margin-top: 10px;
+
   text-align: center;
-  box-sizing: border-box;   /* ⭐ VERY IMPORTANT */
+  box-sizing: border-box;
+  transition: all 0.25s ease;
 }
+
 
 
 .btn-signup:hover {
@@ -151,13 +173,16 @@ body {
 
 /* Form fields */
 .input-box {
-  width: 95%;
+  width: 100%;
+  max-width: 320px;
   padding: 12px;
-  margin: 10px 0;
+  margin: 10px auto;
   border-radius: 10px;
   border: 1px solid #ccc;
   font-size: 16px;
+  display: block;
 }
+
 
 .input-error {
   border-color: #e53935 !important;
