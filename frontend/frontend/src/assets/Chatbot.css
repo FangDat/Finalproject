@@ -8,16 +8,31 @@
 /* Sidebar trái (giống Home.vue) */
 .sidebar-left {
   width: 200px;
-  background: #ffffffcc;
+  flex-shrink: 0;
+  position: relative;
+  left: 0;
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
   padding: 20px;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
   border-radius: 0 20px 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .logo {
   margin-bottom: 40px;
   font-weight: bold;
   font-size: 1.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
 }
 
 .nav-menu {
@@ -344,6 +359,12 @@ a,
   .sidebar-left.open {
     left: 0;
   }
+  
 }
+
+.sidebar-left .logo {
+  justify-content: center !important;
+}
+
 
 
