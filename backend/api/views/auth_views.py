@@ -32,6 +32,33 @@ logger.setLevel(logging.DEBUG)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # ---------------------------
+# COOKIE HELPER (NEW)
+# ---------------------------
+def clear_auth_cookies(resp):
+    """
+    Delete cookies for ALL possible domains
+    Fix Incognito logout issue
+    """
+
+    domains = [
+        None,
+        "api.vietcloud.work",
+        ".vietcloud.work",
+    ]
+
+    for domain in domains:
+        resp.delete_cookie("access_token", domain=domain, path="/")
+        resp.delete_cookie("refresh_token", domain=domain, path="/")
+
+        # non-httponly cookies
+        resp.delete_cookie("username", domain=domain, path="/")
+        resp.delete_cookie("email", domain=domain, path="/")
+        resp.delete_cookie("role", domain=domain, path="/")
+
+    return resp
+
+
+# ---------------------------
 # Custom Token Serializer
 # ---------------------------
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -175,42 +202,7 @@ def login(request):
 def logout(request):
     resp = Response({"message": "Logged out successfully"})
 
-    host = request.get_host()
-
-    if "localhost" in host or "127.0.0.1" in host:
-        cookie_domain = None
-        secure_cookie = False
-        same_site = "Lax"
-    else:
-        # 🔥 production cross-domain cookie
-        cookie_domain = ".vietcloud.work"
-        secure_cookie = True
-        same_site = "None"
-
-    # Ghi đè và xoá hoàn toàn cookie
-    resp.set_cookie(
-        "access_token",
-        "",
-        httponly=True,
-        secure=secure_cookie,
-        samesite=same_site,
-        domain=cookie_domain,
-        path="/",
-        max_age=0,
-        expires=0
-    )
-
-    resp.set_cookie(
-        "refresh_token",
-        "",
-        httponly=True,
-        secure=secure_cookie,
-        samesite=same_site,
-        domain=cookie_domain,
-        path="/",
-        max_age=0,
-        expires=0
-    )
+    clear_auth_cookies(resp)
 
     return resp
 
@@ -317,29 +309,7 @@ def change_password(request):
         same_site = "None"
 
     resp = Response({"message": "Password changed. Logged out automatically."})
-
-    resp.set_cookie(
-        "access_token",
-        "",
-        httponly=True,
-        secure=secure_cookie,
-        samesite=same_site,
-        path="/",
-        max_age=0,
-        expires=0
-    )
-
-    resp.set_cookie(
-        "refresh_token",
-        "",
-        httponly=True,
-        secure=secure_cookie,
-        samesite=same_site,
-        path="/",
-        max_age=0,
-        expires=0
-    )
-
+    clear_auth_cookies(resp)
     return resp
 
 
@@ -391,29 +361,9 @@ def delete_account(request):
             "message": f"User '{username}' deleted successfully. Logged out automatically."
         })
 
-        resp.set_cookie(
-            "access_token",
-            "",
-            httponly=True,
-            secure=secure_cookie,
-            samesite=same_site,
-            path="/",
-            max_age=0,
-            expires=0
-        )
-
-        resp.set_cookie(
-            "refresh_token",
-            "",
-            httponly=True,
-            secure=secure_cookie,
-            samesite=same_site,
-            path="/",
-            max_age=0,
-            expires=0
-        )
-
+        clear_auth_cookies(resp)
         return resp
+
 
     except Exception as e:
         logger.exception("delete_account failed")

@@ -18,12 +18,20 @@ export async function forceLogout() {
     // 🧹 clear browser storage
     localStorage.clear();
 
-    document.cookie =
-      "username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie =
-      "email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie =
-      "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    const domains = [
+      "",
+      "api.vietcloud.work",
+      ".vietcloud.work",
+    ];
+
+    domains.forEach((d) => {
+      document.cookie =
+        `username=; path=/; domain=${d}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      document.cookie =
+        `email=; path=/; domain=${d}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      document.cookie =
+        `role=; path=/; domain=${d}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    });
 
     setTimeout(() => {
       isLoggingOut = false;
