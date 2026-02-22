@@ -402,14 +402,15 @@ a,
   width: 100%;
   box-sizing: border-box;
 
-  padding-right: 70px;   /* 🔥 chừa chỗ icon mới */
+  padding-right: 45px;
 }
 
+/* ================= PASSWORD EYE ICON FIX (DESKTOP) ================= */
 .toggle-icon {
   position: absolute;
 
-  right: -50px;          /* 🔥 dịch sang phải ~5cm */
-  top: 52%;              /* 🔥 hạ xuống chút */
+  right: 18px;        /* ✅ kéo vào trái ~2cm */
+  top: 55%;           /* ✅ hạ xuống nhẹ để nằm giữa */
   transform: translateY(-50%);
 
   font-size: 1.2rem;
@@ -826,9 +827,9 @@ button[disabled] {
   }
 
   .toggle-icon {
-    right: 6px !important;
-    top: 36px ;
-    transform: none;       /* ❌ bỏ translateX(300px) */
+    right: 10px !important;   /* ✅ dịch trái thêm nhẹ */
+    top: 50%;                 /* ✅ nằm giữa input */
+    transform: translateY(-50%);
     font-size: 1.1rem;
   }
 }
