@@ -13,7 +13,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from .auth_views import clear_auth_cookies
 # Redis client
 # ============================
 # Redis client (Railway compatible)
@@ -64,8 +64,27 @@ def normalize_email(raw_email):
     logger.debug(f"normalize_email() input={repr(raw_email)} → output={repr(e)}")
     return e or None
 
+# ---------------------------
+# COOKIE POLICY (COPY AUTH_VIEWS)
+# ---------------------------
+def get_cookie_settings(request):
+    """
+    MUST MATCH auth_views.py login()
+    """
 
-    
+    host = request.get_host()
+
+    if "localhost" in host or "127.0.0.1" in host:
+        cookie_domain = None
+        secure_cookie = False
+        same_site = "Lax"
+    else:
+        cookie_domain = ".vietcloud.work"
+        secure_cookie = True
+        same_site = "None"
+
+    return cookie_domain, secure_cookie, same_site
+
 
 
 # ---------------------------
@@ -223,30 +242,22 @@ def verify_otp(request):
         "email": getattr(user, "email", ""),
         "user_id": str(getattr(user, "_id", "")),
     }, status=201)
-        # ===============================
-    # Xác định domain & secure cookie
-    # (COPY 100% từ auth_views.py)
+    
     # ===============================
-    host = request.get_host()
-    if 'localhost' in host or '127.0.0.1' in host:
-        cookie_domain = "localhost"
-        secure_cookie = False
-    else:
-        cookie_domain = None
-        secure_cookie = True
+    # COOKIE SETTINGS (FROM AUTH_VIEWS)
+    # ===============================
+    cookie_domain, secure_cookie, same_site = get_cookie_settings(request)
 
-    
-    
-    # Set HttpOnly cookies
-        resp.set_cookie(
+    # HttpOnly cookies (IDENTICAL TO LOGIN)
+    resp.set_cookie(
         key="access_token",
         value=str(access),
         httponly=True,
         secure=secure_cookie,
+        samesite=same_site,
         domain=cookie_domain,
         path="/",
-        samesite="None" if secure_cookie else "Lax",
-        max_age=60 * 30
+        max_age=60 * 30,
     )
 
     resp.set_cookie(
@@ -254,43 +265,36 @@ def verify_otp(request):
         value=str(refresh),
         httponly=True,
         secure=secure_cookie,
+        samesite=same_site,
         domain=cookie_domain,
         path="/",
-        samesite="None" if secure_cookie else "Lax",
-        max_age=60 * 60 * 24 * 7
+        max_age=60 * 60 * 24 * 7,
     )
 
-    # Cookies frontend
-    
+    # Frontend cookies
     resp.set_cookie(
         "username",
         str(user.username),
         httponly=False,
         secure=secure_cookie,
+        samesite=same_site,
         domain=cookie_domain,
         path="/",
-        samesite="None" if secure_cookie else "Lax",
-        max_age=60 * 60 * 24 * 7
+        max_age=60 * 60 * 24 * 7,
     )
-    
+
     clean_email = normalize_email(user.email)
-    if clean_email and clean_email.startswith('"') and clean_email.endswith('"'):
-        try:
-            clean_email = json.loads(clean_email)
-        except Exception:
-            clean_email = clean_email.strip('"').strip("'")
 
     resp.set_cookie(
         "email",
         clean_email,
         httponly=False,
         secure=secure_cookie,
+        samesite=same_site,
         domain=cookie_domain,
         path="/",
-        samesite="None" if secure_cookie else "Lax",
-        max_age=60 * 60 * 24 * 7
+        max_age=60 * 60 * 24 * 7,
     )
-
 
     return resp
 
@@ -459,27 +463,8 @@ def verify_change_email_otp_logic(user, otp_input):
     is_local = 'localhost' in host or '127.0.0.1' in host
     secure_cookie = not is_local
 
-    resp.set_cookie(
-        "access_token",
-        "",
-        httponly=True,
-        secure=secure_cookie,
-        samesite="None" if secure_cookie else "Lax",
-        path="/",
-        max_age=0,
-        expires=0
-    )
+    clear_auth_cookies(resp)
 
-    resp.set_cookie(
-        "refresh_token",
-        "",
-        httponly=True,
-        secure=secure_cookie,
-        samesite="None" if secure_cookie else "Lax",
-        path="/",
-        max_age=0,
-        expires=0
-    )
     
     return resp 
 
