@@ -291,10 +291,14 @@ textarea {
   margin-bottom: 6px;
 }
 .form-group input {
-  width: 99%;
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
+
+  /* 🔥 FIX PRODUCTION PASSWORD TEXT */
+  color: #111827;
+  background: #fff;
 }
 
 /* Modal actions */
@@ -380,19 +384,21 @@ a,
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 350px; /* chừa chỗ cho icon 👁 */
+  box-sizing: border-box;
+
+  /* ✅ chừa đúng chỗ cho icon */
+  padding-right: 42px;
 }
 
 .toggle-icon {
   position: absolute;
-  right: 12px;
-  top: 36px;
-  font-size: 36px; 
-  cursor: pointer;
-  font-size: 1.1rem;
-  user-select: none;
+  right: 12px;      
+  top: 50%;
+  transform: translateY(-50%);
 
-  transform: translateX(300px); /* ← ĐẨY SANG PHẢI THÊM */
+  font-size: 1.1rem;
+  cursor: pointer;
+  user-select: none;
 }
 
 button[disabled] {
@@ -800,11 +806,11 @@ button[disabled] {
 @media (max-width: 768px) {
 
   .password-wrapper input {
-    padding-right: 20px;   /* ✅ vừa đủ cho icon */
+    padding-right: 40px;   /* ✅ vừa đủ cho icon */
   }
 
   .toggle-icon {
-    right: -6px !important;
+    right: -10px !important;
     top: 36px ;
     transform: none;       /* ❌ bỏ translateX(300px) */
     font-size: 1.1rem;
@@ -875,4 +881,11 @@ button[disabled] {
 /* 🔥 Prevent router-link color inheritance bug */
 .tab:not(.active) {
   color: #111827 !important;
+}
+/* 🔥 Prevent invisible password text (production fix) */
+input[type="password"],
+input[type="text"],
+input[type="email"] {
+  color: #111827 !important;
+  background: #fff !important;
 }
