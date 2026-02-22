@@ -903,7 +903,7 @@ input[type="email"] {
   position: absolute;
 
   right: 32px;      /* ✅ dịch trái ~2cm */
-  top: 50%;
+  top: 69%;
   transform: translateY(-45%); /* ✅ hạ nhẹ xuống */
 
   font-size: 1.2rem;
@@ -922,7 +922,7 @@ input[type="email"] {
 
   .password-wrapper .toggle-icon {
     right: 24px;     /* ✅ dịch trái thêm nhẹ */
-    top: 50%;
+    top: 69%;
     transform: translateY(-50%);
     font-size: 1.1rem;
   }
