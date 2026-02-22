@@ -78,12 +78,17 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
+
+  /* ✅ FIX MÀU CHỮ */
+  color: #111827;          /* 🔥 luôn đen khi KHÔNG active */
+
   transition: all 0.25s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 .settings-unit-btn:hover {
   background: #f0f4ff;
   border-color: #3b82f6;
+  color: #111827; /* ✅ giữ chữ đen */
   transform: translateY(-2px);
   box-shadow: 0 3px 6px rgba(0,0,0,0.12);
 }
@@ -417,4 +422,8 @@ a,
 }
 .sidebar-left .logo {
   justify-content: center !important;
+}
+/* 🔥 Prevent router-link color inheritance bug */
+.settings-unit-btn:not(.active) {
+  color: #111827 !important;
 }

@@ -103,12 +103,21 @@
   background: #f4f4f4;
   border: none;
   cursor: pointer;
+
+  /* ✅ FIX QUAN TRỌNG */
+  color: #111827;   /* luôn đen khi KHÔNG active */
+
+  transition: all 0.25s ease;
 }
 .tab.active {
   background: #2196f3;
   color: white;
   font-weight: bold;
 }
+.tab:hover:not(.active) {
+  color: #111827;
+}
+
 
 /* Card */
 .card {
@@ -862,4 +871,8 @@ button[disabled] {
 
 .sidebar-left .logo {
   justify-content: center !important;
+}
+/* 🔥 Prevent router-link color inheritance bug */
+.tab:not(.active) {
+  color: #111827 !important;
 }
