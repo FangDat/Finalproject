@@ -96,8 +96,9 @@ export default {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.45);
-  z-index: 1200;
+  z-index: 1100;   /* ⭐ thấp hơn sidebar */
 }
+
 
 @media (max-width: 768px) {
   .sidebar-toggle {
