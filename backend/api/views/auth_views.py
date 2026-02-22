@@ -128,15 +128,17 @@ def login(request):
         user.last_login_at = int(datetime.datetime.now().timestamp())
         user.save(update_fields=["last_login_at"])
 
-        # Xác định domain cho cookie dựa trên request
         host = request.get_host()
-        if 'localhost' in host or '127.0.0.1' in host:
-            cookie_domain = "localhost"
-            secure_cookie = False
-        else:
-            # Production: để domain=None để browser tự xử lý
+
+        if "localhost" in host or "127.0.0.1" in host:
             cookie_domain = None
+            secure_cookie = False
+            same_site = "Lax"
+        else:
+            # 🔥 production cross-domain cookie
+            cookie_domain = ".vietcloud.work"
             secure_cookie = True
+            same_site = "None"
 
         # Set cookies HttpOnly
         resp.set_cookie(
@@ -144,20 +146,20 @@ def login(request):
             value=str(access),
             httponly=True,
             secure=secure_cookie,
+            samesite=same_site,
             domain=cookie_domain,
             path="/",
-            samesite="None" if secure_cookie else "Lax",
-            max_age=60 * 30
+            max_age=60 * 30,
         )
         resp.set_cookie(
             key="refresh_token",
             value=str(refresh),
             httponly=True,
             secure=secure_cookie,
-            samesite="None" if secure_cookie else "Lax",
+            samesite=same_site,
             domain=cookie_domain,
             path="/",
-            max_age=60 * 60 * 24 * 7
+            max_age=60 * 60 * 24 * 7,
         )
         return resp
 
@@ -174,8 +176,16 @@ def logout(request):
     resp = Response({"message": "Logged out successfully"})
 
     host = request.get_host()
-    is_local = 'localhost' in host or '127.0.0.1' in host
-    secure_cookie = not is_local
+
+    if "localhost" in host or "127.0.0.1" in host:
+        cookie_domain = None
+        secure_cookie = False
+        same_site = "Lax"
+    else:
+        # 🔥 production cross-domain cookie
+        cookie_domain = ".vietcloud.work"
+        secure_cookie = True
+        same_site = "None"
 
     # Ghi đè và xoá hoàn toàn cookie
     resp.set_cookie(
@@ -183,7 +193,8 @@ def logout(request):
         "",
         httponly=True,
         secure=secure_cookie,
-        samesite="None" if secure_cookie else "Lax",
+        samesite=same_site,
+        domain=cookie_domain,
         path="/",
         max_age=0,
         expires=0
@@ -194,7 +205,8 @@ def logout(request):
         "",
         httponly=True,
         secure=secure_cookie,
-        samesite="None" if secure_cookie else "Lax",
+        samesite=same_site,
+        domain=cookie_domain,
         path="/",
         max_age=0,
         expires=0
@@ -232,12 +244,16 @@ def refresh_token(request):
 
         # Xác định domain cho cookie dựa trên request
         host = request.get_host()
-        if 'localhost' in host or '127.0.0.1' in host:
-            cookie_domain = "localhost"
-            secure_cookie = False
-        else:
+
+        if "localhost" in host or "127.0.0.1" in host:
             cookie_domain = None
+            secure_cookie = False
+            same_site = "Lax"
+        else:
+            # 🔥 production cross-domain cookie
+            cookie_domain = ".vietcloud.work"
             secure_cookie = True
+            same_site = "None"
 
         # Trước tiên xóa cookie access_token cũ
         resp.delete_cookie("access_token", domain=cookie_domain, path="/")
@@ -248,10 +264,10 @@ def refresh_token(request):
             value=str(new_access),
             httponly=True,
             secure=secure_cookie,
-            samesite="None" if secure_cookie else "Lax",
+            samesite=same_site,
             domain=cookie_domain,
             path="/",
-            max_age=60 * 30  # 30 phút
+            max_age=60 * 30,
         )
         return resp
     except TokenError:
@@ -289,8 +305,16 @@ def change_password(request):
     user.save()
 
     host = request.get_host()
-    is_local = 'localhost' in host or '127.0.0.1' in host
-    secure_cookie = not is_local
+
+    if "localhost" in host or "127.0.0.1" in host:
+        cookie_domain = None
+        secure_cookie = False
+        same_site = "Lax"
+    else:
+        # 🔥 production cross-domain cookie
+        cookie_domain = ".vietcloud.work"
+        secure_cookie = True
+        same_site = "None"
 
     resp = Response({"message": "Password changed. Logged out automatically."})
 
@@ -299,7 +323,7 @@ def change_password(request):
         "",
         httponly=True,
         secure=secure_cookie,
-        samesite="None" if secure_cookie else "Lax",
+        samesite=same_site,
         path="/",
         max_age=0,
         expires=0
@@ -310,7 +334,7 @@ def change_password(request):
         "",
         httponly=True,
         secure=secure_cookie,
-        samesite="None" if secure_cookie else "Lax",
+        samesite=same_site,
         path="/",
         max_age=0,
         expires=0
@@ -352,8 +376,16 @@ def delete_account(request):
 
         # Xác định domain cho cookie dựa trên request
         host = request.get_host()
-        is_local = 'localhost' in host or '127.0.0.1' in host
-        secure_cookie = not is_local
+
+        if "localhost" in host or "127.0.0.1" in host:
+            cookie_domain = None
+            secure_cookie = False
+            same_site = "Lax"
+        else:
+            # 🔥 production cross-domain cookie
+            cookie_domain = ".vietcloud.work"
+            secure_cookie = True
+            same_site = "None"
 
         resp = Response({
             "message": f"User '{username}' deleted successfully. Logged out automatically."
@@ -364,7 +396,7 @@ def delete_account(request):
             "",
             httponly=True,
             secure=secure_cookie,
-            samesite="None" if secure_cookie else "Lax",
+            samesite=same_site,
             path="/",
             max_age=0,
             expires=0
@@ -375,7 +407,7 @@ def delete_account(request):
             "",
             httponly=True,
             secure=secure_cookie,
-            samesite="None" if secure_cookie else "Lax",
+            samesite=same_site,
             path="/",
             max_age=0,
             expires=0

@@ -23,8 +23,17 @@ OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
-ALLOWED_HOSTS = ['finalprojectdat.onrender.com', 'finalproject-production-b074.up.railway.app', 'localhost', '127.0.0.1', 'finalproject-seven-teal.vercel.app', 'vietcloud.work',
-    'www.vietcloud.work',
+ALLOWED_HOSTS = [
+    "api.vietcloud.work",
+    "vietcloud.work",
+    "www.vietcloud.work",
+
+    ".railway.app",
+
+    "localhost",
+    "127.0.0.1",
+
+    "finalproject-seven-teal.vercel.app",
 ]
 # =========================
 # RESEND EMAIL CONFIG
@@ -143,7 +152,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://finalproject-seven-teal.vercel.app",
     "https://vietcloud.work",
     "https://www.vietcloud.work",
-    
+    "https://api.vietcloud.work",
 ]
 CORS_ALLOW_CREDENTIALS = True   
 
@@ -154,6 +163,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://finalproject-seven-teal.vercel.app",
     "https://vietcloud.work",
     "https://www.vietcloud.work",
+    "https://api.vietcloud.work",
 ]
 
 # Cookie settings - tự động theo môi trường
@@ -164,6 +174,19 @@ SESSION_COOKIE_SECURE = _is_production   # True khi deploy HTTPS
 CSRF_COOKIE_SECURE = _is_production
 SESSION_COOKIE_SAMESITE = 'None' if _is_production else 'Lax'
 CSRF_COOKIE_SAMESITE = 'None' if _is_production else 'Lax'
+# ===============================
+# CROSS SUBDOMAIN COOKIE (CRITICAL)
+# ===============================
+
+SESSION_COOKIE_DOMAIN = ".vietcloud.work"
+CSRF_COOKIE_DOMAIN = ".vietcloud.work"
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = "None"
+
 
 # ----------------------
 # REST Framework / JWT
