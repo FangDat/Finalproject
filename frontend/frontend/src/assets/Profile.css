@@ -405,19 +405,6 @@ a,
   padding-right: 45px;
 }
 
-/* ================= PASSWORD EYE ICON FIX (DESKTOP) ================= */
-.toggle-icon {
-  position: absolute;
-
-  right: 18px;        /* ✅ kéo vào trái ~2cm */
-  top: 55%;           /* ✅ hạ xuống nhẹ để nằm giữa */
-  transform: translateY(-50%);
-
-  font-size: 1.2rem;
-  cursor: pointer;
-  user-select: none;
-}
-
 button[disabled] {
   opacity: 0.6;
   cursor: not-allowed;
@@ -826,12 +813,7 @@ button[disabled] {
     padding-right: 40px;   /* ✅ vừa đủ cho icon */
   }
 
-  .toggle-icon {
-    right: 10px !important;   /* ✅ dịch trái thêm nhẹ */
-    top: 50%;                 /* ✅ nằm giữa input */
-    transform: translateY(-50%);
-    font-size: 1.1rem;
-  }
+
 }
 
 @media (max-width: 768px) {
@@ -905,4 +887,44 @@ input[type="text"],
 input[type="email"] {
   color: #111827 !important;
   background: #fff !important;
+}
+
+/* =====================================================
+   PASSWORD ICON FINAL FIX (VietCloud Production Safe)
+===================================================== */
+
+/* wrapper chuẩn */
+.password-wrapper {
+  position: relative;
+}
+
+/* desktop */
+.password-wrapper .toggle-icon {
+  position: absolute;
+
+  right: 32px;      /* ✅ dịch trái ~2cm */
+  top: 50%;
+  transform: translateY(-45%); /* ✅ hạ nhẹ xuống */
+
+  font-size: 1.2rem;
+  cursor: pointer;
+  user-select: none;
+  z-index: 5;
+}
+
+/* input chừa chỗ icon */
+.password-wrapper input {
+  padding-right: 65px !important;
+}
+
+/* ================= MOBILE PASSWORD ICON ================= */
+@media (max-width:768px){
+
+  .password-wrapper .toggle-icon {
+    right: 24px;     /* ✅ dịch trái thêm nhẹ */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+  }
+
 }
