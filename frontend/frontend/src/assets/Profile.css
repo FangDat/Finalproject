@@ -285,6 +285,20 @@ textarea {
 .form-group {
   margin-bottom: 15px;
 }
+
+/* ================= MODAL INPUT WIDTH FIX ================= */
+
+.modal .form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal .form-group input {
+  width: 100%;
+  max-width: 560px;     /* 🔥 dài thêm ~6cm */
+}
+
 .form-group label {
   display: block;
   font-weight: bold;
@@ -380,23 +394,25 @@ a,
 /* Password wrapper với icon */
 .password-wrapper {
   position: relative;
+  width: 100%;
+  max-width: 560px;   /* 🔥 đồng bộ input */
 }
 
 .password-wrapper input {
   width: 100%;
   box-sizing: border-box;
 
-  /* ✅ chừa đúng chỗ cho icon */
-  padding-right: 42px;
+  padding-right: 70px;   /* 🔥 chừa chỗ icon mới */
 }
 
 .toggle-icon {
   position: absolute;
-  right: 12px;      
-  top: 50%;
+
+  right: -50px;          /* 🔥 dịch sang phải ~5cm */
+  top: 52%;              /* 🔥 hạ xuống chút */
   transform: translateY(-50%);
 
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   cursor: pointer;
   user-select: none;
 }
@@ -810,7 +826,7 @@ button[disabled] {
   }
 
   .toggle-icon {
-    right: -10px !important;
+    right: 6px !important;
     top: 36px ;
     transform: none;       /* ❌ bỏ translateX(300px) */
     font-size: 1.1rem;
