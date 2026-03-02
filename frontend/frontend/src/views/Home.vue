@@ -122,7 +122,7 @@
               }}
             </h2>
           </div>
-          <div class="weather-icon">
+          <div class="home-weather-icon">
             <img :src="weatherIcon" alt="Weather Icon" />
           </div>
         </section>
