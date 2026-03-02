@@ -252,9 +252,9 @@
   text-align: left;
 }
 
-.weather-icon img {
-  width: 136px;
-  height: 136px;
+.home-weather-icon img {
+  width: 128px;
+  height: 128px;
 }
 
 /* Chance of rain màu xanh dương để dễ thấy */
@@ -424,7 +424,7 @@ a,
   .city {
     font-size: 1.5rem;
   }
-  .weather-icon img {
+  .home-weather-icon img {
     width: 80px;
     height: 80px;
   }
