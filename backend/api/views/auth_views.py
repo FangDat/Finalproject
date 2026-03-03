@@ -29,7 +29,7 @@ from ..authentication import CustomJWTAuthentication
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
 
 # ---------------------------
 # Custom Token Serializer

@@ -28,7 +28,7 @@ from ..authentication import CustomJWTAuthentication
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
 
 def get_or_create_stripe_customer(user: User):
     """
@@ -140,7 +140,7 @@ def create_checkout_session(request):
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
-    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET_TEST
 
     # ----------------------------
     # 1. Verify signature

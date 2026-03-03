@@ -16,6 +16,9 @@ OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+STRIPE_SECRET_KEY_TEST = os.getenv("STRIPE_SECRET_KEY_TEST")
+STRIPE_PUBLISHABLE_KEY_TEST = os.getenv("STRIPE_PUBLISHABLE_KEY_TEST")
+STRIPE_WEBHOOK_SECRET_TEST = os.getenv("STRIPE_WEBHOOK_SECRET_TEST")
 ALLOWED_HOSTS = []
 
 # ----------------------
@@ -77,7 +80,7 @@ DATABASES = {
         'NAME': 'vietcloud_db',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb+srv://datpvgcd220073:UG2PXaXDRRr3c4jE@cluster-comp1842.yafek.mongodb.net/vietcloud_db?retryWrites=true&w=majority&appName=Cluster-COMP1842',
+            'host': 'mongodb+srv://phamdiep400dn_db_user:omGkBX6v1uqeHlfY@vietcloud.5gnveh4.mongodb.net/?appName=vietcloud',
             'tls': True,
             'tlsCAFile': certifi.where(),
         }

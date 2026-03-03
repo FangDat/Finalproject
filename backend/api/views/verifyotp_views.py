@@ -18,8 +18,8 @@ redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_respo
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-OTP_EXPIRE_SECONDS = 60  
-PENDING_EXPIRE_SECONDS = 300 
+OTP_EXPIRE_SECONDS = 600  
+PENDING_EXPIRE_SECONDS = 3000
 
 # ---------------------------
 # HÀM PHỤ TRỢ
