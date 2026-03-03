@@ -80,9 +80,10 @@ DATABASES = {
         'NAME': 'vietcloud_db',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb+srv://phamdiep400dn_db_user:omGkBX6v1uqeHlfY@vietcloud.5gnveh4.mongodb.net/?appName=vietcloud',
-            'tls': True,
-            'tlsCAFile': certifi.where(),
+             'host': 'mongodb://localhost:27017',
+            # 'host': 'mongodb+srv://phamdiep400dn_db_user:omGkBX6v1uqeHlfY@vietcloud.5gnveh4.mongodb.net/?appName=vietcloud',
+            # 'tls': True,
+            # 'tlsCAFile': certifi.where(),
         }
     }
 }
