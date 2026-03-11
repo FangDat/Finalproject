@@ -323,7 +323,7 @@
             <div class="air-item air-humidity">
               <div class="air-header" @click="toggleAir('humidity')">
                 <div class="air-main">
-                  <span class="air-icon">🫧</span>
+                  <img src="@/assets/humidity.png" class="air-icon-img" />
                   <span class="air-value">{{ humidity ? humidity + "%" : "—" }}</span>
                   <span class="air-label air-label-big">Humidity</span>
                 </div>

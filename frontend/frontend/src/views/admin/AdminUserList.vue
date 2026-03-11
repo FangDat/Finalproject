@@ -407,7 +407,7 @@ export default {
   }
 
   .search-icon {
-    right: 16px; /* FIX mobile */
+    right: 26px; /* FIX mobile */
     font-size: 0.9rem;
   }
 }

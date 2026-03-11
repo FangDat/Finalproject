@@ -35,7 +35,7 @@
   justify-content: center;   /* ⭐ CENTER NGANG */
   align-items: center;
   text-align: center;
-  /* width: 100%; */
+  width: 100%;
   gap: 8px;
 }
 
@@ -43,6 +43,7 @@
   height: 1.2em;   /* 🔥 bằng chiều cao chữ */
   width: auto;
   object-fit: contain;
+  display: block; 
 }
 
 .sidebar-icon {
@@ -637,7 +638,12 @@ a,
 .air-icon {
   font-size: 1.3rem;
 }
-
+.air-icon-img {
+  height: 1.2em;     /* ⭐ bằng chữ Humidity */
+  width: auto;
+  object-fit: contain;
+  display: inline-block;
+}
 .air-value {
   font-size: 1.4rem;
   font-weight: bold;
