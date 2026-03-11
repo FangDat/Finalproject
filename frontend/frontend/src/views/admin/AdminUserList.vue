@@ -233,10 +233,9 @@ export default {
 
 .search-icon {
   position: absolute;
-  right: 14px; /* FIX: kéo icon vào trong input */
+  right: -36px;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
 }
 /* ===========================
    TABLE
@@ -407,7 +406,7 @@ export default {
   }
 
   .search-icon {
-    right: 12px; /* FIX mobile */
+    right: -28px;
     font-size: 0.9rem;
   }
 }
