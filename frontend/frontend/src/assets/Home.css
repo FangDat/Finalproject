@@ -35,7 +35,21 @@
   justify-content: center;   /* ⭐ CENTER NGANG */
   align-items: center;
   text-align: center;
-  width: 100%;
+  /* width: 100%; */
+  gap: 8px;
+}
+
+.logo-icon {
+  height: 1.2em;   /* 🔥 bằng chiều cao chữ */
+  width: auto;
+  object-fit: contain;
+}
+
+.sidebar-icon {
+  height: 1.1em;
+  width: auto;
+  object-fit: contain;
+  margin-right: 8px;
 }
 
 
