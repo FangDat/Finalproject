@@ -30,6 +30,18 @@
   text-align: center;
   width: 100%;
 }
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  height: 1.2em;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
 
 /* ================= MENU ================= */
 
@@ -39,6 +51,12 @@
   gap: 25px;
   font-size: 1.1rem;
 }
+.sidebar-icon {
+  height: 1.1em;
+  width: auto;
+  object-fit: contain;
+  margin-right: 8px;
+}
 
 /* ================= BUTTON ================= */
 
@@ -47,8 +65,12 @@
   border: none;
   padding: 12px 16px;
   border-radius: 10px;
-  text-align: left;
 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  text-align: left;
   font-size: 1rem;
   font-weight: 500;
 
