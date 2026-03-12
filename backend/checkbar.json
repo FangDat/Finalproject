@@ -1,233 +1,228 @@
 {
   "location": "Đà Nẵng",
-  "lat": 16.050263265822906,
-  "lon": 108.14945059425729,
-  "generated_at": "2026-03-03T15:04:54.484710Z",
+  "lat": 16.050166875748136,
+  "lon": 108.14929513215287,
+  "generated_at": "2026-03-12T16:46:21.875299Z",
   "connected_bars_12h": {
     "real_feel": {
-      "min": 24.39,
-      "max": 26.97,
+      "min": 20.99,
+      "max": 23.36,
       "unit_hint": "temperature",
       "direction": "down",
       "points": [
         {
-          "time": "23:00",
-          "value": 26.81,
-          "normalized": 93.8
-        },
-        {
           "time": "00:00",
-          "value": 26.58,
-          "normalized": 84.9
-        },
-        {
-          "time": "01:00",
-          "value": 26.4,
-          "normalized": 77.9
-        },
-        {
-          "time": "02:00",
-          "value": 26.25,
-          "normalized": 72.1
-        },
-        {
-          "time": "03:00",
-          "value": 25.05,
-          "normalized": 25.6
-        },
-        {
-          "time": "04:00",
-          "value": 24.39,
-          "normalized": 0.0
-        },
-        {
-          "time": "05:00",
-          "value": 25.28,
-          "normalized": 34.5
-        },
-        {
-          "time": "06:00",
-          "value": 25.33,
-          "normalized": 36.4
-        },
-        {
-          "time": "07:00",
-          "value": 25.53,
-          "normalized": 44.2
-        },
-        {
-          "time": "08:00",
-          "value": 25.51,
-          "normalized": 43.4
-        },
-        {
-          "time": "09:00",
-          "value": 26.97,
+          "value": 23.36,
           "normalized": 100.0
         },
         {
+          "time": "01:00",
+          "value": 22.98,
+          "normalized": 84.0
+        },
+        {
+          "time": "02:00",
+          "value": 22.56,
+          "normalized": 66.2
+        },
+        {
+          "time": "03:00",
+          "value": 22.17,
+          "normalized": 49.8
+        },
+        {
+          "time": "04:00",
+          "value": 21.79,
+          "normalized": 33.8
+        },
+        {
+          "time": "05:00",
+          "value": 21.47,
+          "normalized": 20.3
+        },
+        {
+          "time": "06:00",
+          "value": 21.65,
+          "normalized": 27.8
+        },
+        {
+          "time": "07:00",
+          "value": 21.36,
+          "normalized": 15.6
+        },
+        {
+          "time": "08:00",
+          "value": 21.34,
+          "normalized": 14.8
+        },
+        {
+          "time": "09:00",
+          "value": 20.99,
+          "normalized": 0.0
+        },
+        {
           "time": "10:00",
-          "value": 26.46,
-          "normalized": 80.2
+          "value": 21.77,
+          "normalized": 32.9
+        },
+        {
+          "time": "11:00",
+          "value": 22.55,
+          "normalized": 65.8
         }
       ]
     },
     "humidity": {
-      "min": 90,
-      "max": 96,
+      "min": 74,
+      "max": 91,
       "unit_hint": "percent",
-      "direction": "up",
+      "direction": "down",
       "points": [
         {
-          "time": "23:00",
-          "value": 90,
-          "normalized": 0.0
-        },
-        {
           "time": "00:00",
-          "value": 91,
-          "normalized": 16.7
+          "value": 78,
+          "normalized": 23.5
         },
         {
           "time": "01:00",
-          "value": 93,
-          "normalized": 50.0
+          "value": 80,
+          "normalized": 35.3
         },
         {
           "time": "02:00",
-          "value": 94,
-          "normalized": 66.7
+          "value": 82,
+          "normalized": 47.1
         },
         {
           "time": "03:00",
-          "value": 95,
-          "normalized": 83.3
+          "value": 85,
+          "normalized": 64.7
         },
         {
           "time": "04:00",
-          "value": 96,
-          "normalized": 100.0
+          "value": 87,
+          "normalized": 76.5
         },
         {
           "time": "05:00",
-          "value": 96,
+          "value": 91,
           "normalized": 100.0
         },
         {
           "time": "06:00",
-          "value": 95,
-          "normalized": 83.3
+          "value": 91,
+          "normalized": 100.0
         },
         {
           "time": "07:00",
-          "value": 95,
-          "normalized": 83.3
+          "value": 90,
+          "normalized": 94.1
         },
         {
           "time": "08:00",
-          "value": 95,
-          "normalized": 83.3
+          "value": 89,
+          "normalized": 88.2
         },
         {
           "time": "09:00",
-          "value": 94,
-          "normalized": 66.7
+          "value": 87,
+          "normalized": 76.5
         },
         {
           "time": "10:00",
-          "value": 94,
-          "normalized": 66.7
+          "value": 80,
+          "normalized": 35.3
+        },
+        {
+          "time": "11:00",
+          "value": 74,
+          "normalized": 0.0
         }
       ]
     },
     "wind": {
-      "min": 0.79,
-      "max": 1.78,
+      "min": 2.46,
+      "max": 3.38,
       "unit_hint": "speed",
-      "direction": "up",
+      "direction": "down",
       "points": [
         {
-          "time": "23:00",
-          "value": 0.79,
-          "normalized": 0.0
-        },
-        {
           "time": "00:00",
-          "value": 1.18,
-          "normalized": 39.4
-        },
-        {
-          "time": "01:00",
-          "value": 1.5,
-          "normalized": 71.7
-        },
-        {
-          "time": "02:00",
-          "value": 1.62,
-          "normalized": 83.8
-        },
-        {
-          "time": "03:00",
-          "value": 1.56,
-          "normalized": 77.8
-        },
-        {
-          "time": "04:00",
-          "value": 1.78,
+          "value": 3.38,
           "normalized": 100.0
         },
         {
+          "time": "01:00",
+          "value": 3.13,
+          "normalized": 72.8
+        },
+        {
+          "time": "02:00",
+          "value": 2.73,
+          "normalized": 29.3
+        },
+        {
+          "time": "03:00",
+          "value": 2.64,
+          "normalized": 19.6
+        },
+        {
+          "time": "04:00",
+          "value": 2.94,
+          "normalized": 52.2
+        },
+        {
           "time": "05:00",
-          "value": 1.77,
-          "normalized": 99.0
+          "value": 2.87,
+          "normalized": 44.6
         },
         {
           "time": "06:00",
-          "value": 1.52,
-          "normalized": 73.7
+          "value": 3.29,
+          "normalized": 90.2
         },
         {
           "time": "07:00",
-          "value": 1.54,
-          "normalized": 75.8
+          "value": 3.23,
+          "normalized": 83.7
         },
         {
           "time": "08:00",
-          "value": 1.32,
-          "normalized": 53.5
+          "value": 3.15,
+          "normalized": 75.0
         },
         {
           "time": "09:00",
-          "value": 1.34,
-          "normalized": 55.6
+          "value": 2.46,
+          "normalized": 0.0
         },
         {
           "time": "10:00",
-          "value": 1.35,
-          "normalized": 56.6
+          "value": 2.53,
+          "normalized": 7.6
+        },
+        {
+          "time": "11:00",
+          "value": 3.09,
+          "normalized": 68.5
         }
       ]
     },
     "visibility": {
-      "min": 9462,
+      "min": 5892,
       "max": 10000,
       "unit_hint": "distance",
-      "direction": "flat",
+      "direction": "up",
       "points": [
         {
-          "time": "23:00",
-          "value": 10000,
-          "normalized": 100.0
-        },
-        {
           "time": "00:00",
-          "value": 10000,
-          "normalized": 100.0
+          "value": 5892,
+          "normalized": 0.0
         },
         {
           "time": "01:00",
-          "value": 9744,
-          "normalized": 52.4
+          "value": 10000,
+          "normalized": 100.0
         },
         {
           "time": "02:00",
@@ -241,8 +236,8 @@
         },
         {
           "time": "04:00",
-          "value": 9462,
-          "normalized": 0.0
+          "value": 10000,
+          "normalized": 100.0
         },
         {
           "time": "05:00",
@@ -271,6 +266,11 @@
         },
         {
           "time": "10:00",
+          "value": 10000,
+          "normalized": 100.0
+        },
+        {
+          "time": "11:00",
           "value": 10000,
           "normalized": 100.0
         }
@@ -278,15 +278,10 @@
     },
     "uv_index": {
       "min": 0,
-      "max": 7.64,
+      "max": 10.02,
       "unit_hint": "uv",
       "direction": "up",
       "points": [
-        {
-          "time": "23:00",
-          "value": 0,
-          "normalized": 0.0
-        },
         {
           "time": "00:00",
           "value": 0,
@@ -324,41 +319,41 @@
         },
         {
           "time": "07:00",
-          "value": 0.4,
-          "normalized": 5.2
+          "value": 0.5,
+          "normalized": 5.0
         },
         {
           "time": "08:00",
-          "value": 1.3,
-          "normalized": 17.0
+          "value": 1.65,
+          "normalized": 16.5
         },
         {
           "time": "09:00",
-          "value": 2.98,
-          "normalized": 39.0
+          "value": 3.65,
+          "normalized": 36.4
         },
         {
           "time": "10:00",
-          "value": 7.64,
+          "value": 7.05,
+          "normalized": 70.4
+        },
+        {
+          "time": "11:00",
+          "value": 10.02,
           "normalized": 100.0
         }
       ]
     },
     "chance_of_rain": {
-      "min": 80,
+      "min": 85,
       "max": 100,
       "unit_hint": "percent",
-      "direction": "up",
+      "direction": "down",
       "points": [
         {
-          "time": "23:00",
-          "value": 80,
-          "normalized": 0.0
-        },
-        {
           "time": "00:00",
-          "value": 80,
-          "normalized": 0.0
+          "value": 100,
+          "normalized": 100.0
         },
         {
           "time": "01:00",
@@ -392,23 +387,28 @@
         },
         {
           "time": "07:00",
-          "value": 80,
-          "normalized": 0.0
+          "value": 100,
+          "normalized": 100.0
         },
         {
           "time": "08:00",
-          "value": 81,
-          "normalized": 5.0
+          "value": 95,
+          "normalized": 66.7
         },
         {
           "time": "09:00",
-          "value": 93,
-          "normalized": 65.0
+          "value": 90,
+          "normalized": 33.3
         },
         {
           "time": "10:00",
-          "value": 99,
-          "normalized": 95.0
+          "value": 85,
+          "normalized": 0.0
+        },
+        {
+          "time": "11:00",
+          "value": 91,
+          "normalized": 40.0
         }
       ]
     }
