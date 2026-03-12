@@ -16,18 +16,63 @@
       ></div>
     <!-- Sidebar trái -->
     <aside class="sidebar-left" :class="{ open: showSidebar }">
+
       <h2 class="logo">
-        <router-link to="/">🌤 VietCloud</router-link>
+        <img src="@/assets/cloudy.png" class="logo-icon" />
+        VietCloud
       </h2>
+
       <nav class="nav-menu">
-        <router-link to="/" class="nav-btn" @click.native="closeSidebar">
-          ☁️ Weather
+
+        <router-link
+          to="/"
+          exact
+          class="nav-btn"
+          @click.native="closeSidebar"
+        >
+          <img src="@/assets/cloudy.png" class="sidebar-icon" />
+          Weather
         </router-link>
-        <router-link to="/map" class="nav-btn" @click.native="closeSidebar">🗺️ Maps</router-link>
-        <router-link v-if="username" to="/chatbot" class="nav-btn" @click.native="closeSidebar">🤖 Chatbot</router-link>
-        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link>
-        <router-link to="/profile" class="nav-btn" @click.native="closeSidebar">👤 Profile</router-link>
+
+        <router-link
+          to="/map"
+          class="nav-btn"
+          @click.native="closeSidebar"
+        >
+          <img src="@/assets/map.png" class="sidebar-icon" />
+          Maps
+        </router-link>
+
+        <router-link
+          v-if="username"
+          to="/chatbot"
+          class="nav-btn"
+          @click.native="closeSidebar"
+        >
+          <img src="@/assets/chatbotsidebar.png" class="sidebar-icon" />
+          Chatbot
+        </router-link>
+
+        <router-link
+          to="/settings"
+          class="nav-btn"
+          @click.native="closeSidebar"
+        >
+          <img src="@/assets/setting.png" class="sidebar-icon" />
+          Settings
+        </router-link>
+
+        <router-link
+          to="/profile"
+          class="nav-btn"
+          @click.native="closeSidebar"
+        >
+          <img src="@/assets/user.png" class="sidebar-icon" />
+          Profile
+        </router-link>
+
       </nav>
+
     </aside>
 
     <!-- Nội dung chính -->
