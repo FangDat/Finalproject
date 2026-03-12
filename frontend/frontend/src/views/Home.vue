@@ -661,8 +661,8 @@ export default {
             label: "Good",
             color: "#4CAF50",
             desc:
-              "Air quality is poor, and pollution levels can negatively impact health, especially for sensitive individuals. " +
-          "Limiting outdoor activities and avoiding intense exercise outside is recommended.",
+              "Air quality is good, and pollution levels are low, posing little or no risk to health. " +
+              "Outdoor activities and exercise can be enjoyed safely.",
           },
           2: {
             label: "Fair",

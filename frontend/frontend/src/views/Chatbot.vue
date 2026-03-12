@@ -172,7 +172,7 @@ export default {
       thinkingTimer: null,
 
       welcomeMessage:
-        "Hello! I'm VietCloud AI Assistant. Feel free to ask me about the weather anywhere in the world, get weather-related recommendations.",
+        "Hello! I'm VietCloud AI Assistant. Feel free to ask me about the weather anywhere in the world, get weather-related recommendations such as natural disasters, air quality, travel suggestions, and health issues. I'm here to help you stay informed and prepared for any weather conditions. Just type your question in English, and I'll do my best to provide accurate and helpful answers!",
     };
   },
   watch: {
