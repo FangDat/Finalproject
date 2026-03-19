@@ -5,7 +5,7 @@
       <button class="back-btn" @click="goBack">← Return to VietCloud</button>
 
       <div class="pricing-box">
-        <h2 class="price">$6.96 <span class="vat">inc. VAT (per month)</span></h2>
+        <h2 class="price">$2.99 <span class="vat">inc. VAT (per month)</span></h2>
         <p class="billing-cycle">Billed monthly</p>
         <p class="note">Secure payment via Stripe</p>
 
