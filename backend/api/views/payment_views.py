@@ -115,7 +115,7 @@ def create_checkout_session(request):
                     "product_data": {
                         "name": "VietCloud Premium (30 days)",
                     },
-                    "unit_amount": 696,  # $6.96
+                    "unit_amount": 299,  # $2.99
                 },
                 "quantity": 1,
             }],
