@@ -108,14 +108,14 @@ def create_checkout_session(request):
             mode="payment",
             customer=stripe_customer_id,
             payment_method_types=["card"],
-            invoice_creation={"enabled": True},  # 🔥 KEY POINT
+            invoice_creation={"enabled": True},  #  KEY POINT
             line_items=[{
                 "price_data": {
                     "currency": "usd",
                     "product_data": {
                         "name": "VietCloud Premium (30 days)",
                     },
-                    "unit_amount": 696,  # $6.96
+                    "unit_amount": 299,  # $6.96
                 },
                 "quantity": 1,
             }],
