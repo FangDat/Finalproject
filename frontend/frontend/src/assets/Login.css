@@ -208,18 +208,17 @@ body {
   z-index: 1000;
 }
 
-/* ================= FORGOT PASSWORD MODAL ================= */
-/* ================= FORGOT PASSWORD MODAL (ĐÃ SỬA ĐỘ RỘNG) ================= */
+/* ================= FORGOT PASSWORD MODAL (FIXED WIDTH) ================= */
 .modal {
   background: #ffffff;
   border-radius: 16px;
   padding: 30px;
-  /* SỬA TẠI ĐÂY: Tăng từ 420px lên 500px để input dài thêm ~2cm */
-  width: 500px; 
-  max-width: 95%;
+  /* Tăng lên 600px để các ô input dài ra thêm đúng ý bạn */
+  width: 600px !important; 
+  max-width: 95% !important;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
   animation: popup 0.25s ease;
-  box-sizing: border-box; /* Quan trọng để padding không làm vỡ size */
+  box-sizing: border-box;
 }
 
 @keyframes popup {
@@ -228,99 +227,91 @@ body {
 }
 
 .modal h2 {
-  font-size: 1.4rem;
-  margin-bottom: 10px;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
   text-align: left;
 }
 
 .modal .note {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #666;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   text-align: left;
 }
 
-/* Form Groups */
+/* Form Groups - Đảm bảo chiếm hết chiều ngang mới */
 .form-group {
-  margin-bottom: 16px;
-  width: 100%; /* Luôn bám sát chiều rộng modal */
+  margin-bottom: 20px;
+  width: 100% !important; 
 }
 
 .form-group label {
   font-weight: bold;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   text-align: left;
 }
 
-.form-group input {
-  width: 100%;             /* Đã full 100% của 500px */
-  padding: 12px;           /* Tăng nhẹ padding cho cân đối với ô dài */
+/* SỬA LỖI 1 & 2: Phá bỏ giới hạn chiều dài input */
+.modal .form-group input {
+  width: 100% !important;             
+  max-width: none !important; /* Ghi đè hoàn toàn lệnh khóa 560px bạn thấy ở F12 */
+  padding: 14px 12px;         /* Tăng nhẹ độ cao để cân đối với chiều dài */
   border-radius: 10px;
   border: 1px solid #ccc;
-  font-size: 15px;
+  font-size: 16px;
   box-sizing: border-box;  
+  display: block;
 }
 
 /* Password wrapper & Eye Icon */
 .modal .password-wrapper {
-  width: 100%;             
-  max-width: none;         
-  margin-left: 0;          
-  margin-right: 0;
-  margin-bottom: 16px;
+  width: 100% !important;             
+  max-width: none !important;         
+  margin-bottom: 20px;
   position: relative;      
 }
 
 .modal .password-wrapper input {
-  width: 100%;
-  padding-right: 45px;     
-  box-sizing: border-box;
+  width: 100% !important;
+  padding-right: 50px !important; /* Chừa chỗ cho mắt */
 }
 
 .modal .password-wrapper .toggle-icon {
   position: absolute;
   right: 15px;             
-  top: 38px;               
-  font-size: 1.1rem;
+  top: 42px; /* Điều chỉnh lại để nằm giữa ô input cao 14px padding */
+  font-size: 1.2rem;
   cursor: pointer;
+  z-index: 10;
 }
 
-/* Actions */
+/* Nút bấm ở cuối Modal */
 .modal-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 25px;
+  justify-content: flex-end; /* Nút SendOTP và ResetPassword luôn nằm bên phải */
+  gap: 15px;
+  margin-top: 30px;
 }
 
 .btn-primary {
   background: #2196f3;
   color: white;
   border: none;
-  padding: 12px 25px; /* Tăng nhẹ kích thước nút cho xứng với modal mới */
-  border-radius: 25px;
+  padding: 12px 30px; 
+  border-radius: 30px;
   cursor: pointer;
   font-weight: bold;
-}
-
-
-.btn-primary:hover {
-  background: #1976d2;
-}
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 22px;
+  font-size: 16px;
 }
 
 .btn-secondary {
   background: #e0e0e0;
   border: none;
-  padding: 10px 18px;
-  border-radius: 20px;
+  padding: 12px 25px;
+  border-radius: 30px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .btn-secondary:hover {
