@@ -253,11 +253,12 @@ body {
 }
 
 .form-group input {
-  width: 95%;
+  width: 100%;             /* Đổi từ 95% thành 100% để full lề */
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #ccc;
   font-size: 15px;
+  box-sizing: border-box;  /* Thêm dòng này để padding không làm nở/hụt input */
 }
 .password-wrapper {
   position: relative;
@@ -421,21 +422,29 @@ body {
   margin-bottom: 4px;
 }
 
-/* ===== Forgot password STEP 3 input width fix ===== */
+/* ===== FIXED: Password wrapper & Eye Icon alignment ===== */
 .modal .password-wrapper {
-  width: 90%;              /* kéo dài thêm 1 tí */
-  max-width: 320px;
-  margin-left: 8px;       /* 👈 đẩy sang trái */
-  margin-right: auto;
+  width: 100%;             /* Đổi từ 90% thành 100% để bằng nút Reset */
+  max-width: none;         /* Bỏ giới hạn cũ */
+  margin-left: 0;          /* Reset lề trái về 0 */
+  margin-right: 0;
   margin-bottom: 16px;
+  position: relative;      /* Giữ nguyên để làm gốc cho icon */
 }
 
 .modal .password-wrapper input {
   width: 100%;
+  padding-right: 40px;     /* Chừa chỗ cho icon mắt bên trong */
+  box-sizing: border-box;
 }
+
 .modal .password-wrapper .toggle-icon {
-  right: -36px;
-  top: 36px;
+  position: absolute;
+  right: 12px;             /* Đưa icon vào sát lề phải bên trong input */
+  top: 38px;               /* Hạ trọng tâm xuống (tổng cộng khoảng 38px từ đỉnh label) */
+  transform: translateY(0);
+  font-size: 1.1rem;
+  cursor: pointer;
 }
 
 

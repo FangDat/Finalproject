@@ -91,7 +91,7 @@
               placeholder="Enter new password"
             />
             <span class="toggle-icon" @click="showForgotPasswordText = !showForgotPasswordText">
-              {{ showForgotPasswordText ? '🙈' : '👁' }}
+              {{ showForgotPasswordText ? '🚫' : '👁' }}
             </span>
           </div>
 
@@ -106,7 +106,7 @@
               class="toggle-icon"
               @click="showForgotPasswordText = !showForgotPasswordText"
             >
-              {{ showForgotPasswordText ? '🙈' : '👁' }}
+              {{ showForgotPasswordText ? '🚫' : '👁' }}
             </span>
           </div>
         </div>
@@ -209,7 +209,7 @@ export default {
       forgotOtpDigits: ["", "", "", "", "", ""],
       forgotOtpError: null,
       verifyingForgotOtp: false,
-      resendTimer: 60,
+      resendTimer: 600,
       otpInterval: null,
     };
   },
@@ -337,7 +337,7 @@ export default {
     },
 
     startResendCountdown() {
-      this.resendTimer = 60;
+      this.resendTimer = 600;
       if (this.otpInterval) clearInterval(this.otpInterval);
       this.otpInterval = setInterval(() => {
         if (this.resendTimer > 0) this.resendTimer--;
