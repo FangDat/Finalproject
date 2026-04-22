@@ -201,7 +201,7 @@
               placeholder="Enter your password"
             />
             <span class="toggle-icon" @click="showEmailPassword = !showEmailPassword">
-              {{ showEmailPassword ? '🙈' : '👁' }}
+              {{ showEmailPassword ? '🚫' : '👁' }}
             </span>
           </div>
 
@@ -279,17 +279,17 @@
           <div class="form-group password-wrapper">
             <label>Current Password:</label>
             <input :type="showCurrentPassword ? 'text' : 'password'" v-model="current_password" placeholder="Enter current password" />
-            <span class="toggle-icon" @click="showCurrentPassword = !showCurrentPassword">{{ showCurrentPassword ? '🙈' : '👁' }}</span>
+            <span class="toggle-icon" @click="showCurrentPassword = !showCurrentPassword">{{ showCurrentPassword ? '🚫' : '👁' }}</span>
           </div>
           <div class="form-group password-wrapper">
             <label>New Password:</label>
             <input :type="showNewPassword ? 'text' : 'password'" v-model="new_password" placeholder="Enter new password" />
-            <span class="toggle-icon" @click="showNewPassword = !showNewPassword">{{ showNewPassword ? '🙈' : '👁' }}</span>
+            <span class="toggle-icon" @click="showNewPassword = !showNewPassword">{{ showNewPassword ? '🚫' : '👁' }}</span>
           </div>
           <div class="form-group password-wrapper">
             <label>Confirm New Password:</label>
             <input :type="showConfirmPassword ? 'text' : 'password'" v-model="confirm_password" placeholder="Re-enter new password" />
-            <span class="toggle-icon" @click="showConfirmPassword = !showConfirmPassword">{{ showConfirmPassword ? '🙈' : '👁' }}</span>
+            <span class="toggle-icon" @click="showConfirmPassword = !showConfirmPassword">{{ showConfirmPassword ? '🚫' : '👁' }}</span>
           </div>
 
           <!-- Alert -->
@@ -342,12 +342,12 @@
           <div class="form-group password-wrapper">
             <label>Password:</label>
             <input :type="showDeletePassword ? 'text' : 'password'" v-model="delete_password" placeholder="Enter your password" />
-            <span class="toggle-icon" @click="showDeletePassword = !showDeletePassword">{{ showDeletePassword ? '🙈' : '👁' }}</span>
+            <span class="toggle-icon" @click="showDeletePassword = !showDeletePassword">{{ showDeletePassword ? '🚫' : '👁' }}</span>
           </div>
           <div class="form-group password-wrapper">
             <label>Confirm Password:</label>
             <input :type="showDeleteConfirm ? 'text' : 'password'" v-model="delete_confirm_password" placeholder="Re-enter your password" />
-            <span class="toggle-icon" @click="showDeleteConfirm = !showDeleteConfirm">{{ showDeleteConfirm ? '🙈' : '👁' }}</span>
+            <span class="toggle-icon" @click="showDeleteConfirm = !showDeleteConfirm">{{ showDeleteConfirm ? '🚫' : '👁' }}</span>
           </div>
 
           <!-- Alert -->

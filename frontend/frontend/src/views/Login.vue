@@ -91,7 +91,7 @@
               placeholder="Enter new password"
             />
             <span class="toggle-icon" @click="showForgotPasswordText = !showForgotPasswordText">
-              {{ showForgotPasswordText ? '🙈' : '👁' }}
+              {{ showForgotPasswordText ? '🚫' : '👁' }}
             </span>
           </div>
 
@@ -106,7 +106,7 @@
               class="toggle-icon"
               @click="showForgotPasswordText = !showForgotPasswordText"
             >
-              {{ showForgotPasswordText ? '🙈' : '👁' }}
+              {{ showForgotPasswordText ? '🚫' : '👁' }}
             </span>
           </div>
         </div>
