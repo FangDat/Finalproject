@@ -226,17 +226,18 @@ export default {
 
 .search-bar {
   width: 100%;
-  padding: 12px 45px 12px 20px;
+  padding: 12px 55px 12px 20px;
   border-radius: 30px;
   border: 1px solid #ccc;
 }
 
 .search-icon {
   position: absolute;
-  right: 14px; /* FIX: kéo icon vào trong input */
+  right: 80px; 
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
+  font-size: 1.2rem;
 }
 /* ===========================
    TABLE
@@ -402,12 +403,12 @@ export default {
   }
 
   .search-bar {
-    padding: 8px 36px 8px 14px;
+    padding: 8px 45px 8px 14px;
     font-size: 0.85rem;
   }
 
   .search-icon {
-    right: 26px; /* FIX mobile */
+    right: 70px; /* FIX mobile */
     font-size: 0.9rem;
   }
 }

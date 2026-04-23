@@ -113,7 +113,7 @@
 
 .search-bar {
   width: 100%;
-  padding: 12px 45px 12px 20px;
+  padding: 12px 110px 12px 20px;
   border-radius: 30px;
   border: 1px solid #ccc;
   font-size: 1rem;
@@ -126,13 +126,14 @@
 
 .search-icon {
   position: absolute;
-  right: 16px;            /* ⭐ ICON CHUI VÀO INPUT */
+  right: 80px;            
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.4rem;
   color: #2196f3;
   cursor: pointer;
-  pointer-events: none;   /* ⭐ không block click input */
+  pointer-events: none; 
+  transition: transform 0.2s ease;
 }
 
 
@@ -560,9 +561,14 @@ button:hover {
   .search-container {
     width: 100%;
   }
+  .search-bar {
+    /* Giảm padding cho mobile */
+    padding: 10px 90px 10px 16px;
+  }
 
   .search-icon {
-    right: 16x; /* 🔥 bỏ âm */
+    right: 65px; 
+    font-size: 1.2rem;
   }
 
   /* CITY LIST */
