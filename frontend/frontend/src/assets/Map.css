@@ -126,7 +126,7 @@
 
 .search-icon {
   position: absolute;
-  right: 50px;            
+  right: 42px;            
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.4rem;
@@ -566,7 +566,7 @@ button:hover {
   }
 
   .search-icon {
-    right: 40px; 
+    right: 32px; 
     font-size: 1.2rem;
   }
 

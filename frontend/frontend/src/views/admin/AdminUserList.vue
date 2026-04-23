@@ -233,7 +233,7 @@ export default {
 
 .search-icon {
   position: absolute;
-  right: 40px; 
+  right: 42px; 
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -408,7 +408,7 @@ export default {
   }
 
   .search-icon {
-    right: 70px; /* FIX mobile */
+    right: 32px; 
     font-size: 0.9rem;
   }
 }
