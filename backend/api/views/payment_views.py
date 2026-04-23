@@ -165,9 +165,23 @@ def stripe_webhook(request):
     # 2. Handle event
     # ----------------------------
     if event_type == "checkout.session.completed":
+        # session = event["data"]["object"]
+
+        # user_id = getattr(session, "client_reference_id", None)
+        # logger.info(f"Checkout completed for user_id={user_id}")
         session = event["data"]["object"]
 
-        user_id = session.get("client_reference_id")
+        # ✅ FIX 1: Stripe object → convert sang dict (an toàn nhất)
+        try:
+            session_dict = session.to_dict()
+        except Exception:
+            session_dict = session  # fallback
+
+        # ✅ FIX 2: lấy user_id đúng cách
+        user_id = session_dict.get("client_reference_id")
+
+        # ✅ LOG để debug future
+        logger.debug(f"[Stripe] session_dict={session_dict}")
         logger.info(f"Checkout completed for user_id={user_id}")
 
         if not user_id:
