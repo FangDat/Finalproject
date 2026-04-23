@@ -226,14 +226,14 @@ export default {
 
 .search-bar {
   width: 100%;
-  padding: 12px 55px 12px 20px;
+  padding: 12px 45px 12px 20px;
   border-radius: 30px;
   border: 1px solid #ccc;
 }
 
 .search-icon {
   position: absolute;
-  right: 80px; 
+  right: 40px; 
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -403,7 +403,7 @@ export default {
   }
 
   .search-bar {
-    padding: 8px 45px 8px 14px;
+    padding: 8px 38px 8px 14px;
     font-size: 0.85rem;
   }
 

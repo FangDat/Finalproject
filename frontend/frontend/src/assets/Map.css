@@ -113,7 +113,7 @@
 
 .search-bar {
   width: 100%;
-  padding: 12px 110px 12px 20px;
+  padding: 12px 45px 12px 20px;
   border-radius: 30px;
   border: 1px solid #ccc;
   font-size: 1rem;
@@ -126,7 +126,7 @@
 
 .search-icon {
   position: absolute;
-  right: 80px;            
+  right: 50px;            
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.4rem;
@@ -562,12 +562,11 @@ button:hover {
     width: 100%;
   }
   .search-bar {
-    /* Giảm padding cho mobile */
-    padding: 10px 90px 10px 16px;
+    padding: 10px 40px 10px 16px;
   }
 
   .search-icon {
-    right: 65px; 
+    right: 40px; 
     font-size: 1.2rem;
   }
 
