@@ -5,16 +5,14 @@ from datetime import timedelta
 from django.utils import timezone
 import time
 
-
-
-class User(models.Model):
+class User(models.Model):   # Define User model
     _id = models.ObjectIdField(primary_key=True)  # MongoDB ObjectId
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     is_premium = models.BooleanField(default=False)
     
-    role = models.CharField(
+    role = models.CharField(    # Define user role field
         max_length=20,
         default="user"   # user | admin
     )
@@ -25,15 +23,13 @@ class User(models.Model):
         default=lambda: int(time.time())
     )
 
-    last_login_at = models.BigIntegerField(
+    last_login_at = models.BigIntegerField( # Store last login timestamp
         null=True,
         blank=True
     )
     
     
-
-    # ✅ DÙNG TIMESTAMP (SECONDS)
-    premium_started_at_ts = models.BigIntegerField(null=True, blank=True)
+    premium_started_at_ts = models.BigIntegerField(null=True, blank=True)   # Store premium start timestamp
     premium_expires_at_ts = models.BigIntegerField(null=True, blank=True)
     
     # =========================
@@ -57,46 +53,46 @@ class User(models.Model):
     )
 
 
-    def save(self, *args, **kwargs):
-        if self.password and not self.password.startswith("pbkdf2_"):
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):    # Override save method
+        if self.password and not self.password.startswith("pbkdf2_"):   # Check if password is not hashed
+            self.password = make_password(self.password)    # Hash the password
+        super().save(*args, **kwargs)   # Call parent save method
 
     # =========================
     # PREMIUM HELPERS
     # =========================
-    def activate_premium(self, days=30):
+    def activate_premium(self, days=30):    # Activate premium for given days
         now = timezone.now()
         now_ts = int(now.timestamp())
-        expires_ts = int((now + timedelta(days=days)).timestamp())
+        expires_ts = int((now + timedelta(days=days)).timestamp())  # Calculate expiry timestamp
 
-        self.is_premium = True
+        self.is_premium = True   # Set premium to true
         self.premium_started_at_ts = now_ts
         self.premium_expires_at_ts = expires_ts
 
-        self.save(update_fields=[
+        self.save(update_fields=[   # Save only specific fields
             "is_premium",
             "premium_started_at_ts",
             "premium_expires_at_ts"
         ])
 
-    def deactivate_premium(self):
+    def deactivate_premium(self):    # Deactivate premium
         self.is_premium = False
         self.save(update_fields=["is_premium"])
 
-    def __str__(self):
+    def __str__(self):   # String representation of User
         return self.username
 
-    @property
+    @property   # Define property for id
     def id(self):
         return str(self._id)
 
-    @property
+    @property   # Define property for authentication
     def is_authenticated(self):
         return True
 
 
-class RevokedToken(models.Model):
+class RevokedToken(models.Model):    # Model for storing revoked JWT tokens
     _id = models.ObjectIdField(primary_key=True)
     jti = models.CharField(max_length=200, unique=True)
     token = models.TextField(blank=True, null=True)
@@ -105,12 +101,12 @@ class RevokedToken(models.Model):
     expires_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return f"RevokedToken(jti={self.jti}, user={self.user_id})"
+        return f"RevokedToken(jti={self.jti}, user={self.user_id})"  # Return formatted string
 
 # -----------------------------
 # SearchHistory Model (update)
 # -----------------------------
-class SearchHistory(models.Model):
+class SearchHistory(models.Model):  # Model to store search history
     _id = models.ObjectIdField(primary_key=True)
     user_id = models.CharField(max_length=200)
     city_name = models.CharField(max_length=200)
@@ -118,10 +114,10 @@ class SearchHistory(models.Model):
     lon = models.FloatField(null=True, blank=True)   # thêm field lon
     created_at = models.DateTimeField(default=timezone.now)
 
-    def __str__(self):
-        return f"{self.city_name} ({self.lat},{self.lon}) for {self.user_id}"
+    def __str__(self):  # String representation
+        return f"{self.city_name} ({self.lat},{self.lon}) for {self.user_id}"   # Return formatted string
 
-class AdminAuditLog(models.Model):
+class AdminAuditLog(models.Model):  # Model to log admin actions
     _id = models.ObjectIdField(primary_key=True)
     admin_id = models.CharField(max_length=200)
     admin_username = models.CharField(max_length=150, null=True, blank=True) 
@@ -129,8 +125,8 @@ class AdminAuditLog(models.Model):
     target_user_id = models.CharField(max_length=200, null=True, blank=True)
     target_username = models.CharField(max_length=150, null=True, blank=True)
     created_at = models.BigIntegerField(
-        default=lambda: int(time.time())
+        default=lambda: int(time.time())    # Default is current timestamp
     )
 
-    def __str__(self):
-        return f"{self.action} by {self.admin_id}"
+    def __str__(self):  # String representation
+        return f"{self.action} by {self.admin_id}"  # Return formatted string

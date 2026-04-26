@@ -3,7 +3,7 @@
 # File: backend/api/views/weather_intent_views.py
 # ================================
 
-import requests
+import requests 
 import json
 import logging
 from datetime import datetime, timezone, timedelta
@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from .weather_views import fuzzy_search_cities
 
 # -------------------------------
-# LOGGER (DEBUG RIÊNG → checkjson.log)
+# LOGGER (DEBUG → checkjson.log)
 # -------------------------------
 logger = logging.getLogger(__name__)
 
@@ -29,16 +29,16 @@ BASE_OW_URL = "https://api.openweathermap.org/data/3.0"
 # ==================================================
 # STEP 3 – DATA NORMALIZATION HELPERS
 # ==================================================
-def unix_to_local(ts, tz_offset_seconds):
+def unix_to_local(ts, tz_offset_seconds):   
     """
     Convert UNIX timestamp → LOCAL datetime string (NO timezone text)
     """
     if not ts:
         return None
 
-    local_tz = timezone(timedelta(seconds=tz_offset_seconds))
-    dt = datetime.fromtimestamp(ts, tz=local_tz)
-    return dt.strftime("%Y-%m-%d %H:%M:%S")
+    local_tz = timezone(timedelta(seconds=tz_offset_seconds))   # Create timezone
+    dt = datetime.fromtimestamp(ts, tz=local_tz)     # Convert timestamp
+    return dt.strftime("%Y-%m-%d %H:%M:%S") # Format datetime string
 
 
 def kelvin_to_celsius(k):
@@ -181,10 +181,10 @@ def normalize_air_pollution(item, tz_offset):
 # -------------------------------
 @api_view(["POST"])
 @permission_classes([AllowAny])
-def weather_by_intent(request):
+def weather_by_intent(request):  # Main function to handle intent-based weather requests
     """
     Input: intent JSON from /api/chatbot/intent/
-    Output: weather data (KHÔNG dùng log làm dữ liệu)
+    Output: weather data
     """
 
     # ⚠️ DEBUG ONLY: clear log mỗi request
@@ -192,39 +192,39 @@ def weather_by_intent(request):
         open(settings.DEBUG_INTENT_LOG_FILE, "w").close()
         logger.debug("===== NEW WEATHER INTENT REQUEST =====")
 
-    intent_payload = request.data
+    intent_payload = request.data   # Get JSON data from request body
 
     if settings.DEBUG:
         logger.debug("INTENT INPUT")
         logger.debug(json.dumps(intent_payload, indent=2, ensure_ascii=False))
 
-    location = intent_payload.get("location")
-    day = intent_payload.get("day")
-    intents = intent_payload.get("intent", [])
+    location = intent_payload.get("location")   # Extract location from input
+    day = intent_payload.get("day") # Extract day (if provided)
+    intents = intent_payload.get("intent", [])   # Extract intent list (default empty)
 
     # -------------------------------
     # Resolve lat/lon
     # -------------------------------
-    matches = fuzzy_search_cities(location)
-    if not matches:
+    matches = fuzzy_search_cities(location)  # Find matching cities using fuzzy search
+    if not matches:  # If no location match found
         if settings.DEBUG:
             logger.debug("LOCATION NOT FOUND")
         return Response({"error": "Location not found"}, status=404)
 
-    city = matches[0]
-    lat, lon = city["lat"], city["lon"]
+    city = matches[0]   # Take best match result
+    lat, lon = city["lat"], city["lon"]  # Extract latitude and longitude
 
     if settings.DEBUG:
         logger.debug("RESOLVED LOCATION")
         logger.debug(json.dumps(city, indent=2, ensure_ascii=False))
 
-    responses = {}
+    responses = {}  # Initialize response container
 
-    for tool_name in intents:
+    for tool_name in intents:   # Loop through requested intent tools
     # -------------------------------
     # DAILY AGGREGATION
     # -------------------------------
-        if tool_name == "daily_aggregation" and day:
+        if tool_name == "daily_aggregation" and day:     # Check if intent is daily summary
             if settings.DEBUG:
                 logger.debug("CALLING DAY SUMMARY API")
 
@@ -239,9 +239,9 @@ def weather_by_intent(request):
                 timeout=8,
             )
 
-            raw_data = r.json()
-            normalized_daily = normalize_daily_aggregation(raw_data)
-            responses['daily_aggregation'] = normalized_daily
+            raw_data = r.json() # Parse API response JSON
+            normalized_daily = normalize_daily_aggregation(raw_data)     # Normalize data
+            responses['daily_aggregation'] = normalized_daily    # Store result
 
             if settings.DEBUG:
                 logger.debug("DAY SUMMARY NORMALIZED (LLM READY)")
@@ -251,9 +251,9 @@ def weather_by_intent(request):
         # -------------------------------
         # WEATHER OVERVIEW
         # -------------------------------
-        elif tool_name == "weather_overview":
+        elif tool_name == "weather_overview":    # Check overview intent
             r = requests.get(
-                f"{BASE_OW_URL}/onecall/overview",
+                f"{BASE_OW_URL}/onecall/overview",   # Endpoint URL
                 params={
                     "lat": lat,
                     "lon": lon,
@@ -263,8 +263,8 @@ def weather_by_intent(request):
                 timeout=8,
             )
 
-            data = r.json()
-            responses["weather_overview"] = data
+            data = r.json() # Parse JSON response
+            responses["weather_overview"] = data    # Store overview data
 
             if settings.DEBUG:
                 logger.debug("WEATHER OVERVIEW RESPONSE")
@@ -287,23 +287,17 @@ def weather_by_intent(request):
 
             raw_data = r.json()
 
-            tz_offset = raw_data.get("timezone_offset", 0)
-            tz_string = f"{tz_offset // 3600:+03d}:00"
+            tz_offset = raw_data.get("timezone_offset", 0)   # Get timezone offset
+            tz_string = f"{tz_offset // 3600:+03d}:00"   # Convert to readable timezone
 
-            # # ============================
-            # # DEBUG – GIỮ NGUYÊN RAW JSON
-            # # ============================
-            # if settings.DEBUG:
-            #     logger.debug("WEATHER FORECAST RAW RESPONSE (OPENWEATHER)")
-            #     logger.debug(json.dumps(raw_data, indent=2, ensure_ascii=False))
 
             # ============================
             # STEP 3 – NORMALIZE DATA
             # ============================
-            normalized_data = {
-                "tz": tz_string,
-                "current": normalize_hourly(
-                    raw_data.get("current", {}), tz_offset
+            normalized_data = { # Normalize forecast data
+                "tz": tz_string,     # Timezone string
+                "current": normalize_hourly(    
+                    raw_data.get("current", {}), tz_offset  # Normalize current weather
                 ),
                 "hourly": [
                     normalize_hourly(h, tz_offset)
@@ -326,7 +320,7 @@ def weather_by_intent(request):
                     json.dumps(normalized_data, indent=2, ensure_ascii=False)
                 )
 
-            # 👉 RESPONSE CHO CHATBOT
+            # 👉 RESPONSE FOR CHATBOT
             responses["weather_forecast"] = normalized_data
             
             # -------------------------------
@@ -348,19 +342,19 @@ def weather_by_intent(request):
 
             raw_data = r.json()
 
-            # timezone offset → reuse từ weather forecast nếu có
-            tz_offset = raw_data.get("timezone_offset", 0)
-            tz_string = f"{tz_offset // 3600:+03d}:00"
+            # timezone offset
+            tz_offset = raw_data.get("timezone_offset", 0)   # Get timezone offset
+            tz_string = f"{tz_offset // 3600:+03d}:00" # Format timezone
 
-            # fallback: dùng timezone của weather_forecast nếu tồn tại
-            if "weather_forecast" in responses:
-                tz_string = responses["weather_forecast"].get("tz", "+00:00")
+           
+            if "weather_forecast" in responses:  # If forecast already exists
+                tz_string = responses["weather_forecast"].get("tz", "+00:00")   # Reuse timezone
                 try:
-                    tz_offset = int(tz_string.split(":")[0]) * 3600
+                    tz_offset = int(tz_string.split(":")[0]) * 3600 # Convert to seconds
                 except:
                     tz_offset = 0
 
-            normalized_air = [
+            normalized_air = [  # Normalize air data list
                 normalize_air_pollution(item, tz_offset)
                 for item in raw_data.get("list", [])
             ]

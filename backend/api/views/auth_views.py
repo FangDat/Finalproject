@@ -36,37 +36,37 @@ stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
 # ---------------------------
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['user_id'] = str(user._id)
-        return token
+    def get_token(cls, user):   # Generate token for user
+        token = super().get_token(user) # Call parent method
+        token['user_id'] = str(user._id)    # Add user_id to token
+        return token     # Return token
 
-    def validate(self, attrs):
-        username = attrs.get("username")
-        password = attrs.get("password")
+    def validate(self, attrs):  # Validate login data
+        username = attrs.get("username")    # Get username
+        password = attrs.get("password")    # Get password
 
-        if not username or not password:
+        if not username or not password:    # Check missing input
             raise AuthenticationFailed("Username and password required")
 
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(username=username)  # Find user
         except User.DoesNotExist:
             raise AuthenticationFailed(
-                "No active account found with the given credentials")
+                "No active account found with the given credentials") # User not found
 
-        if not check_password(password, user.password):
+        if not check_password(password, user.password): # Check password
             raise AuthenticationFailed(
                 "No active account found with the given credentials")
 
-        refresh = self.get_token(user)
-        data = {
+        refresh = self.get_token(user) # Create refresh token
+        data = {    # Build response data
             "refresh": str(refresh),
             "access": str(refresh.access_token),
             "username": user.username,
             "is_premium": bool(getattr(user, "is_premium", False)),
             "user_id": str(user._id),
         }
-        return data
+        return data # Return response
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -93,36 +93,36 @@ def signup(request):
 # ---------------------------
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def login(request):
-    username = request.data.get("username")
+def login(request): # Login function
+    username = request.data.get("username") # Get username
     password = request.data.get("password")
 
-    if not username or not password:
+    if not username or not password:     # Check missing fields
         return Response({"error": "Username and password are required"}, status=400)
 
     try:
-        user = User.objects.get(username=username)
-        if not user.is_active:
+        user = User.objects.get(username=username)  # Find user
+        if not user.is_active:  # Check if account disabled
             return Response(
                 {
                     "error": "Account is temporarily suspended. Please contact support."
                 },
                 status=403
             )
-        if not check_password(password, user.password):
+        if not check_password(password, user.password): # Check password
             return Response({"error": "Invalid password"}, status=400)
 
-        refresh = RefreshToken.for_user(user)
+        refresh = RefreshToken.for_user(user)   # Create refresh token
         refresh['user_id'] = str(user._id)
-        access = refresh.access_token
+        access = refresh.access_token    # Create access token
         access['user_id'] = str(user._id)
 
-        resp = Response({
+        resp = Response({   # Create response
             "message": "Login successful",
             "username": user.username,
             "email": getattr(user, "email", ""),
             "role": user.role,  
-            "is_premium": bool(getattr(user, 'is_premium', False)),
+            "is_premium": bool(getattr(user, 'is_premium', False)), # Include premium
             "user_id": str(user._id)
         })
         user.last_login_at = int(datetime.datetime.now().timestamp())
@@ -422,13 +422,13 @@ def forgot_password_send_otp(request):
 # ============================
 # FORGOT PASSWORD - VERIFY OTP
 # ============================
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def forgot_password_verify_otp(request):
-    from .verifyotp_views import verify_forgot_password_otp_logic
-    return verify_forgot_password_otp_logic(
-        request.data.get("email"),
-        request.data.get("otp")
+@api_view(['POST']) # Define POST API endpoint
+@permission_classes([AllowAny])   # Allow all users (no login required)
+def forgot_password_verify_otp(request):   # Function to verify OTP for password reset
+    from .verifyotp_views import verify_forgot_password_otp_logic  # Import OTP verification logic
+    return verify_forgot_password_otp_logic(   # Call OTP verification function
+        request.data.get("email"),  # Get email from request
+        request.data.get("otp") # Get OTP code from request
     )
 
 

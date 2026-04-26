@@ -22,28 +22,28 @@
       <p class="or-text">OR</p> -->
 
       <!-- Form -->
-      <form @submit.prevent="handleLogin">
+      <form @submit.prevent="handleLogin">  <!-- Submit form and prevent page reload, call handleLogin -->
         <input
-          v-model.trim="username"
+          v-model.trim="username" 
           type="text"
           placeholder="Username"
           class="input-box"
           :class="{ 'input-error': !!errors.username }"
         />
-        <p v-if="errors.username" class="error-msg">{{ errors.username }}</p>
+        <p v-if="errors.username" class="error-msg">{{ errors.username }}</p> <!-- Show error message if exists -->
 
         <input
           v-model="password"
           type="password"
           placeholder="Password"
           class="input-box"
-          :class="{ 'input-error': !!errors.password }"
+          :class="{ 'input-error': !!errors.password }" 
         />
-        <p v-if="errors.password" class="error-msg">{{ errors.password }}</p>
+        <p v-if="errors.password" class="error-msg">{{ errors.password }}</p> <!-- Show error message if exists -->
 
-        <button class="btn-login" type="submit" :disabled="submitting">
-          <span v-if="!submitting">LOG IN</span>
-          <span v-else>Processing...</span>
+        <button class="btn-login" type="submit" :disabled="submitting"> <!-- Disable button when submitting -->
+          <span v-if="!submitting">LOG IN</span>  <!-- Show normal text -->
+          <span v-else>Processing...</span> <!-- Show loading text -->
         </button>
       </form>
 
@@ -234,9 +234,9 @@ export default {
       this.forgotOtpError = null;
     },
 
-    async handleForgotPassword() {
-      this.forgotAlert = "";
-      this.forgotErrors = { email: "" };
+    async handleForgotPassword() {  // Handle forgot password flow
+      this.forgotAlert = "";  // Clear alert
+      this.forgotErrors = { email: "" };  // Reset email error
 
       // ===== FRONTEND VALIDATION =====
       if (this.forgotStep === 1) {
@@ -245,56 +245,56 @@ export default {
           return;
         }
 
-        const emailInput = document.createElement("input");
-        emailInput.type = "email";
-        emailInput.value = this.forgotEmail;
+        const emailInput = document.createElement("input"); // Create temp input
+        emailInput.type = "email";  // Set type email
+        emailInput.value = this.forgotEmail;  // Assign value
 
-        if (!emailInput.checkValidity()) {
+        if (!emailInput.checkValidity()) {  // Validate email format
           this.forgotErrors.email = "Please enter a valid email address.";
           return;
         }
       }
 
-      this.forgotLoading = true;
+      this.forgotLoading = true;  // Enable loading
 
       try {
         // STEP 1: SEND OTP
-        if (this.forgotStep === 1) {
-          await apiClient.post("/api/forgot-password/send-otp/", {
-            email: this.forgotEmail,
+        if (this.forgotStep === 1) {  // Send OTP step
+          await apiClient.post("/api/forgot-password/send-otp/", {  
+            email: this.forgotEmail,  // Send email
           });
 
-          this.showForgotPassword = false;
-          this.showForgotOtp = true;
-          this.startResendCountdown();
+          this.showForgotPassword = false;  // Hide modal
+          this.showForgotOtp = true;  // Show OTP modal
+          this.startResendCountdown();  // Start timer
         }
 
         // STEP 3: RESET PASSWORD
         else {
-          if (this.forgotNewPassword !== this.forgotConfirmPassword) {
-            this.forgotAlert = "Passwords do not match.";
-            this.forgotSuccess = false;
+          if (this.forgotNewPassword !== this.forgotConfirmPassword) {  // Check match
+            this.forgotAlert = "Passwords do not match."; 
+            this.forgotSuccess = false; 
             return;
           }
 
-          await apiClient.post("/api/forgot-password/reset/", {
+          await apiClient.post("/api/forgot-password/reset/", { // Call API
             email: this.forgotEmail,
             new_password: this.forgotNewPassword,
             confirm_password: this.forgotConfirmPassword,
           });
 
-          this.forgotAlert = "Password reset successfully.";
-          this.forgotSuccess = true;
+          this.forgotAlert = "Password reset successfully.";  // Success message
+          this.forgotSuccess = true;  // Mark success
 
-          setTimeout(() => this.closeForgotPassword(), 2000);
+          setTimeout(() => this.closeForgotPassword(), 2000); // Close modal
         }
-      } catch (err) {
+      } catch (err) { // Handle error
         if (
           this.forgotStep === 1 &&
           err.response?.status === 400 &&
-          err.response.data?.error
+          err.response.data?.error  // Show error related to email if exists
         ) {
-          this.forgotErrors.email = err.response.data.error;
+          this.forgotErrors.email = err.response.data.error;  // Disable loading
           return;
         }
 
@@ -372,63 +372,63 @@ export default {
     },
 
 
-    async handleLogin() {
-      this.resetErrors();
+    async handleLogin() { // Main function to process login
+      this.resetErrors(); // Clear previous errors and alerts
 
-      if (!this.username || !this.password) {
-        if (!this.username)
-          this.errors.username = "Please enter your username.";
+      if (!this.username || !this.password) { // Check if fields are empty
+        if (!this.username) // If username missing
+          this.errors.username = "Please enter your username."; // Set username error
         if (!this.password)
           this.errors.password = "Please enter your password.";
 
-        this.alertMessage = "Please fill in all required fields.";
+        this.alertMessage = "Please fill in all required fields.";  // Show warning message
         this.alertType = "warning";
-        return;
+        return; // Stop execution
       }
 
-      this.submitting = true;
+      this.submitting = true; // Enable loading state
 
       try {
-        const payload = {
+        const payload = { // Prepare request data
           username: this.username,
           password: this.password,
         };
 
-        // 🔥 DÙNG apiClient (cookie tự gửi)
-        const res = await apiClient.post("/api/login/", payload);
 
-        const user = res.data?.user || this.username;
+        const res = await apiClient.post("/api/login/", payload); // Send login request
+
+        const user = res.data?.user || this.username; 
         const email = res.data?.email || "";
         const role = res.data?.role || "user";
 
-        Cookies.set("username", user, { expires: 7 });
+        Cookies.set("username", user, { expires: 7 });  // Save username in cookie
         Cookies.set("email", email, { expires: 7 });
         Cookies.set("role", role, { expires: 7 });
 
-        this.alertMessage = "Login successful! Redirecting...";
+        this.alertMessage = "Login successful! Redirecting..."; // Show success message
         this.alertType = "success";
 
-        setTimeout(() => {
-          if (role === "admin") {
-            this.$router.push("/admin");
+        setTimeout(() => {  // Delay redirect
+          if (role === "admin") { // If admin
+            this.$router.push("/admin");  // Go to admin page
           } else {
-            this.$router.push("/");
+            this.$router.push("/"); // Go to home page
           }
         }, 800);
       } catch (err) {
         if (err.response) {
-          const { status, data } = err.response;
+          const { status, data } = err.response;  // Extract status and data
 
-          if (data?.username || data?.password) {
+          if (data?.username || data?.password) { // Validation errors
             if (data.username?.length)
-              this.errors.username = data.username[0];
+              this.errors.username = data.username[0];  // Set username error
             if (data.password?.length)
-              this.errors.password = data.password[0];
+              this.errors.password = data.password[0];  // Set password error
 
             this.alertMessage =
               data.username?.[0] ||
               data.password?.[0] ||
-              "Login failed.";
+              "Login failed.";  // Show message
             this.alertType = "error";
           } else if (status === 404) {
             this.errors.username = "User not found.";
@@ -439,9 +439,8 @@ export default {
             this.alertMessage = "Incorrect password.";
             this.alertType = "warning";
           } else if (status === 403) {
-            // 👇 hiển thị giống "Please enter your password."
             this.errors.password =
-              "Your account has been temporarily suspended. Please contact support.";
+              "Your account has been temporarily suspended. Please contact support."; // Show suspension message
           }
         } else {
           this.alertMessage =
@@ -449,7 +448,7 @@ export default {
           this.alertType = "error";
         }
       } finally {
-        this.submitting = false;
+        this.submitting = false;  // Disable loading state
       }
     },
   },

@@ -973,46 +973,46 @@ export default {
         this.showHistory = true;
       }
     },
-   async fetchWeather(city = "") {
+   async fetchWeather(city = "") {  // Call backend API to get weather by city name
     try {
-      const res = await apiClient.get("/api/weather/", {
-        params: city ? { city } : {},
+      const res = await apiClient.get("/api/weather/", {  // Send GET request to backend
+        params: city ? { city } : {}, // If city exists → send as query param
       });
 
-      const data = res.data;
+      const data = res.data;  // Extract response data
 
-      this.errorMessage = "";
-      this.errorGif = "";
-      this.applyWeatherData(data);
-      this.showSuggestions = false;
-    } catch (err) {
+      this.errorMessage = ""; // Clear previous error message
+      this.errorGif = ""; // Clear error image
+      this.applyWeatherData(data);  // Apply data to UI state
+      this.showSuggestions = false; // Hide suggestions dropdown
+    } catch (err) { // If API fails
       this.errorMessage = `Location '${city}' not found\nTry searching another location`;
-      this.errorGif = "";
+      this.errorGif = ""; // Reset error gif
     }
   },
 
-  async getWeatherByLocation(lat, lon, name = null) {
+  async getWeatherByLocation(lat, lon, name = null) { // Get weather using coordinates
     try {
-      const params = { lat, lon };
-      if (name) params.name = name;
+      const params = { lat, lon };  // Create params object with lat/lon
+      if (name) params.name = name; // Add name if available
 
-      const res = await apiClient.get("/api/weather/", { params });
-      const data = res.data;
+      const res = await apiClient.get("/api/weather/", { params }); // Call backend API
+      const data = res.data;  // Extract response data
 
-      this.errorMessage = "";
-      this.errorGif = "";
-      this.applyWeatherData(data);
-      this.showSuggestions = false;
+      this.errorMessage = ""; // Clear error message
+      this.errorGif = ""; // Clear error gif
+      this.applyWeatherData(data);  // Update UI with new weather data
+      this.showSuggestions = false; // Hide suggestions dropdown
     } catch (err) {
       this.errorMessage = `Location '${this.searchQuery}' not found\nTry searching another location`;
       this.errorGif = "";
     }
   },
 
-    applyWeatherData(data) {
-      this.city = data.location || this.searchQuery;
-      this.temperature = data.temperature;
-      this.realFeel = data.temperature;
+    applyWeatherData(data) {  // Map API data → UI variables
+      this.city = data.location || this.searchQuery;  // Set city name
+      this.temperature = data.temperature;  // Set temperature
+      this.realFeel = data.temperature; // Assign real feel (same source)
       this.wind = data.wind_speed;
       this.chanceOfRain = data.chance_of_rain
         ? data.chance_of_rain + "%"
@@ -1021,32 +1021,32 @@ export default {
       this.humidity = data.humidity;
       this.uvIndex = data.uv_index;
       this.visibility = data.visibility;
-      if (data.icon) {
-        this.weatherIcon = this.getIconSrc(data.icon);
-        this.currentIcon = data.icon;
+      if (data.icon) {  // If icon exists
+        this.weatherIcon = this.getIconSrc(data.icon); // Load icon image 
+        this.currentIcon = data.icon; // Update background icon
       } else {
         this.weatherIcon = require("@/assets/01d.png");
       }
-      this.forecastToday = (data.upcoming_hours || []).map((item) => ({
+      this.forecastToday = (data.upcoming_hours || []).map((item) => ({ // Map hourly forecast
         time: item.time.split(" ")[1].slice(0, 5),
         temp: item.temp,
         icon: item.icon,
       }));
-      this.forecast3days = (data.daily_forecast || []).map((item) => ({
+      this.forecast3days = (data.daily_forecast || []).map((item) => ({ // Map daily forecast
         day: item.day,
         temp: item.temp,
         icon: item.icon,
       }));
-      if (data.connected_bars_12h) {
-        this.connectedBars = data.connected_bars_12h;
+      if (data.connected_bars_12h) {  // If chart data exists
+        this.connectedBars = data.connected_bars_12h; // Assign chart data
       } else {
         this.connectedBars = null;
       }
       if (data.sun_path) {
         this.sunPath = data.sun_path;
       }   
-      if (data.air_quality?.aqi) {
-        this.aqiLevel = data.air_quality.aqi;
+      if (data.air_quality?.aqi) {  // If AQI exists in nested object
+        this.aqiLevel = data.air_quality.aqi; // Set AQI
       } else if (data.aqi) {
         this.aqiLevel = data.aqi;
       }   

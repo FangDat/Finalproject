@@ -95,30 +95,29 @@ def normalize_text(text):
     return text.lower()
 
 
-def fuzzy_search_cities(query, limit=8):
-    """Fuzzy search có fallback admin_name + cache, loại bỏ trùng city/admin_name."""
-    query_norm = normalize_text(query)
-    if not query_norm:
-        return []
+def fuzzy_search_cities(query, limit=8):    # Function to search cities using fuzzy matching
+    query_norm = normalize_text(query) # Normalize input text
+    if not query_norm:  # Check if query is empty
+        return []   # Return empty list
     
     if len(query_norm) > 15 and sum(ch in "aeiou" for ch in query_norm) < 2:
         return []
 
-    cache_key = f"fuzzy_local:{query_norm}"
-    cached = cache.get(cache_key)
+    cache_key = f"fuzzy_local:{query_norm}" # Create cache key
+    cached = cache.get(cache_key)    # Get cached result
     if cached:
         logger.debug(f"✅ [CACHE HIT] fuzzy search: {query}")
         return cached
 
-    matches = []
-    seen = set()  # tránh trùng lặp cùng cặp city|admin
+    matches = []    # Store matched results
+    seen = set()  # Track duplicates
 
-    for city in WORLD_CITIES:
-        city_name = city.get("city", "") or ""
+    for city in WORLD_CITIES:   # Loop through all cities
+        city_name = city.get("city", "") or ""  # Get city name
         city_ascii = city.get("city_ascii", "") or ""
-        admin_name = city.get("admin_name", "") or ""
+        admin_name = city.get("admin_name", "") or ""   # Get admin region
 
-        # Nếu city và admin giống nhau => coi như không có admin (để tránh "Quảng Nam, Quảng Nam")
+
         if normalize_text(city_name) == normalize_text(admin_name):
             admin_name_to_use = ""
         else:
@@ -128,19 +127,19 @@ def fuzzy_search_cities(query, limit=8):
         admin_norm = normalize_text(admin_name_to_use)
         name_norm = normalize_text(city_name)
 
-        # Score: ưu tiên so với city_ascii, nhưng cũng so với admin
-        score_city = fuzz.token_set_ratio(query_norm, city_norm)
-        score_admin = fuzz.token_set_ratio(query_norm, admin_norm)
 
-        # Nếu query trùng 100% với city_ascii hoặc với city có dấu, cho điểm cực lớn để đứng đầu
-        if query_norm == city_norm or query_norm == name_norm:
-            score_city = 1000
+        score_city = fuzz.token_set_ratio(query_norm, city_norm)    # Compare city name
+        score_admin = fuzz.token_set_ratio(query_norm, admin_norm)    # Compare admin
 
-        best_score = max(score_city, score_admin)
-        if best_score > 60:  # ngưỡng có thể điều chỉnh
+
+        if query_norm == city_norm or query_norm == name_norm:  # Choose best score
+            score_city = 1000   
+
+        best_score = max(score_city, score_admin)   # Apply threshold
+        if best_score > 60: # Create unique key
             key = f"{normalize_text(city_name)}|{normalize_text(admin_name_to_use)}"
-            if key not in seen:
-                seen.add(key)
+            if key not in seen:   # Avoid duplicates
+                seen.add(key)   # Mark as seen
                 matches.append({
                     "city": city_name,
                     "admin_name": admin_name_to_use,
@@ -152,21 +151,21 @@ def fuzzy_search_cities(query, limit=8):
         logger.debug(f"❌ No fuzzy matches for '{query}'")
         return []
     
-    # Sort theo score giảm dần, sau đó lấy limit
-    matches.sort(key=lambda x: -x["score"])
-    results = matches[:limit]
+
+    matches.sort(key=lambda x: -x["score"])  # Sort by score descending
+    results = matches[:limit]    # Limit results
     
     max_score = results[0]["score"]
-    SCORE_THRESHOLD = 80  # bạn có thể chỉnh lên/xuống tùy độ khắt khe
+    SCORE_THRESHOLD = 80  
     if max_score < SCORE_THRESHOLD:
-        logger.debug(f"⚠️ Fuzzy top score {max_score} < {SCORE_THRESHOLD} → coi như không hợp lệ")
+        logger.debug(f"⚠️ Fuzzy top score {max_score} < {SCORE_THRESHOLD} → invalid")
         return []
 
     try:
         cache.set(cache_key, results, timeout=900)
         logger.debug(f"🔁 [CACHE SET] fuzzy search saved key={cache_key}")
     except Exception:
-        logger.exception("⚠️ Không lưu được fuzzy search cache")
+        logger.exception("⚠️ Can not save fuzzy search cache")
 
     return results
 
@@ -349,24 +348,21 @@ def get_city_from_coordinates(lat, lon, OPENCAGE_API_KEY):
 # ---------------------------
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated, IsPremiumUser])
-def add_search_history(request):
-    """
-    Thêm entry search history cho user. Chống duplicate (cùng user + city_name).
-    Đồng thời xóa cache cũ để tránh stale data.
-    """
-    user = request.user
-    city_name = request.data.get("city_name")
+@permission_classes([IsAuthenticated, IsPremiumUser])   # Require login + premium
+def add_search_history(request):     # Add search history
+
+    user = request.user # Get current user
+    city_name = request.data.get("city_name")   # Get city name
     lat = request.data.get("lat")
     lon = request.data.get("lon")
 
     logger.debug(f"➕ add_search_history called: user={user.username}, city_name={city_name}, lat={lat}, lon={lon}")
 
-    if not city_name:
+    if not city_name:   # Validate input
         logger.warning("❌ add_search_history failed: city_name missing")
         return Response({"error": "city_name is required"}, status=400)
 
-    # Chống duplicate: nếu đã tồn tại gần đây thì update created_at
+
     existing = SearchHistory.objects.filter(user_id=str(user._id), city_name=city_name).first()
     if existing:
         existing.lat = lat or existing.lat
@@ -375,24 +371,24 @@ def add_search_history(request):
         existing.save()
         logger.debug(f"♻️ Updated existing search history for user={user.username}, city_name={city_name}")
 
-        # Xóa cache để cập nhật list mới
-        cache_key = f"search_history:{str(user._id)}"
+
+        cache_key = f"search_history:{str(user._id)}"   
         cache.delete(cache_key)
         logger.debug(f"🗑 [CACHE DELETE] search history cache cleared for key={cache_key}")
 
         return Response({"message": "Updated existing search history"}, status=200)
 
-    # Tạo mới
-    sh = SearchHistory(user_id=str(user._id), city_name=city_name, lat=lat, lon=lon)
-    sh.save()
+
+    sh = SearchHistory(user_id=str(user._id), city_name=city_name, lat=lat, lon=lon)     # Create new record
+    sh.save()   # Save to database
     logger.debug(f"✅ Search history added for user={user.username}, city_name={city_name}")
 
-    # Xóa cache để list mới reflect ngay
-    cache_key = f"search_history:{str(user._id)}"
+
+    cache_key = f"search_history:{str(user._id)}"   # Clear cache
     cache.delete(cache_key)
     logger.debug(f"🗑 [CACHE DELETE] search history cache cleared for key={cache_key}")
 
-    return Response({"message": "Search history added"}, status=201)
+    return Response({"message": "Search history added"}, status=201)    # Return success
 
 
 @api_view(['GET'])
@@ -604,7 +600,7 @@ def format_duration_hm(minutes):
 # GET WEATHER
 # ---------------------------
 @api_view(['GET'])
-def get_weather(request):
+def get_weather(request):   # Main weather API function
     if not OPENWEATHER_API_KEY:
         logger.error("❌ Missing OPENWEATHER_API_KEY")
         return Response(
@@ -620,13 +616,10 @@ def get_weather(request):
         )
 
     city_input = request.GET.get("city")
-    lat = request.GET.get("lat")
+    lat = request.GET.get("lat")    # Get latitude
     lon = request.GET.get("lon")
     name = request.GET.get("name")
     
-    
-    # 1️⃣ Kiểm tra trạng thái login tạm thời dựa trên frontend cookie
-    #    Nếu cookie 'username' tồn tại → login, else → chưa login
     username_cookie = request.COOKIES.get("username")
     is_logged_in = bool(username_cookie)
     logger.debug("📄 request.COOKIES.keys(): %s", list(request.COOKIES.keys()))
@@ -635,7 +628,6 @@ def get_weather(request):
     logger.debug("🍪 username_cookie: %s", username_cookie)
     logger.debug("🔑 is_logged_in: %s", is_logged_in)
     
-    # --- PREMIUM LOGIC (CHUẨN) ---
     is_premium = False
     if request.user and request.user.is_authenticated:
         is_premium = getattr(request.user, "is_premium", False)
@@ -645,29 +637,29 @@ def get_weather(request):
     try:
         city_name = None
 
-        # --- TRƯỜNG HỢP 1: Người dùng F5 / cho phép định vị ---
+        # --- Case 1: User F5 / allow access current location ---
         if lat and lon:
             if name:
                 city_name = name
-                logger.debug("📍 Lấy city_name từ query param name='%s'", name)
+                logger.debug("📍 take city_name from query param name='%s'", name)
             else:
                 city_name = get_city_from_coordinates(lat, lon, OPENCAGE_API_KEY)
-                logger.debug("📍 Lấy city_name từ OpenCage reverse geocode: %s", city_name)
+                logger.debug("📍 take city_name from OpenCage reverse geocode: %s", city_name)
 
             city_name = strip_country_suffix(city_name)
 
-        # --- TRƯỜNG HỢP 2: Người dùng nhập tên thành phố và nhấn Enter ---
+        # --- Case 2: User enters city name and presses Enter ---
         elif city_input:
-            logger.debug("🔍 Dùng fuzzy search nội bộ cho city_input='%s'", city_input)
+            logger.debug("use fuzzy search for city_input='%s'", city_input)
             matches = fuzzy_search_cities(city_input)
             if not matches:
-                return Response({"error": f"Không tìm thấy địa điểm '{city_input}'"}, status=404)
+                return Response({"error": f"can not found'{city_input}'"}, status=404)
 
             top = matches[0]
             lat = top.get("lat")
             lon = top.get("lon")
 
-            # --- XÂY display_name giống dropdown: nếu có admin khác city -> "City, Admin" ---
+            # --- build display_name same as dropdown: if admin not same as city -> "City, Admin" ---
             if top.get("admin_name") and normalize_text(top.get("admin_name")) != normalize_text(top.get("city")):
                 city_name = f"{top.get('city')}, {top.get('admin_name')}"
             else:
@@ -676,17 +668,17 @@ def get_weather(request):
             logger.debug("✅ Fuzzy top result: %s (%s,%s) score=%s", city_name, lat, lon, top.get("score"))
 
         else:
-            return Response({"error": "Thiếu tham số city hoặc lat/lon"}, status=400)
+            return Response({"error": "missing city or lat/lon parameter"}, status=400)
 
-        # Chuẩn hoá hiển thị
+        # nomalize city name
         fixed_name = strip_country_suffix(city_name)
 
-        # Kiểm tra tọa độ
+        # check lat lon
         if not lat or not lon:
-            return Response({"error": "Không lấy được tọa độ"}, status=400)
+            return Response({"error": "missing lat or lon parameter"}, status=400)
 
 
-        # --- TẠO CACHE KEY ---
+        # --- CREATE CACHE KEY ---
         try:
             lat_s = f"{float(lat):.6f}"
             lon_s = f"{float(lon):.6f}"
@@ -694,24 +686,24 @@ def get_weather(request):
             lat_s = str(lat)
             lon_s = str(lon)
 
-        weather_cache_key = f"weather:{lat_s}:{lon_s}:{'premium' if is_premium else 'standard'}"
+        weather_cache_key = f"weather:{lat_s}:{lon_s}:{'premium' if is_premium else 'standard'}"    # Create cache key
 
         # --- CACHE HIT ---
-        cached_weather = cache.get(weather_cache_key)
+        cached_weather = cache.get(weather_cache_key)   # Check cache
         if cached_weather:
-            logger.info(f"💾 [CACHE HIT] Trả dữ liệu từ Redis cho {weather_cache_key}")
-            return Response(cached_weather)
+            logger.info(f"💾 [CACHE HIT] Return data from Redis for {weather_cache_key}")
+            return Response(cached_weather) # Return cached result
         else:
-            logger.info(f"🌍 [API CALL] Gọi OpenWeather cho {weather_cache_key}")
+            logger.info(f"🌍 [API CALL] Calling OpenWeather for {weather_cache_key}")
 
          # --- CALL OpenWeather 3.0 ---
-        url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&units=metric&exclude=minutely,alerts&appid={OPENWEATHER_API_KEY}"
-        resp = requests.get(url, timeout=8)
-        if resp.status_code != 200:
-            return Response({"error": "Không lấy được dữ liệu thời tiết", "details": resp.json()}, status=400)
-        data = resp.json()
+        url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&units=metric&exclude=minutely,alerts&appid={OPENWEATHER_API_KEY}"   # Build API URL
+        resp = requests.get(url, timeout=8)  # Call OpenWeather API
+        if resp.status_code != 200: # Check API response
+            return Response({"error": "can not get weather data", "details": resp.json()}, status=400)
+        data = resp.json()   # Parse JSON response
 
-        current = data.get("current", {})
+        current = data.get("current", {})   
         hourly = data.get("hourly", [])
         daily = data.get("daily", [])
         
@@ -849,9 +841,9 @@ def get_weather(request):
 
         result = {
             "location": fixed_name,
-            "temperature": temperature,
-            "humidity": humidity,
-            "condition": condition,
+            "temperature": temperature, # Temperature
+            "humidity": humidity,   # Humidity
+            "condition": condition, # Weather condition
             "icon": icon,
             "wind_speed": wind_speed,
             "chance_of_rain": chance_of_rain,
@@ -869,20 +861,20 @@ def get_weather(request):
             "source": "OpenWeather 3.0"
         }
         
-        # Thêm toạ độ nếu có
+        # add lat/lon to result for caching, only if they are valid numbers
         if lat and lon:
             result["lat"] = float(lat)
             result["lon"] = float(lon)
             result["fixed_name"] = fixed_name
 
-        # --- LƯU CACHE ---
+        # --- SAVE CACHE ---
         try:
-            cache.set(weather_cache_key, result, timeout=900)
-            logger.debug("🔁 Lưu weather vào Redis cache key=%s", weather_cache_key)
+            cache.set(weather_cache_key, result, timeout=900)   # Cache result
+            logger.debug("🔁 Saved weather into Redis cache key=%s", weather_cache_key)
         except Exception:
-            logger.exception("Không lưu được weather vào cache")
+            logger.exception("Cannot save weather into cache")
 
-        return Response(result)
+        return Response(result)  # Return response
 
     except Exception as e:
         logger.exception("get_weather failed")

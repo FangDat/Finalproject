@@ -15,18 +15,18 @@
         @click="closeSidebar"
       ></div>
     <!-- Sidebar trái -->
-    <aside class="sidebar-left" :class="{ open: showSidebar }">
+    <aside class="sidebar-left" :class="{ open: showSidebar }"> <!-- Sidebar container, toggles 'open' class -->
       <h2 class="logo">
-        <router-link to="/">🌤 VietCloud</router-link>
+        <router-link to="/">🌤 VietCloud</router-link>  
       </h2>
-      <nav class="nav-menu">
-        <router-link to="/" class="nav-btn" @click.native="closeSidebar">
+      <nav class="nav-menu">  <!-- Navigation menu -->
+        <router-link to="/" class="nav-btn" @click.native="closeSidebar"> <!-- Go to Weather page -->
           ☁️ Weather
         </router-link>
-        <router-link to="/map" class="nav-btn" @click.native="closeSidebar">🗺️ Maps</router-link>
-        <router-link v-if="username" to="/chatbot" class="nav-btn" @click.native="closeSidebar">🤖 Chatbot</router-link>
-        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link>
-        <router-link to="/profile" class="nav-btn" @click.native="closeSidebar">👤 Profile</router-link>
+        <router-link to="/map" class="nav-btn" @click.native="closeSidebar">🗺️ Maps</router-link> <!-- Go to Map page -->
+        <router-link v-if="username" to="/chatbot" class="nav-btn" @click.native="closeSidebar">🤖 Chatbot</router-link>  <!-- Show only if logged in -->
+        <router-link to="/settings" class="nav-btn" @click.native="closeSidebar">⚙️ Settings</router-link> <!-- Go to Settings -->
+        <router-link to="/profile" class="nav-btn" @click.native="closeSidebar">👤 Profile</router-link>  <!-- Current profile page -->
       </nav>
     </aside>
 
@@ -560,62 +560,62 @@ export default {
   },
 
 
-    async handleChangeEmail() {
-    this.changeEmailAlert = "";
-    this.changeEmailLoading = true;
+    async handleChangeEmail() { // Handle change email process
+    this.changeEmailAlert = ""; // Reset alert message
+    this.changeEmailLoading = true; // Show loading state
 
     try {
-      if (this.changeEmailStep === 1) {
-        await apiClient.post(
+      if (this.changeEmailStep === 1) {  // Step 1: verify password
+        await apiClient.post( // Call API to verify password
           "/api/change-email/verify-password/",
-          { password: this.email_password }
+          { password: this.email_password } // Send current password
         );
-        this.changeEmailStep = 2;
+        this.changeEmailStep = 2; // Move to next step
       } else {
-      await apiClient.post(
+      await apiClient.post( // Step 2: send OTP to new email
         "/api/change-email/send-otp/",
-        { new_email: this.new_email }
+        { new_email: this.new_email } // Send new email
       );
-        this.showChangeEmail = false;
-        this.showChangeEmailOtp = true;
-        this.startResendCountdown();
+        this.showChangeEmail = false; // Close modal
+        this.showChangeEmailOtp = true;  // Open OTP modal
+        this.startResendCountdown();  // Start resend timer
       }
     } catch (err) {
       this.changeEmailAlert = err.response?.data?.error || "Action failed.";
-      this.changeEmailSuccess = false;
+      this.changeEmailSuccess = false;  // Mark failure
     } finally {
-      this.changeEmailLoading = false;
+      this.changeEmailLoading = false;  // Stop loading
     }
   },
-   async verifyChangeEmailOtp() {
-    this.verifyingOtp = true;
-    this.otpError = null;
+   async verifyChangeEmailOtp() { // Verify OTP for email change
+    this.verifyingOtp = true; // Start loading
+    this.otpError = null; // Reset error
 
-    const otpCode = this.otpDigits.join("");
-    if (otpCode.length !== 6) {
+    const otpCode = this.otpDigits.join("");  // Combine digits into string
+    if (otpCode.length !== 6) { // Check if OTP is valid length
       this.otpError = "Please enter all 6 digits.";
       this.verifyingOtp = false;
       return;
     }
 
     try {
-      await apiClient.post(
+      await apiClient.post( // Send OTP to backend
         "/api/change-email/verify-otp/",
         { otp: otpCode }
       );
 
-      this.showChangeEmailOtp = false;
+      this.showChangeEmailOtp = false;  // Close OTP modal
       this.popupMessage = "Email changed successfully.";
-      this.popupSuccess = true;
-      this.showPopup = true;
+      this.popupSuccess = true; // Mark success
+      this.showPopup = true;  // Show popup
 
-      setTimeout(() => {
-        document.cookie.split(";").forEach(c => {
-          document.cookie = c.replace(/^ +/, "")
+      setTimeout(() => {  // Delay before logout
+        document.cookie.split(";").forEach(c => { // Loop all cookies
+          document.cookie = c.replace(/^ +/, "")  // Trim spaces
             .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
         });
-        this.$router.push("/");
-        window.location.reload();
+        this.$router.push("/"); // Redirect to home
+        window.location.reload(); // Reload page
       }, 3000);
     } catch (err) {
       this.otpError =
@@ -762,45 +762,45 @@ focusPrev(index, event) {
       }
     },
 
-    async sendFeedback() {
-      if (!this.feedbackMessage.trim()) {
+    async sendFeedback() {  // Send user feedback
+      if (!this.feedbackMessage.trim()) { // Check empty message
         this.popupMessage = "Please enter your feedback message.";
-        this.popupSuccess = false;
-        this.showPopup = true;
+        this.popupSuccess = false;  // Mark failure
+        this.showPopup = true;  // Show popup
         return;
       }
 
-      if (this.sendingDisabled) return;
+      if (this.sendingDisabled) return; // Prevent spam click
 
-      this.sendingDisabled = true;
-      this.countdown = 8;
+      this.sendingDisabled = true;  // Disable button
+      this.countdown = 8; // Set cooldown time
 
-      const interval = setInterval(() => {
-        this.countdown--;
+      const interval = setInterval(() => {  // Start countdown timer
+        this.countdown--; // Decrease time
         if (this.countdown <= 0) {
           this.sendingDisabled = false;
-          clearInterval(interval);
+          clearInterval(interval);  // Stop timer
         }
       }, 1000);
 
       try {
-        await apiClient.post("/api/send-feedback/", {
-          message: this.feedbackMessage,
-          email: this.email || "",
+        await apiClient.post("/api/send-feedback/", {  // Send feedback API
+          message: this.feedbackMessage,  // User message
+          email: this.email || "",  // Optional email
         });
 
         this.popupMessage =
-          "Feedback sent successfully! Support will respond to your email soon.";
+          "Feedback sent successfully! Support will respond to your email soon."; // Success message
         this.popupSuccess = true;
-        this.showPopup = true;
-        this.feedbackMessage = "";
+        this.showPopup = true;  // Show popup
+        this.feedbackMessage = "";  // Clear input
       } catch (err) {
         this.popupMessage =
           err.response?.data?.error ||
           err.response?.data?.detail ||
           "Failed to send feedback.";
-        this.popupSuccess = false;
-        this.showPopup = true;
+        this.popupSuccess = false;  // Mark failure
+        this.showPopup = true;   // Show popup
       }
     },
 

@@ -112,41 +112,41 @@ Output ONLY the final answer text.
 # ============================
 # CORE FUNCTION
 # ============================
-def generate_weather_response(
-    user_question: str,
-    intent_result: dict,
-    weather_data: dict
+def generate_weather_response(  # Define main function
+    user_question: str, # Input: user question
+    intent_result: dict,   # Input: intent analysis
+    weather_data: dict # Input: processed weather data
 ):
     """
     LLM #2 – Generate final natural language answer
     """
 
-    payload = {
-        "user_question": user_question,
+    payload = {  # Combine inputs into one object
+        "user_question": user_question,  # Add question
         "intent_result": intent_result,
         "weather_data": weather_data
     }
 
-    logger.debug("LLM RESPONSE INPUT")
-    logger.debug(json.dumps(payload, indent=2, ensure_ascii=False))
+    logger.debug("LLM RESPONSE INPUT")  # Log input label
+    logger.debug(json.dumps(payload, indent=2, ensure_ascii=False))  # Log full payload
 
-    response = client.responses.create(
+    response = client.responses.create( 
         model="gpt-4o",  # GPT-4.0 (OpenAI standard)
-        input=[
+        input=[ # Provide conversation input
             {
                 "role": "system",
-                "content": WEATHER_RESPONSE_PROMPT
+                "content": WEATHER_RESPONSE_PROMPT  # Prompt instructions
             },
             {
                 "role": "user",
-                "content": json.dumps(payload, ensure_ascii=False)
+                "content": json.dumps(payload, ensure_ascii=False)  # Send payload as JSON
             }
         ],
     )
 
-    answer = response.output_text.strip()
+    answer = response.output_text.strip() # Extract and clean output text
 
     logger.debug("LLM RESPONSE OUTPUT")
     logger.debug(answer)
 
-    return answer
+    return answer # Return final response
