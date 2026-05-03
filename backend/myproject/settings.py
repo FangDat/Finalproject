@@ -170,7 +170,7 @@ CSRF_TRUSTED_ORIGINS = [
 import os
 _is_production = os.getenv('RAILWAY_ENVIRONMENT') == 'production'
 
-SESSION_COOKIE_SECURE = _is_production   # True khi deploy HTTPS
+SESSION_COOKIE_SECURE = _is_production   # True when deploy HTTPS
 CSRF_COOKIE_SECURE = _is_production
 SESSION_COOKIE_SAMESITE = 'None' if _is_production else 'Lax'
 CSRF_COOKIE_SAMESITE = 'None' if _is_production else 'Lax'

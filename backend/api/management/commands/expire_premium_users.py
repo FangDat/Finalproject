@@ -34,7 +34,7 @@ class Command(BaseCommand):
         result = collection.update_many(
             {
                 "is_premium": True,
-                "premium_expires_at_ts": {"$lt": now_ts}
+                "premium_expires_at_ts": {"$lt": now_ts}  # lt means "less than" 
             },
             {
                 "$set": {"is_premium": False}

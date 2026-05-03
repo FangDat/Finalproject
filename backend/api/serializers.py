@@ -14,3 +14,5 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         user.save()
         return user
+
+# A serializer in Django REST Framework transforms, validates, and controls data between frontend (JSON) and backend (models).

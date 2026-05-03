@@ -18,7 +18,7 @@ if not OPENAI_API_KEY:
     logger.error("❌ OPENAI_API_KEY is missing in environment variables")
     raise RuntimeError("OPENAI_API_KEY is not set")
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY) # Initialize the client to call OpenAI
 
 
 # ============================
@@ -112,7 +112,7 @@ Output ONLY the final answer text.
 # ============================
 # CORE FUNCTION
 # ============================
-def generate_weather_response(
+def generate_weather_response(   # This function generates a natural language response using AI (LLM)
     user_question: str,
     intent_result: dict,
     weather_data: dict
@@ -121,7 +121,7 @@ def generate_weather_response(
     LLM #2 – Generate final natural language answer
     """
 
-    payload = {
+    payload = { # Combine all input data into one object to send to the AI
         "user_question": user_question,
         "intent_result": intent_result,
         "weather_data": weather_data
@@ -130,23 +130,23 @@ def generate_weather_response(
     logger.debug("LLM RESPONSE INPUT")
     logger.debug(json.dumps(payload, indent=2, ensure_ascii=False))
 
-    response = client.responses.create(
+    response = client.responses.create(    # Send request to OpenAI API to generate a response
         model="gpt-4o",  # GPT-4.0 (OpenAI standard)
         input=[
             {
                 "role": "system",
                 "content": WEATHER_RESPONSE_PROMPT
-            },
+            },  # System message: contains rules and instructions for the AI
             {
                 "role": "user",
                 "content": json.dumps(payload, ensure_ascii=False)
-            }
+            } # User message: contains actual data (question + weather + intent)
         ],
     )
 
-    answer = response.output_text.strip()
+    answer = response.output_text.strip() # Extract the generated text and remove extra whitespace
 
     logger.debug("LLM RESPONSE OUTPUT")
     logger.debug(answer)
 
-    return answer
+    return answer # Return the final answer back to the API/view
